@@ -1,21 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import displayParentHeader from './src/navigation/displayParentHeader';
+import CustomDrawerContent from './src/components/CustomDrawerContent';
 
-export default function App() {
+import AuthFlow from './src/screens/auth';
+import DrillFlow from './src/screens/drills';
+import HomeScreen from './src/screens/HomeScreen';
+
+function mainFlow() {
+  const Drawer = createDrawerNavigator();
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen
+        name="Drills"
+        component={DrillFlow}
+        options={({ route }) => ({
+          headerShown: displayParentHeader(route),
+        })}
+      />
+    </Drawer.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function renderScreens() {
+  const isSignedIn = true;
+  return isSignedIn ? mainFlow() : AuthFlow();
+}
+
+function App() {
+  return <NavigationContainer>{renderScreens()}</NavigationContainer>;
+}
+
+export default App;
