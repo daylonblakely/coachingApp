@@ -9,6 +9,10 @@ const DrillListScreen = ({ navigation }) => {
         title="go to drill create screen"
         onPress={() => navigation.navigate('DrillCreate')}
       />
+      <Button
+        title="go to drill detail screen"
+        onPress={() => navigation.navigate('DrillDetail')}
+      />
     </View>
   );
 };

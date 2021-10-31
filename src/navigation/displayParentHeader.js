@@ -7,6 +7,12 @@ export default function displayParentHeader(route) {
   switch (routeName) {
     case 'DrillCreate':
       return false;
+    case 'DrillDetail':
+      return false;
+    case 'PracticeCreate':
+      return false;
+    case 'PracticeDetail':
+      return false;
     default:
       true;
   }

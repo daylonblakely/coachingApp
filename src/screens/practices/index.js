@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import DrillListScreen from './DrillListScreen';
-import DrillCreateScreen from './DrillCreateScreen';
-import DrillDetailScreen from './DrillDetailScreen';
+import PracticeListScreen from './PracticeListScreen';
+import PracticeCreateScreen from './PracticeCreateScreen';
+import PracticeDetailScreen from './PracticeDetailScreen';
 
 const index = () => {
   const Stack = createStackNavigator();
@@ -11,20 +11,20 @@ const index = () => {
     <Stack.Navigator>
       <Stack.Group>
         <Stack.Screen
-          name="DrillList"
-          options={{ title: 'Drills', headerShown: false }}
-          component={DrillListScreen}
+          name="PracticeList"
+          options={{ title: 'Practices', headerShown: false }}
+          component={PracticeListScreen}
         />
         <Stack.Screen
-          name="DrillDetail"
-          options={{ title: 'Drills' }}
-          component={DrillDetailScreen}
+          name="PracticeDetail"
+          options={{ title: 'Practices' }}
+          component={PracticeDetailScreen}
         />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
-          name="DrillCreate"
-          component={DrillCreateScreen}
+          name="PracticeCreate"
+          component={PracticeCreateScreen}
           options={{
             headerShown: false,
           }}
