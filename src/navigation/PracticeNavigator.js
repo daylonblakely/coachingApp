@@ -1,11 +1,11 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import PracticeListScreen from './PracticeListScreen';
-import PracticeCreateScreen from './PracticeCreateScreen';
-import PracticeDetailScreen from './PracticeDetailScreen';
+import PracticeListScreen from '../screens/PracticeListScreen';
+import PracticeCreateScreen from '../screens/PracticeCreateScreen';
+import PracticeDetailScreen from '../screens/PracticeDetailScreen';
 
-const index = () => {
+const PracticeNavigator = () => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator>
@@ -34,4 +34,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default PracticeNavigator;

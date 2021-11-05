@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import SigninScreen from './SigninScreen';
-import SignupScreen from './SignupScreen';
+import SigninScreen from '../screens/SigninScreen';
+import SignupScreen from '../screens/SignupScreen';
 
-const index = () => {
+const AuthNavigator = () => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator>
@@ -22,4 +22,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default AuthNavigator;

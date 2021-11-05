@@ -1,11 +1,11 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import DrillListScreen from './DrillListScreen';
-import DrillCreateScreen from './DrillCreateScreen';
-import DrillDetailScreen from './DrillDetailScreen';
+import DrillListScreen from '../screens/DrillListScreen';
+import DrillCreateScreen from '../screens/DrillCreateScreen';
+import DrillDetailScreen from '../screens/DrillDetailScreen';
 
-const index = () => {
+const DrillNavigator = () => {
   const Stack = createStackNavigator();
   return (
     <Stack.Navigator>
@@ -34,4 +34,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default DrillNavigator;

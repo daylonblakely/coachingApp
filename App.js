@@ -4,9 +4,11 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import displayParentHeader from './src/navigation/displayParentHeader';
 import CustomDrawerContent from './src/components/CustomDrawerContent';
 
-import AuthFlow from './src/screens/auth';
-import PracticeFlow from './src/screens/practices';
-import DrillFlow from './src/screens/drills';
+import { Provider as DrillProvider } from './src/context/DrillContext';
+
+import AuthNavigator from './src/navigation/AuthNavigator';
+import PracticeNavigator from './src/navigation/practices';
+import DrillNavigator from './src/navigation/DrillNavigator';
 import HomeScreen from './src/screens/HomeScreen';
 
 function mainFlow() {
@@ -18,14 +20,14 @@ function mainFlow() {
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen
         name="Practice Plans"
-        component={PracticeFlow}
+        component={PracticeNavigator}
         options={({ route }) => ({
           headerShown: displayParentHeader(route),
         })}
       />
       <Drawer.Screen
         name="Drills"
-        component={DrillFlow}
+        component={DrillNavigator}
         options={({ route }) => ({
           headerShown: displayParentHeader(route),
         })}
@@ -36,11 +38,17 @@ function mainFlow() {
 
 function renderScreens() {
   const isSignedIn = true; //TODO: use a user token in state
-  return isSignedIn ? mainFlow() : AuthFlow();
+  return isSignedIn ? mainFlow() : AuthNavigator();
 }
 
 function App() {
   return <NavigationContainer>{renderScreens()}</NavigationContainer>;
 }
 
-export default App;
+export default () => {
+  return (
+    <DrillProvider>
+      <App />
+    </DrillProvider>
+  );
+};
