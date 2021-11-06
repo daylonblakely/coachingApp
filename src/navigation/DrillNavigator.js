@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import DrillListScreen from '../screens/DrillListScreen';
-import DrillCreateScreen from '../screens/DrillCreateScreen';
-import DrillDetailScreen from '../screens/DrillDetailScreen';
+import DrillListScreen from '../screens/drills/DrillListScreen';
+import DrillCreateScreen from '../screens/drills/DrillCreateScreen';
+import DrillDetailScreen from '../screens/drills/DrillDetailScreen';
 
 const DrillNavigator = () => {
   const Stack = createStackNavigator();

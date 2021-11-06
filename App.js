@@ -7,7 +7,7 @@ import CustomDrawerContent from './src/components/CustomDrawerContent';
 import { Provider as DrillProvider } from './src/context/DrillContext';
 
 import AuthNavigator from './src/navigation/AuthNavigator';
-import PracticeNavigator from './src/navigation/practices';
+import PracticeNavigator from './src/navigation/PracticeNavigator';
 import DrillNavigator from './src/navigation/DrillNavigator';
 import HomeScreen from './src/screens/HomeScreen';
 
