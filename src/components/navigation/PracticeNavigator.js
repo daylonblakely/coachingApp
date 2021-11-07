@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import PracticeListScreen from '../screens/PracticeListScreen';
-import PracticeCreateScreen from '../screens/PracticeCreateScreen';
-import PracticeDetailScreen from '../screens/PracticeDetailScreen';
+import PracticeListScreen from '../../screens/practices/PracticeListScreen';
+import PracticeCreateScreen from '../../screens/practices/PracticeCreateScreen';
+import PracticeDetailScreen from '../../screens/practices/PracticeDetailScreen';
 
 const PracticeNavigator = () => {
   const Stack = createStackNavigator();
