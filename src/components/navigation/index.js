@@ -1,6 +1,6 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
+import { useColorModeValue, useToken } from 'native-base';
 import AuthNavigator from './AuthNavigator';
 import PracticeNavigator from './PracticeNavigator';
 import DrillNavigator from './DrillNavigator';
@@ -16,6 +16,16 @@ export default () => {
   return isSignedIn ? (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        drawerStyle: {
+          // backgroundColor: '#c6cbef',
+          // width: 240,
+        },
+        headerStyle: {
+          // height: 200, // Specify the height of your custom header
+        },
+        headerTintColor: useColorModeValue('black', 'white'), // TODO: update text color in theme
+      }}
     >
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen
