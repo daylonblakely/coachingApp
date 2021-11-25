@@ -7,6 +7,16 @@ export default theme = extendTheme({
         fontSize: 'lg',
       },
     },
+    Box: {
+      defaultProps: {
+        _dark: {
+          borderColor: 'gray.600',
+          backgroundColor: 'gray.700',
+        },
+        borderColor: 'coolGray.200',
+        backgroundColor: 'gray.50',
+      },
+    },
   },
   colors: {
     primary: {
