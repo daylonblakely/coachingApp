@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import { Context as DrillContext } from '../../context/DrillContext';
 
-const DrillDetailScreen = ({ navigation }) => {
+const DrillDetailScreen = ({ route, navigation }) => {
+  const { state } = useContext(DrillContext);
+
+  const { id } = route.params;
+  const drill = state.find((d) => d.id === id);
+
   return (
     <View>
-      <Text>DrillDetailScreen</Text>
+      <Text>{drill.title}</Text>
     </View>
   );
 };

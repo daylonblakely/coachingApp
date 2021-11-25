@@ -29,5 +29,30 @@ const createDrill = (dispatch) => async (drill) => {
 export const { Provider, Context } = createDataContext(
   drillReducer,
   { fetchDrills, createDrill },
-  []
+  [
+    {
+      id: 'alkjf',
+      title: 'Shell Drill',
+      description: 'description...',
+      category: 'Defense',
+      comments: 'comments...',
+      userId: 'lakfjlsak',
+    },
+    {
+      id: 'alkjfsdv',
+      title: '3 Man Shooting',
+      description: 'description...',
+      category: 'Offense',
+      comments: 'comments...',
+      userId: 'lakfjlsak',
+    },
+    {
+      id: 'alkjaaaf',
+      title: 'Weak Hand Passing',
+      description: 'description...',
+      category: 'Passing',
+      comments: 'comments...',
+      userId: 'lakfjlsak',
+    },
+  ]
 );
