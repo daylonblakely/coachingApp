@@ -11,13 +11,14 @@ const DrillDetailScreen = ({ route, navigation }) => {
   return (
     <Box
       // maxW="80%"
-      rounded="lg"
+      rounded="sm"
       overflow="hidden"
       borderWidth="1"
       _web={{
         shadow: 2,
         borderWidth: 0,
       }}
+      marginTop="5px"
     >
       <Stack p="4" space={3}>
         <Stack space={2}>
