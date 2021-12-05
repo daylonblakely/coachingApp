@@ -1,22 +1,27 @@
-import React from 'react';
-import { View, StyleSheet, Text, Button } from 'react-native';
+import React, { useContext } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { Box, FlatList } from 'native-base';
+import { Context as DrillContext } from '../../context/DrillContext';
+import DrillListItem from '../../components/DrillListItem';
 
 const DrillListScreen = ({ navigation }) => {
+  const { state, fetchDrills } = useContext(DrillContext);
+  // TODO: fetch drills on render
+
   return (
-    <View>
-      <Text>DrillListScreen</Text>
-      <Button
-        title="go to drill create screen"
-        onPress={() => navigation.navigate('DrillCreate')}
+    <Box>
+      <FlatList
+        data={state}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('DrillDetail', { id: item.id })}
+          >
+            <DrillListItem drill={item} />
+          </TouchableOpacity>
+        )}
       />
-      <Button
-        title="go to drill detail screen"
-        onPress={() => navigation.navigate('DrillDetail')}
-      />
-    </View>
+    </Box>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default DrillListScreen;
