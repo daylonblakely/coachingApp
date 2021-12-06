@@ -4,21 +4,15 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import { useColorMode, Text } from 'native-base';
+import { useColorMode, Text, Box } from 'native-base';
+import DrawerHeader from './DrawerHeader';
 
 const CustomDrawerContent = (props) => {
   const { toggleColorMode } = useColorMode();
   return (
     <DrawerContentScrollView {...props}>
+      <DrawerHeader />
       <DrawerItemList {...props} />
-      <DrawerItem
-        label="Close drawer"
-        onPress={() => props.navigation.closeDrawer()}
-      />
-      <DrawerItem
-        label="Toggle drawer"
-        onPress={() => props.navigation.toggleDrawer()}
-      />
       <DrawerItem
         label={(focused, color) => <Text>Toggle color mode</Text>}
         onPress={toggleColorMode}

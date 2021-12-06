@@ -48,6 +48,10 @@ export default theme = extendTheme({
       light: '#FFFFFF',
     },
     darkModeHeader: '#27272a', //gray.800
+    drawer: {
+      dark: '#18181b', //gray.900
+      light: '#fafafa', //gray.50
+    },
   },
   Pressable: {
     cursor: 'pointer',
