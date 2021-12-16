@@ -1,4 +1,5 @@
 import React from 'react';
+import { StatusBar, Platform } from 'react-native';
 import {
   useColorModeValue,
   Heading,
@@ -8,15 +9,19 @@ import {
   Circle,
 } from 'native-base';
 
+const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+
 const DrawerHeader = () => {
   const backgroundColor = useColorModeValue('primary.600', 'darkModeHeader');
   return (
     <Box
       height="100"
       marginBottom="20px"
+      marginTop={STATUS_BAR_HEIGHT}
       bg={backgroundColor}
       flexDirection="row"
       alignItems="center"
+      // position="absolute"
     >
       <Box
         space={4}

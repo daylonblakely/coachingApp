@@ -20,6 +20,7 @@ const RootComponent = () => {
   const headerColor = useColorModeValue(lightPrimary, darkModeHeader);
   const primaryColor = useColorModeValue('red', darkPrimary); //TODO: fix light primary
   const textColor = useColorModeValue('black', 'white'); //TODO: update these
+
   return (
     <NavigationContainer
       theme={{
