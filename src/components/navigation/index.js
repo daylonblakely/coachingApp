@@ -11,6 +11,11 @@ import CustomDrawerContent from './CustomDrawerContent';
 
 export default () => {
   const Drawer = createDrawerNavigator();
+  const [lightBg, darkBg] = useToken(
+    'colors',
+    ['drawer.light', 'drawer.dark'],
+    'background.dark'
+  );
 
   const isSignedIn = true; //TODO: use a user token in state
   return isSignedIn ? (
@@ -18,7 +23,7 @@ export default () => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         drawerStyle: {
-          // backgroundColor: '#c6cbef',
+          backgroundColor: useColorModeValue(lightBg, darkBg),
           // width: 240,
         },
         headerStyle: {
