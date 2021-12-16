@@ -1,20 +1,47 @@
 import React from 'react';
-import { useColorModeValue, Text, Box, Center } from 'native-base';
+import {
+  useColorModeValue,
+  Heading,
+  Text,
+  Box,
+  Stack,
+  Circle,
+} from 'native-base';
 
 const DrawerHeader = () => {
+  const backgroundColor = useColorModeValue('primary.600', 'darkModeHeader');
   return (
-    <Center
-      bg={useColorModeValue('primary.600', 'gray.800')}
+    <Box
       height="100"
       marginBottom="20px"
-      _text={{
-        fontSize: 'lg',
-        fontWeight: 'medium',
-        color: 'warmGray.50',
-      }}
+      bg={backgroundColor}
+      flexDirection="row"
+      alignItems="center"
     >
-      Daylon
-    </Center>
+      <Box
+        space={4}
+        flexDirection="row"
+        alignItems="center"
+        left="4"
+        bg={backgroundColor}
+      >
+        <Circle
+          size="md"
+          bg={useColorModeValue('secondary.600', 'primary.600')}
+          _text={{
+            fontWeight: 'bold',
+            fontSize: '3xl',
+          }}
+          marginRight="4"
+        >
+          D
+        </Circle>
+        <Stack bg={backgroundColor}>
+          <Heading fontSize="lg">Daylon Blakely</Heading>
+          <Text fontSize="sm">Coach</Text>
+        </Stack>
+      </Box>
+    </Box>
   );
 };
 
