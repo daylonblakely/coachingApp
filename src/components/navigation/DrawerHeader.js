@@ -15,13 +15,12 @@ const DrawerHeader = () => {
   const backgroundColor = useColorModeValue('primary.600', 'darkModeHeader');
   return (
     <Box
-      height="100"
+      height="130"
       marginBottom="20px"
-      marginTop={STATUS_BAR_HEIGHT}
+      paddingTop={STATUS_BAR_HEIGHT}
       bg={backgroundColor}
       flexDirection="row"
       alignItems="center"
-      // position="absolute"
     >
       <Box
         space={4}

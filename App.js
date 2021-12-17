@@ -11,7 +11,7 @@ export default () => {
       <DrillProvider>
         <StatusBar
           translucent
-          backgroundColor="#5E8D48" //TODO - update color and style
+          backgroundColor="#17171780" // muted.900
           barStyle="light-content"
         />
         <RootComponent />
