@@ -8,8 +8,12 @@ import DrillDetailScreen from '../../screens/drills/DrillDetailScreen';
 const DrillNavigator = () => {
   const Stack = createStackNavigator();
   return (
-    <Stack.Navigator>
-      <Stack.Group>
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: 'white',
+      }}
+    >
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
           name="DrillList"
           options={{ title: 'Drills', headerShown: false }}
@@ -20,8 +24,6 @@ const DrillNavigator = () => {
           options={{ title: 'Drills' }}
           component={DrillDetailScreen}
         />
-      </Stack.Group>
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
           name="DrillCreate"
           component={DrillCreateScreen}

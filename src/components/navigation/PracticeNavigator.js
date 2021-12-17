@@ -8,8 +8,12 @@ import PracticeDetailScreen from '../../screens/practices/PracticeDetailScreen';
 const PracticeNavigator = () => {
   const Stack = createStackNavigator();
   return (
-    <Stack.Navigator>
-      <Stack.Group>
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: 'white',
+      }}
+    >
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
           name="PracticeList"
           options={{ title: 'Practices', headerShown: false }}
@@ -20,8 +24,6 @@ const PracticeNavigator = () => {
           options={{ title: 'Practices' }}
           component={PracticeDetailScreen}
         />
-      </Stack.Group>
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
           name="PracticeCreate"
           component={PracticeCreateScreen}

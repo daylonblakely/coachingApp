@@ -29,7 +29,7 @@ export default () => {
         headerStyle: {
           // height: 200, // Specify the height of your custom header
         },
-        headerTintColor: useColorModeValue('black', 'white'), // TODO: update text color in theme
+        headerTintColor: 'white',
       }}
     >
       <Drawer.Screen name="Home" component={HomeScreen} />
