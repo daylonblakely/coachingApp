@@ -41,8 +41,12 @@ const DrawerHeader = () => {
           D
         </Circle>
         <Stack bg={backgroundColor}>
-          <Heading fontSize="lg">Daylon Blakely</Heading>
-          <Text fontSize="sm">Coach</Text>
+          <Heading fontSize="lg" color="white">
+            Daylon Blakely
+          </Heading>
+          <Text fontSize="sm" color="white">
+            Coach
+          </Text>
         </Stack>
       </Box>
     </Box>
