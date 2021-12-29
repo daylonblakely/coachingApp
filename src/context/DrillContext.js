@@ -37,14 +37,16 @@ export const { Provider, Context } = createDataContext(
       category: 'Defense',
       comments: 'comments...',
       userId: 'lakfjlsak',
+      isIndvidual: false,
     },
     {
       id: 'alkjfsdv',
       title: '3 Man Shooting',
       description: 'description...',
-      category: 'Offense',
+      category: 'Shooting',
       comments: 'comments...',
       userId: 'lakfjlsak',
+      isIndvidual: false,
     },
     {
       id: 'alkjaaaf',
@@ -53,6 +55,7 @@ export const { Provider, Context } = createDataContext(
       category: 'Passing',
       comments: 'comments...',
       userId: 'lakfjlsak',
+      isIndvidual: false,
     },
   ]
 );
