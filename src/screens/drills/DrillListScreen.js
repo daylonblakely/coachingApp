@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Box, FlatList } from 'native-base';
 import { Context as DrillContext } from '../../context/DrillContext';
-import DrillListItem from '../../components/DrillListItem';
+import DrillListItem from '../../components/drills/DrillListItem';
 
 const DrillListScreen = ({ navigation }) => {
   const { state, fetchDrills } = useContext(DrillContext);
@@ -14,7 +14,12 @@ const DrillListScreen = ({ navigation }) => {
         data={state}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('DrillDetail', { id: item.id })}
+            onPress={() =>
+              navigation.navigate('DrillDetail', {
+                id: item.id,
+                title: item.title,
+              })
+            }
           >
             <DrillListItem drill={item} />
           </TouchableOpacity>

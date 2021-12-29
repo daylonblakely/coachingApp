@@ -12,7 +12,7 @@ import {
 const DrillListItem = ({ drill }) => {
   const { title, category } = drill;
   return (
-    <Box borderBottomWidth="1" rounded="lg" overflow="hidden">
+    <Box variant="card" borderBottomWidth="1" rounded="lg" overflow="hidden">
       <Stack p="4" space={3}>
         <HStack alignItems="center">
           <VStack>
