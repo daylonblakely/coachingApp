@@ -9,7 +9,7 @@ import {
   Circle,
 } from 'native-base';
 
-const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+// const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
 const DrawerHeader = () => {
   const backgroundColor = useColorModeValue('primary.600', 'darkModeHeader');
@@ -17,7 +17,7 @@ const DrawerHeader = () => {
     <Box
       height="130"
       marginBottom="20px"
-      paddingTop={STATUS_BAR_HEIGHT}
+      paddingTop={5}
       bg={backgroundColor}
       flexDirection="row"
       alignItems="center"
