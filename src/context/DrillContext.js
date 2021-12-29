@@ -38,6 +38,8 @@ export const { Provider, Context } = createDataContext(
       comments: 'comments...',
       userId: 'lakfjlsak',
       isIndvidual: false,
+      requirements: [],
+      steps: [],
     },
     {
       id: 'alkjfsdv',
@@ -47,6 +49,8 @@ export const { Provider, Context } = createDataContext(
       comments: 'comments...',
       userId: 'lakfjlsak',
       isIndvidual: false,
+      requirements: ['three players', 'two balls'],
+      steps: [],
     },
     {
       id: 'alkjaaaf',
@@ -56,6 +60,19 @@ export const { Provider, Context } = createDataContext(
       comments: 'comments...',
       userId: 'lakfjlsak',
       isIndvidual: false,
+      requirements: ['2 players'],
+      steps: [],
+    },
+    {
+      id: 'alkjaaafae',
+      title: 'Two Ball Dribbling',
+      description: 'description...',
+      category: 'Ball Handling',
+      comments: 'comments...',
+      userId: 'lakfjlsak',
+      isIndvidual: true,
+      requirements: ['2 balls'],
+      steps: [],
     },
   ]
 );
