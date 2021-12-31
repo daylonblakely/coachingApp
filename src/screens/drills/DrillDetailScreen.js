@@ -15,24 +15,22 @@ const DrillDetailScreen = ({ route, navigation }) => {
     <ScrollView>
       <DrillDetailCategoryHeader category={drill.category} />
       <Box>
-        <Stack p="3" space={3}>
-          <DrillDetailTitle
-            title={drill.title}
-            isIndividual={drill.isIndvidual}
-          />
-          <FlatList
-            horizontal
-            data={drill.tags}
-            renderItem={({ item }) => <ItemTag text={item} />}
-            keyExtractor={(x, i) => i.toString()}
-            showsHorizontalScrollIndicator={false}
-          />
-          <Text>{drill.description}</Text>
-          {/* TODO add drill comments */}
-          {/* <Box variant="card">
+        <DrillDetailTitle
+          title={drill.title}
+          isIndividual={drill.isIndvidual}
+        />
+        <FlatList
+          horizontal
+          data={drill.tags}
+          renderItem={({ item }) => <ItemTag text={item} />}
+          keyExtractor={(x, i) => i.toString()}
+          showsHorizontalScrollIndicator={false}
+        />
+        <Text p="3">{drill.description}</Text>
+        {/* TODO add drill comments */}
+        {/* <Box variant="card">
             <Text>{drill.comments}</Text>
           </Box> */}
-        </Stack>
       </Box>
     </ScrollView>
   );

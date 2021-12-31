@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 const DrillDetailTitle = ({ title, isIndividual }) => {
   const iconColor = useColorModeValue('black', 'white');
   return (
-    <>
+    <Box p="3">
       <Box
         flexDirection="row"
         alignItems="center"
@@ -20,7 +20,7 @@ const DrillDetailTitle = ({ title, isIndividual }) => {
       </Box>
 
       <Divider my="1" thickness="1.5" />
-    </>
+    </Box>
   );
 };
 
