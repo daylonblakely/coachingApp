@@ -38,7 +38,7 @@ export const { Provider, Context } = createDataContext(
       comments: 'comments...',
       userId: 'lakfjlsak',
       isIndvidual: false,
-      requirements: [],
+      tags: [],
       steps: [],
     },
     {
@@ -49,7 +49,7 @@ export const { Provider, Context } = createDataContext(
       comments: 'comments...',
       userId: 'lakfjlsak',
       isIndvidual: false,
-      requirements: ['three players', 'two balls'],
+      tags: ['three players', 'two balls'],
       steps: [],
     },
     {
@@ -60,7 +60,7 @@ export const { Provider, Context } = createDataContext(
       comments: 'comments...',
       userId: 'lakfjlsak',
       isIndvidual: false,
-      requirements: ['2 players'],
+      tags: ['2 players'],
       steps: [],
     },
     {
@@ -71,7 +71,16 @@ export const { Provider, Context } = createDataContext(
       comments: 'comments...',
       userId: 'lakfjlsak',
       isIndvidual: true,
-      requirements: ['2 balls'],
+      tags: [
+        '2 balls',
+        'aslkfjsa',
+        'alkfjaslk',
+        'eijen',
+        'aekljfawl',
+        'aeljfal',
+        'dkgjdk',
+        'ejeje',
+      ],
       steps: [],
     },
   ]
