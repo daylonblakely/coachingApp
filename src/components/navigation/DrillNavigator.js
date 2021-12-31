@@ -21,7 +21,7 @@ const DrillNavigator = () => {
         />
         <Stack.Screen
           name="DrillDetail"
-          options={{ title: 'Drills' }}
+          options={({ route }) => ({ title: route.params.title })}
           component={DrillDetailScreen}
         />
         <Stack.Screen

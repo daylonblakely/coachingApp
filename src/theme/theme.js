@@ -8,11 +8,19 @@ export default theme = extendTheme({
       },
     },
     Box: {
-      baseStyle: (props) => {
-        return {
-          backgroundColor: themeTools.mode('gray.50', 'gray.900')(props),
-          borderColor: themeTools.mode('coolGray.200', 'gray.800')(props),
-        };
+      // baseStyle: (props) => {
+      //   return {
+      //     backgroundColor: themeTools.mode('gray.50', 'gray.900')(props),
+      //     borderColor: themeTools.mode('coolGray.200', 'gray.800')(props),
+      //   };
+      // },
+      variants: {
+        card: (props) => {
+          return {
+            backgroundColor: themeTools.mode('gray.50', 'gray.900')(props),
+            borderColor: themeTools.mode('coolGray.200', 'gray.800')(props),
+          };
+        },
       },
     },
   },

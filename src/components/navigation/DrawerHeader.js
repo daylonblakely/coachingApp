@@ -22,13 +22,7 @@ const DrawerHeader = () => {
       flexDirection="row"
       alignItems="center"
     >
-      <Box
-        space={4}
-        flexDirection="row"
-        alignItems="center"
-        left="4"
-        bg={backgroundColor}
-      >
+      <Box space={4} flexDirection="row" alignItems="center" left="4">
         <Circle
           size="md"
           bg={useColorModeValue('secondary.600', 'primary.600')}
@@ -40,7 +34,7 @@ const DrawerHeader = () => {
         >
           D
         </Circle>
-        <Stack bg={backgroundColor}>
+        <Stack>
           <Heading fontSize="lg" color="white">
             Daylon Blakely
           </Heading>

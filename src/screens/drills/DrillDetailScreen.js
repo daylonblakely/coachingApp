@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
-import { Box, Heading, Stack, Text } from 'native-base';
+import { Box, Stack, Text, FlatList, ScrollView } from 'native-base';
 import { Context as DrillContext } from '../../context/DrillContext';
+import DrillCategorySVG from '../../components/drills/DrillCategorySVG';
+import DrillDetailTitle from '../../components/drills/DrillDetailTitle';
+import ItemTag from '../../components/ItemTag';
 
 const DrillDetailScreen = ({ route, navigation }) => {
   const { state } = useContext(DrillContext);
@@ -9,39 +12,29 @@ const DrillDetailScreen = ({ route, navigation }) => {
   const drill = state.find((d) => d.id === id);
 
   return (
-    <Box
-      // maxW="80%"
-      rounded="sm"
-      overflow="hidden"
-      borderWidth="1"
-      _web={{
-        shadow: 2,
-        borderWidth: 0,
-      }}
-      marginTop="5px"
-    >
-      <Stack p="4" space={3}>
-        <Stack space={2}>
-          <Heading>{drill.title}</Heading>
-          <Text
-            fontSize="md"
-            _light={{
-              color: 'violet.500',
-            }}
-            _dark={{
-              color: 'violet.400',
-            }}
-            fontWeight="500"
-            ml="-0.5"
-            mt="-1"
-          >
-            {drill.category}
-          </Text>
+    <ScrollView>
+      <DrillCategorySVG category={drill.category} />
+      <Box>
+        <Stack p="3" space={3}>
+          <DrillDetailTitle
+            title={drill.title}
+            isIndividual={drill.isIndvidual}
+          />
+          <FlatList
+            horizontal
+            data={drill.tags}
+            renderItem={({ item }) => <ItemTag text={item} />}
+            keyExtractor={(x, i) => i.toString()}
+            showsHorizontalScrollIndicator={false}
+          />
+          <Text>{drill.description}</Text>
+          {/* TODO add drill comments */}
+          {/* <Box variant="card">
+            <Text>{drill.comments}</Text>
+          </Box> */}
         </Stack>
-        <Text>{drill.description}</Text>
-        <Text>{drill.comments}</Text>
-      </Stack>
-    </Box>
+      </Box>
+    </ScrollView>
   );
 };
 
