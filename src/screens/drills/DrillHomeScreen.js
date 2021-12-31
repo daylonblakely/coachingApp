@@ -1,10 +1,11 @@
 import React from 'react';
-import { Box, Divider, Heading, ScrollView, Text, FlatList } from 'native-base';
+import { ScrollView } from 'native-base';
 import HorizontalListDisplay from '../../components/HorizontalListDisplay';
 import ListBoxOption from '../../components/ListBoxOption';
+import drillCategoryMap from '../../static/drillCategoryMap';
 
 const DrillHomeScreen = ({ navigation }) => {
-  const categories = ['All Drills', 'Offense', 'Defense'];
+  const categories = ['All Drills', ...Object.keys(drillCategoryMap)];
   return (
     <ScrollView>
       <HorizontalListDisplay
@@ -15,7 +16,7 @@ const DrillHomeScreen = ({ navigation }) => {
           <ListBoxOption
             color="red.500"
             text={item}
-            onPress={() => navigation.navigate('DrillList', { _id: item._id })}
+            onPress={() => navigation.navigate('DrillList', { title: item })}
           />
         )}
       />
