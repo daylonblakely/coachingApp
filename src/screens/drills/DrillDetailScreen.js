@@ -14,17 +14,7 @@ const DrillDetailScreen = ({ route, navigation }) => {
   return (
     <>
       <DrillCategorySVG category={drill.category} />
-      <Box
-        // maxW="80%"
-        rounded="sm"
-        overflow="hidden"
-        // borderWidth="1"
-        _web={{
-          shadow: 2,
-          borderWidth: 0,
-        }}
-        // marginTop="5px"
-      >
+      <Box>
         <Stack p="3" space={3}>
           <DrillDetailTitle
             title={drill.title}
@@ -33,11 +23,15 @@ const DrillDetailScreen = ({ route, navigation }) => {
           <FlatList
             horizontal
             data={drill.tags}
-            renderItem={({ item, index }) => <ItemTag text={item} />}
+            renderItem={({ item }) => <ItemTag text={item} />}
             keyExtractor={(x, i) => i.toString()}
+            showsHorizontalScrollIndicator={false}
           />
           <Text>{drill.description}</Text>
-          <Text>{drill.comments}</Text>
+          {/* TODO add drill comments */}
+          {/* <Box variant="card">
+            <Text>{drill.comments}</Text>
+          </Box> */}
         </Stack>
       </Box>
     </>
