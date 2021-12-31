@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, Stack, Text, FlatList } from 'native-base';
+import { Box, Stack, Text, FlatList, ScrollView } from 'native-base';
 import { Context as DrillContext } from '../../context/DrillContext';
 import DrillCategorySVG from '../../components/drills/DrillCategorySVG';
 import DrillDetailTitle from '../../components/drills/DrillDetailTitle';
@@ -12,7 +12,7 @@ const DrillDetailScreen = ({ route, navigation }) => {
   const drill = state.find((d) => d.id === id);
 
   return (
-    <>
+    <ScrollView>
       <DrillCategorySVG category={drill.category} />
       <Box>
         <Stack p="3" space={3}>
@@ -34,7 +34,7 @@ const DrillDetailScreen = ({ route, navigation }) => {
           </Box> */}
         </Stack>
       </Box>
-    </>
+    </ScrollView>
   );
 };
 

@@ -12,7 +12,7 @@ const ItemTag = ({ text }) => {
       mr="2"
       px="2"
     >
-      <Text fontSize="lg" color={color} fontWeight="500">
+      <Text fontSize="md" color={color} fontWeight="500">
         {text}
       </Text>
     </Box>
