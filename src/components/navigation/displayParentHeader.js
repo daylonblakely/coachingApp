@@ -5,6 +5,8 @@ export default function displayParentHeader(route) {
   const routeName = getFocusedRouteNameFromRoute(route);
 
   switch (routeName) {
+    case 'DrillList':
+      return false;
     case 'DrillCreate':
       return false;
     case 'DrillDetail':
@@ -13,6 +15,7 @@ export default function displayParentHeader(route) {
       return false;
     case 'PracticeDetail':
       return false;
+
     default:
       true;
   }
