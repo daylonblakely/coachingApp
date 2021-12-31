@@ -2,11 +2,20 @@ import React from 'react';
 import { Svg, Circle, Line } from 'react-native-svg';
 
 export default {
+  'All Drills': {
+    image: <Circle cx="150" cy="150" r="150" fill="black" />,
+  },
   Offense: {
     image: <Circle cx="150" cy="150" r="150" fill="pink" />,
   },
   Defense: {
     image: <Circle cx="150" cy="150" r="150" fill="red" />,
+  },
+  Shooting: {
+    image: <Circle cx="150" cy="150" r="150" fill="grey" />,
+  },
+  'Ball Handling': {
+    image: <Circle cx="150" cy="150" r="150" fill="brown" />,
   },
   Rebounding: {
     image: <Circle cx="150" cy="150" r="150" fill="blue" />,
@@ -17,12 +26,7 @@ export default {
   Passing: {
     image: <Circle cx="150" cy="150" r="150" fill="yellow" />,
   },
-  'Ball Handling': {
-    image: <Circle cx="150" cy="150" r="150" fill="brown" />,
-  },
-  Shooting: {
-    image: <Circle cx="150" cy="150" r="150" fill="grey" />,
-  },
+
   Other: {
     image: <Circle cx="150" cy="150" r="150" fill="black" />,
   },
