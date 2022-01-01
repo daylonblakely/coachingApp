@@ -2,9 +2,6 @@ import React from 'react';
 import { Svg, Circle, Line } from 'react-native-svg';
 
 export default {
-  'All Drills': {
-    image: <Circle cx="150" cy="150" r="150" fill="black" />,
-  },
   Offense: {
     image: <Circle cx="150" cy="150" r="150" fill="pink" />,
   },
