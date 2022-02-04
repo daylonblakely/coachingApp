@@ -9,7 +9,7 @@ const ItemTag = ({ text }) => {
       overflow="hidden"
       borderColor={color}
       borderWidth="1"
-      mr="2"
+      ml="3"
       px="2"
     >
       <Text fontSize="md" color={color} fontWeight="500">

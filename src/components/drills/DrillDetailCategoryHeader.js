@@ -1,24 +1,15 @@
 import React from 'react';
 import { Center, Text, useColorModeValue } from 'native-base';
-import { Svg, Circle, Line } from 'react-native-svg';
+import { Svg } from 'react-native-svg';
+import drillCategoryMap from '../../static/drillCategoryMap';
 
-const DrillCategorySVG = ({ category }) => {
+const DrillDetailCategoryHeader = ({ category }) => {
   const textColor = useColorModeValue('violet.500', 'violet.400');
-
-  const mapToImage = (category) => {
-    switch (category) {
-      case 'Defense':
-        return <Circle cx="150" cy="150" r="150" fill="pink" />;
-
-      default:
-        return <Circle cx="150" cy="150" r="150" fill="red" />;
-    }
-  };
 
   return (
     <Center>
       <Svg height="300" width="300">
-        {mapToImage(category)}
+        {drillCategoryMap[category].image}
       </Svg>
       <Center position="absolute" bottom="0" left="0" px="3">
         <Text
@@ -35,4 +26,4 @@ const DrillCategorySVG = ({ category }) => {
   );
 };
 
-export default DrillCategorySVG;
+export default DrillDetailCategoryHeader;
