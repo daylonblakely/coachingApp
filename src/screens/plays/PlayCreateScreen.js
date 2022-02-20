@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Text, Button } from 'react-native';
-import Whiteboard from '../../components/whiteboard';
+import { View, StyleSheet } from 'react-native';
+import Whiteboard from '../../components/Whiteboard';
 
 const PlayCreateScreen = ({ navigation }) => {
   return (
     <View>
-      <Text>Play create</Text>
       <Whiteboard />
     </View>
   );
