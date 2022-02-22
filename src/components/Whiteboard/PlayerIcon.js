@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
-import { Animated, PanResponder } from 'react-native';
+import { Animated, PanResponder, StyleSheet } from 'react-native';
 import { Circle } from 'native-base';
 
 const PlayerIcon = () => {
-  const position = useRef(new Animated.ValueXY()).current;
+  const position = useRef(new Animated.ValueXY({ x: 100, y: 100 })).current;
 
   const panResponder = useRef(
     PanResponder.create({
@@ -24,23 +24,28 @@ const PlayerIcon = () => {
   ).current;
   return (
     <Animated.View
-      style={{ ...position.getLayout() }}
+      style={[{ ...position.getLayout() }, styles.container]}
       {...panResponder.panHandlers}
     >
       <Circle
-        size="md"
+        size="xs"
         //   bg={useColorModeValue('secondary.600', 'primary.600')}
         _text={{
           fontWeight: 'bold',
-          fontSize: '5xl',
+          fontSize: '3xl',
         }}
         bg="secondary.600"
-        // marginLeft="40px"
       >
         1
       </Circle>
     </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+  },
+});
 
 export default PlayerIcon;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { SvgXml } from 'react-native-svg';
+import { Box } from 'native-base';
 
 const xml = `<svg width="339" height="630" viewBox="0 0 339 630" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M171.235 18.2436L189.726 18.2389L189.724 13.1592L149.054 13.1695L149.055 18.2493L167.846 18.2445V19.9037C164.921 20.6551 162.759 23.3084 162.76 26.4656C162.761 30.2063 165.797 33.2379 169.54 33.2369C173.284 33.236 176.318 30.2028 176.317 26.4622C176.316 23.3075 174.157 20.6571 171.235 19.9047V18.2436ZM166.149 26.4648C166.15 28.3351 167.668 29.8509 169.539 29.8504C171.411 29.8499 172.928 28.3333 172.928 26.463C172.927 24.5927 171.41 23.0769 169.538 23.0774C167.666 23.0778 166.149 24.5944 166.149 26.4648Z" fill="black"/>
@@ -10,7 +11,11 @@ const xml = `<svg width="339" height="630" viewBox="0 0 339 630" fill="none" xml
 </svg>
 `;
 const FullCourt = () => {
-  return <SvgXml xml={xml} width="100%" height="100%" />;
+  return (
+    <Box elevation={-999} z={-999}>
+      <SvgXml xml={xml} width="100%" height="100%" />
+    </Box>
+  );
 };
 
 export default FullCourt;

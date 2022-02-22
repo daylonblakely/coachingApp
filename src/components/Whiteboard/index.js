@@ -6,9 +6,8 @@ import FullCourt from './FullCourt';
 const Whiteboard = () => {
   return (
     <Box bg="white" w="100%" h="100%" p={5}>
-      {/* whiteboard
-      <PlayerIcon /> */}
       <FullCourt />
+      <PlayerIcon />
     </Box>
   );
 };
