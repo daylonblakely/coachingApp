@@ -1,10 +1,9 @@
-import React, { useRef } from 'react';
-import { Animated, PanResponder, StyleSheet, Button } from 'react-native';
-import useAnimation from '../../hooks/useAnimation';
+import React, { useState } from 'react';
+import { Animated, StyleSheet, Button } from 'react-native';
 import { Circle } from 'native-base';
 
-const PlayerIcon = () => {
-  const [position, panResponder] = useAnimation(200, 200);
+const PlayerIcon = ({ position, panResponder }) => {
+  const [isMovable, setIsMovable] = useState(true);
   const resetPosition = () => {
     Animated.spring(position, {
       toValue: { x: 200, y: 200 },
@@ -13,10 +12,11 @@ const PlayerIcon = () => {
   };
   return (
     <>
-      <Button onPress={resetPosition} title="fawklj" />
+      <Button onPress={resetPosition} title="reset pos" />
+      <Button onPress={() => setIsMovable(!isMovable)} title="toggle" />
       <Animated.View
         style={[{ ...position.getLayout() }, styles.container]}
-        {...panResponder.panHandlers}
+        {...(isMovable && panResponder.panHandlers)}
       >
         <Circle
           size="xs"
