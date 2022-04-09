@@ -4,6 +4,7 @@ import { Box } from 'native-base';
 import useAnimation from '../../hooks/useAnimation';
 import PlayerIcon from './PlayerIcon';
 import FullCourt from './FullCourt';
+import Arrow from './Arrow';
 
 const Whiteboard = () => {
   const [position, panResponder] = useAnimation(200, 200);
@@ -23,10 +24,11 @@ const Whiteboard = () => {
   // };
 
   return (
-    <Box bg="white" w="100%" h="100%" p={5}>
-      <FullCourt />
+    <Box bg="white" w="100%" h="100%">
+      {/* <FullCourt /> */}
       <PlayerIcon position={position} panResponder={panResponder} />
       {/* <Button onPress={runPlay} title="run play" /> */}
+      <Arrow />
     </Box>
   );
 };
