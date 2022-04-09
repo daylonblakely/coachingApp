@@ -4,16 +4,16 @@ import { Circle } from 'native-base';
 
 const PlayerIcon = ({ position, panResponder }) => {
   const [isMovable, setIsMovable] = useState(true);
-  const resetPosition = () => {
-    Animated.spring(position, {
-      toValue: { x: 200, y: 200 },
-      useNativeDriver: false,
-    }).start();
-  };
+  // const resetPosition = () => {
+  //   Animated.spring(position, {
+  //     toValue: { x: 200, y: 200 },
+  //     useNativeDriver: false,
+  //   }).start();
+  // };
   return (
     <>
-      <Button onPress={resetPosition} title="reset pos" />
-      <Button onPress={() => setIsMovable(!isMovable)} title="toggle" />
+      {/* <Button onPress={resetPosition} title="reset pos" />
+      <Button onPress={() => setIsMovable(!isMovable)} title="toggle" /> */}
       <Animated.View
         style={[{ ...position.getLayout() }, styles.container]}
         {...(isMovable && panResponder.panHandlers)}

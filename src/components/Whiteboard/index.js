@@ -8,24 +8,25 @@ import FullCourt from './FullCourt';
 const Whiteboard = () => {
   const [position, panResponder] = useAnimation(200, 200);
 
-  const runPlay = () => {
-    Animated.stagger(3000, [
-      Animated.spring(position, {
-        toValue: { x: 300, y: 200 },
-        useNativeDriver: false,
-      }),
-      Animated.spring(position, {
-        toValue: { x: 100, y: 200 },
-        useNativeDriver: false,
-      }),
-    ]).start();
-  };
+  // TODO find a way to run plays
+  // const runPlay = () => {
+  //   Animated.stagger(3000, [
+  //     Animated.spring(position, {
+  //       toValue: { x: 300, y: 200 },
+  //       useNativeDriver: false,
+  //     }),
+  //     Animated.spring(position, {
+  //       toValue: { x: 100, y: 200 },
+  //       useNativeDriver: false,
+  //     }),
+  //   ]).start();
+  // };
 
   return (
     <Box bg="white" w="100%" h="100%" p={5}>
-      {/* <FullCourt /> */}
+      <FullCourt />
       <PlayerIcon position={position} panResponder={panResponder} />
-      <Button onPress={runPlay} title="run play" />
+      {/* <Button onPress={runPlay} title="run play" /> */}
     </Box>
   );
 };
