@@ -4,6 +4,7 @@ import { useColorModeValue, useToken } from 'native-base';
 import AuthNavigator from './AuthNavigator';
 import PracticeNavigator from './PracticeNavigator';
 import DrillNavigator from './DrillNavigator';
+import PlayNavigator from './PlayNavigator';
 import displayParentHeader from './displayParentHeader';
 
 import HomeScreen from '../../screens/HomeScreen';
@@ -43,6 +44,13 @@ export default () => {
       <Drawer.Screen
         name="Drills"
         component={DrillNavigator}
+        options={({ route }) => ({
+          headerShown: displayParentHeader(route),
+        })}
+      />
+      <Drawer.Screen
+        name="Plays"
+        component={PlayNavigator}
         options={({ route }) => ({
           headerShown: displayParentHeader(route),
         })}
