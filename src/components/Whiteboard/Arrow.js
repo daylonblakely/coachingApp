@@ -14,7 +14,6 @@ const Arrow = () => {
   const [positionStart, panResponderStart] = useAnimation(200, 0);
   const [positionMiddle, panResponderMiddle] = useAnimation(30, 30);
   const [positionEnd, panResponderEnd] = useAnimation(60, 60);
-  const [path, setPath] = useState('');
 
   const onLayout = (event) => {
     const { x, y, height, width } = event.nativeEvent.layout;
@@ -48,8 +47,10 @@ const Arrow = () => {
     const endX = interpolateX(positionEnd.x);
     const endY = interpolateY(positionEnd.y);
 
-    return `M ${startX} ${startY} S ${midX} ${midY} ${endX} ${endY}`;
+    return `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`;
   };
+
+  const [path, setPath] = useState(getPath());
 
   positionStart.addListener((value) => {
     if (value) {
@@ -71,35 +72,35 @@ const Arrow = () => {
 
   return (
     <>
-      <View style={{ backgroundColor: 'grey' }} onLayout={onLayout}>
-        <Svg
-          width="100%"
-          height="100%"
-          //   viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
-        >
-          <Defs>
-            <Marker
-              id="Triangle"
-              viewBox="0 0 10 10"
-              refX="0"
-              refY="5"
-              markerUnits="strokeWidth"
-              markerWidth="3"
-              markerHeight="2"
-              orient="auto"
-            >
-              <Path d="M 0 0 L 10 5 L 0 10 z" stroke="black" fill="black" />
-            </Marker>
-          </Defs>
-          <Path
-            d={path}
-            fill="none"
-            stroke="black"
-            strokeWidth="6"
-            markerEnd="url(#Triangle)"
-          />
-        </Svg>
-      </View>
+      {/* <View style={{ backgroundColor: 'grey' }} onLayout={onLayout}> */}
+      <Svg
+        width="100%"
+        height="100%"
+        //   viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
+      >
+        <Defs>
+          <Marker
+            id="Triangle"
+            viewBox="0 0 10 10"
+            refX="0"
+            refY="5"
+            markerUnits="strokeWidth"
+            markerWidth="3"
+            markerHeight="2"
+            orient="auto"
+          >
+            <Path d="M 0 0 L 10 5 L 0 10 z" stroke="black" fill="black" />
+          </Marker>
+        </Defs>
+        <Path
+          d={path}
+          fill="none"
+          stroke="black"
+          strokeWidth="6"
+          markerEnd="url(#Triangle)"
+        />
+      </Svg>
+      {/* </View> */}
 
       <Animated.View
         style={[{ ...positionStart.getLayout() }, styles.container]}

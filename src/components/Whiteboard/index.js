@@ -26,9 +26,10 @@ const Whiteboard = () => {
   return (
     <Box bg="white" w="100%" h="100%">
       {/* <FullCourt /> */}
-      <PlayerIcon position={position} panResponder={panResponder} />
+
       {/* <Button onPress={runPlay} title="run play" /> */}
       <Arrow />
+      <PlayerIcon position={position} panResponder={panResponder} />
     </Box>
   );
 };
