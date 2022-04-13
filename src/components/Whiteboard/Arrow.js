@@ -10,8 +10,10 @@ const SCREEN_HEIGHT = 680; // TODO get height
 const VIEWBOX_WIDTH = Dimensions.get('window').width;
 const VIEWBOX_HEIGHT = 680;
 
+const LINE_OFFSET = 8; // .5 * width of circle + stroke width of path
+
 const Arrow = () => {
-  const [positionStart, panResponderStart] = useAnimation(200, 0);
+  const [positionStart, panResponderStart] = useAnimation(10, 10);
   const [positionMiddle, panResponderMiddle] = useAnimation(30, 30);
   const [positionEnd, panResponderEnd] = useAnimation(60, 60);
 
@@ -22,30 +24,34 @@ const Arrow = () => {
   };
 
   const interpolateX = (x) =>
-    JSON.stringify(
-      //use stringify because interpolate returns an obj
-      x.interpolate({
-        inputRange: [0, SCREEN_WIDTH],
-        outputRange: [0, VIEWBOX_WIDTH],
-      })
+    parseFloat(
+      JSON.stringify(
+        //use stringify because interpolate returns an obj
+        x.interpolate({
+          inputRange: [0, SCREEN_WIDTH],
+          outputRange: [0, VIEWBOX_WIDTH],
+        })
+      )
     );
   const interpolateY = (y) =>
-    JSON.stringify(
-      y.interpolate({
-        inputRange: [0, SCREEN_HEIGHT],
-        outputRange: [0, VIEWBOX_HEIGHT],
-      })
+    parseFloat(
+      JSON.stringify(
+        y.interpolate({
+          inputRange: [0, SCREEN_HEIGHT],
+          outputRange: [0, VIEWBOX_HEIGHT],
+        })
+      )
     );
 
   const getPath = () => {
-    const startX = interpolateX(positionStart.x);
-    const startY = interpolateY(positionStart.y);
+    const startX = interpolateX(positionStart.x) + LINE_OFFSET;
+    const startY = interpolateY(positionStart.y) + LINE_OFFSET;
 
-    const midX = interpolateX(positionMiddle.x);
-    const midY = interpolateY(positionMiddle.y);
+    const midX = interpolateX(positionMiddle.x) + LINE_OFFSET;
+    const midY = interpolateY(positionMiddle.y) + LINE_OFFSET;
 
-    const endX = interpolateX(positionEnd.x);
-    const endY = interpolateY(positionEnd.y);
+    const endX = interpolateX(positionEnd.x) + LINE_OFFSET; // .5 * width of circle + stroke width of path
+    const endY = interpolateY(positionEnd.y) + LINE_OFFSET;
 
     return `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`;
   };
@@ -85,8 +91,8 @@ const Arrow = () => {
             refX="0"
             refY="5"
             markerUnits="strokeWidth"
-            markerWidth="3"
-            markerHeight="2"
+            markerWidth="6"
+            markerHeight="4"
             orient="auto"
           >
             <Path d="M 0 0 L 10 5 L 0 10 z" stroke="black" fill="black" />
