@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Dimensions, View } from 'react-native';
 import { Svg, Defs, Marker, Rect, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
@@ -20,14 +20,29 @@ const Arrow = ({ positionStart }) => {
   const initialX = positionToVal(x);
   const initialY = positionToVal(y);
 
-  const [positionMiddle, panResponderMiddle] = useAnimation(
-    initialX + START_OFFSET - LINE_OFFSET,
-    initialY - 40
-  );
   const [positionEnd, panResponderEnd] = useAnimation(
     initialX + START_OFFSET - LINE_OFFSET,
     initialY - 80
   );
+
+  // gets the midpoint between positionStart and positionEnd
+  const getMidpoint = () => {
+    return {
+      x:
+        (positionToVal(positionStart.x) + positionToVal(positionEnd.x)) / 2 +
+        LINE_OFFSET,
+      y:
+        (positionToVal(positionStart.y) + positionToVal(positionEnd.y)) / 2 +
+        LINE_OFFSET,
+    };
+  };
+
+  const [positionMiddle, panResponderMiddle] = useAnimation(
+    getMidpoint().x,
+    getMidpoint().y
+  );
+  const [path, setPath] = useState('');
+  const isCurved = useRef(false);
 
   // TODO - confirm these interpolates are necessary
   const interpolateX = (x) =>
@@ -46,8 +61,8 @@ const Arrow = ({ positionStart }) => {
       })
     );
 
-  // TODO separate move logic for the end and mid points
   // the start will be attatched to the player icon by default
+  // set returns a straight line if isCurved == false
   const getPath = () => {
     const startX = interpolateX(positionStart.x) + START_OFFSET;
     const startY = interpolateY(positionStart.y) + START_OFFSET;
@@ -58,26 +73,43 @@ const Arrow = ({ positionStart }) => {
     const endX = interpolateX(positionEnd.x) + LINE_OFFSET; // .5 * width of circle + stroke width of path
     const endY = interpolateY(positionEnd.y) + LINE_OFFSET;
 
-    return `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`;
+    const svgPath = isCurved.current
+      ? `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`
+      : `M ${startX} ${startY} L ${endX} ${endY}`;
+
+    setPath(svgPath);
   };
 
-  const [path, setPath] = useState(getPath());
+  useEffect(() => {
+    getPath();
+  }, []);
 
   positionStart.addListener((value) => {
     if (value) {
-      setPath(getPath());
+      if (!isCurved.current) {
+        positionMiddle.setValue(getMidpoint());
+      }
+      getPath();
     }
   });
 
   positionMiddle.addListener((value) => {
     if (value) {
-      setPath(getPath());
+      // set isCurved to true if the midpoint has been moved off the straight line
+      // TODO - snap back to the midpoint when close enough
+      if (value.x !== getMidpoint().x && value.y !== getMidpoint().y) {
+        isCurved.current = true;
+      }
+      getPath();
     }
   });
 
   positionEnd.addListener((value) => {
     if (value) {
-      setPath(getPath());
+      if (!isCurved.current) {
+        positionMiddle.setValue(getMidpoint());
+      }
+      getPath();
     }
   });
 
