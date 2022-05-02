@@ -13,6 +13,7 @@ const VIEWBOX_HEIGHT = 680;
 const LINE_OFFSET = 8; // .5 * width of circle + stroke width of path
 const START_OFFSET = 20; // ~ .5 * width of player + stroke width
 
+// returns float value for a position
 const positionToVal = (position) => parseFloat(JSON.stringify(position));
 
 const Arrow = ({ positionStart }) => {
@@ -87,6 +88,9 @@ const Arrow = ({ positionStart }) => {
   positionStart.addListener((value) => {
     if (value) {
       if (!isCurved.current) {
+        // sets midpoint position
+        // TODO - figure out why this is so slow
+        // TODO - clean up the way user's curve arrows
         positionMiddle.setValue(getMidpoint());
       }
       getPath();
