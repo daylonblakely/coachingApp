@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Animated, StyleSheet, Button } from 'react-native';
 import { Circle } from 'native-base';
+import Arrow from './Arrow';
 
 const PlayerIcon = ({ position, panResponder }) => {
   const [isMovable, setIsMovable] = useState(true);
@@ -14,6 +15,7 @@ const PlayerIcon = ({ position, panResponder }) => {
     <>
       {/* <Button onPress={resetPosition} title="reset pos" />
       <Button onPress={() => setIsMovable(!isMovable)} title="toggle" /> */}
+      <Arrow positionStart={position} />
       <Animated.View
         style={[{ ...position.getLayout() }, styles.container]}
         {...(isMovable && panResponder.panHandlers)}

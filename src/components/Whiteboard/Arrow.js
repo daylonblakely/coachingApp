@@ -11,41 +11,46 @@ const VIEWBOX_WIDTH = Dimensions.get('window').width;
 const VIEWBOX_HEIGHT = 680;
 
 const LINE_OFFSET = 8; // .5 * width of circle + stroke width of path
+const START_OFFSET = 20; // ~ .5 * width of player + stroke width
 
-const Arrow = () => {
-  const [positionStart, panResponderStart] = useAnimation(10, 10);
-  const [positionMiddle, panResponderMiddle] = useAnimation(30, 30);
-  const [positionEnd, panResponderEnd] = useAnimation(60, 60);
+const positionToVal = (position) => parseFloat(JSON.stringify(position));
 
-  const onLayout = (event) => {
-    const { x, y, height, width } = event.nativeEvent.layout;
-    console.log('h', height);
-    console.log('w', width);
-  };
+const Arrow = ({ positionStart }) => {
+  const { x, y } = positionStart;
+  const initialX = positionToVal(x);
+  const initialY = positionToVal(y);
 
+  const [positionMiddle, panResponderMiddle] = useAnimation(
+    initialX + START_OFFSET - LINE_OFFSET,
+    initialY - 40
+  );
+  const [positionEnd, panResponderEnd] = useAnimation(
+    initialX + START_OFFSET - LINE_OFFSET,
+    initialY - 80
+  );
+
+  // TODO - confirm these interpolates are necessary
   const interpolateX = (x) =>
-    parseFloat(
-      JSON.stringify(
-        //use stringify because interpolate returns an obj
-        x.interpolate({
-          inputRange: [0, SCREEN_WIDTH],
-          outputRange: [0, VIEWBOX_WIDTH],
-        })
-      )
+    positionToVal(
+      //use stringify because interpolate returns an obj
+      x.interpolate({
+        inputRange: [0, SCREEN_WIDTH],
+        outputRange: [0, VIEWBOX_WIDTH],
+      })
     );
   const interpolateY = (y) =>
-    parseFloat(
-      JSON.stringify(
-        y.interpolate({
-          inputRange: [0, SCREEN_HEIGHT],
-          outputRange: [0, VIEWBOX_HEIGHT],
-        })
-      )
+    positionToVal(
+      y.interpolate({
+        inputRange: [0, SCREEN_HEIGHT],
+        outputRange: [0, VIEWBOX_HEIGHT],
+      })
     );
 
+  // TODO separate move logic for the end and mid points
+  // the start will be attatched to the player icon by default
   const getPath = () => {
-    const startX = interpolateX(positionStart.x) + LINE_OFFSET;
-    const startY = interpolateY(positionStart.y) + LINE_OFFSET;
+    const startX = interpolateX(positionStart.x) + START_OFFSET;
+    const startY = interpolateY(positionStart.y) + START_OFFSET;
 
     const midX = interpolateX(positionMiddle.x) + LINE_OFFSET;
     const midY = interpolateY(positionMiddle.y) + LINE_OFFSET;
@@ -107,17 +112,6 @@ const Arrow = () => {
         />
       </Svg>
       {/* </View> */}
-
-      <Animated.View
-        style={[{ ...positionStart.getLayout() }, styles.container]}
-        {...panResponderStart.panHandlers}
-      >
-        <Circle
-          size="4"
-          //   bg={useColorModeValue('secondary.600', 'primary.600')}
-          bg="secondary.600"
-        ></Circle>
-      </Animated.View>
       <Animated.View
         style={[{ ...positionMiddle.getLayout() }, styles.container]}
         {...panResponderMiddle.panHandlers}

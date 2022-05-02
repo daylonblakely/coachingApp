@@ -28,7 +28,7 @@ const Whiteboard = () => {
       {/* <FullCourt /> */}
 
       {/* <Button onPress={runPlay} title="run play" /> */}
-      <Arrow />
+      {/* <Arrow /> */}
       <PlayerIcon position={position} panResponder={panResponder} />
     </Box>
   );
