@@ -7,12 +7,13 @@ import FullCourt from './FullCourt';
 
 import { Context as PlayContext } from '../../context/PlayContext';
 
-const Whiteboard = () => {
+const Whiteboard = ({ playId }) => {
   const { state } = useContext(PlayContext);
+  const play = state.plays.find((p) => p.id === playId);
 
   const renderPlayers = () => {
-    return state.players.map((player) => (
-      <PlayerIcon label={player.label} key={player.id} />
+    return play.players.map((player) => (
+      <PlayerIcon player={player} key={player.id} />
     ));
   };
 

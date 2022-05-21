@@ -10,12 +10,12 @@ import Arrow2 from './Arrow';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const PlayerIcon = ({ label }) => {
+const PlayerIcon = ({ player }) => {
   const { state } = useContext(PlayContext);
   const [pos, gestureHandler, animatedStyle] = useDraggable(
     {
-      initX: 200,
-      initY: 200,
+      initX: player.steps[0].initialPos.x,
+      initY: player.steps[0].initialPos.y,
     },
     state.isEditMode
   );
@@ -36,7 +36,7 @@ const PlayerIcon = ({ label }) => {
           }}
           bg="secondary.600"
         >
-          {label}
+          {player.label}
         </AnimatedCircle>
       </PanGestureHandler>
     </>
