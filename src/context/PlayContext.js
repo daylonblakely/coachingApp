@@ -7,21 +7,10 @@ const playReducer = (state, action) => {
   }
 };
 
-export const { Provider, Context } = createDataContext(playReducer, {}, [
+export const { Provider, Context } = createDataContext(
+  playReducer,
+  {},
   {
-    id: 1,
-    name: 'Mixer',
-    createdTimestamp: '',
-    players: [
-      {
-        id: 1,
-        positions: [
-          { x: 200, y: 200 },
-          { x: 250, y: 250 },
-          { x: 150, y: 150 },
-        ],
-        label: 'pg',
-      },
-    ],
-  },
-]);
+    isEditMode: true,
+  }
+);

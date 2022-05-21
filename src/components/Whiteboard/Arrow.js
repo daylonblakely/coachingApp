@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Dimensions, View } from 'react-native';
 import { Svg, Defs, Marker, Rect, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
@@ -19,16 +19,21 @@ import {
   interpolatePath,
 } from 'react-native-redash';
 import useDraggable from '../../hooks/useDraggable';
+import { Context as PlayContext } from '../../context/PlayContext';
 
 const { Value, interpolate } = Animated;
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const Arrow2 = ({ playerPos }) => {
-  const [posEnd, gestureHandler, animatedStyle] = useDraggable({
-    initX: 50,
-    initY: 50,
-  });
+  const { state } = useContext(PlayContext);
+  const [posEnd, gestureHandler, animatedStyle] = useDraggable(
+    {
+      initX: 50,
+      initY: 50,
+    },
+    state.isEditMode
+  );
 
   const animatedProps = useAnimatedProps(() => {
     //   TODO add curve functionality
