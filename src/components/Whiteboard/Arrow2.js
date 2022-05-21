@@ -57,7 +57,13 @@ const Arrow2 = () => {
   });
 
   return (
-    <>
+    <View
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+      }}
+    >
       <Svg
         width="100%"
         height="100%"
@@ -79,7 +85,6 @@ const Arrow2 = () => {
           </Marker>
         </Defs>
         <AnimatedPath
-          //   d={d}
           animatedProps={animatedProps}
           //   style={[animatedStylePath]}
           //   d="M20,20 C70,20 50,10 100,100"
@@ -97,7 +102,7 @@ const Arrow2 = () => {
           bg="primary.600"
         />
       </PanGestureHandler>
-    </>
+    </View>
   );
 };
 

@@ -25,7 +25,7 @@ const Whiteboard = () => {
 
   return (
     <Box bg="white" w="100%" h="100%">
-      {/* <FullCourt /> */}
+      <FullCourt />
 
       {/* <Button onPress={runPlay} title="run play" /> */}
       {/* <Arrow /> */}
