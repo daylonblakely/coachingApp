@@ -1,23 +1,20 @@
-import React from 'react';
-import { Animated, StyleSheet, Button } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, Button } from 'react-native';
 import { Box } from 'native-base';
+import Svg from 'react-native-svg';
 import PlayerIcon from './PlayerIcon';
 import FullCourt from './FullCourt';
 
+import { Context as PlayContext } from '../../context/PlayContext';
+
 const Whiteboard = () => {
-  // TODO find a way to run plays
-  // const runPlay = () => {
-  //   Animated.stagger(3000, [
-  //     Animated.spring(position, {
-  //       toValue: { x: 300, y: 200 },
-  //       useNativeDriver: false,
-  //     }),
-  //     Animated.spring(position, {
-  //       toValue: { x: 100, y: 200 },
-  //       useNativeDriver: false,
-  //     }),
-  //   ]).start();
-  // };
+  const { state } = useContext(PlayContext);
+
+  const renderPlayers = () => {
+    return state.players.map((player) => (
+      <PlayerIcon label={player.label} key={player.id} />
+    ));
+  };
 
   return (
     <Box bg="white" w="100%" h="100%">
@@ -25,7 +22,10 @@ const Whiteboard = () => {
 
       {/* <Button onPress={runPlay} title="run play" /> */}
       {/* <Arrow /> */}
-      <PlayerIcon />
+
+      <Box position="absolute" w="100%" h="100%">
+        <Svg>{renderPlayers()}</Svg>
+      </Box>
     </Box>
   );
 };

@@ -44,13 +44,7 @@ const Arrow2 = ({ playerPos }) => {
   });
 
   return (
-    <View
-      style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-      }}
-    >
+    <>
       <Svg
         width="100%"
         height="100%"
@@ -89,7 +83,7 @@ const Arrow2 = ({ playerPos }) => {
           bg="primary.600"
         />
       </PanGestureHandler>
-    </View>
+    </>
   );
 };
 
