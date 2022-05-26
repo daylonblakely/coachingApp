@@ -12,7 +12,7 @@ export const { Provider, Context } = createDataContext(
   {},
   {
     isEditMode: true,
-    runStep: 0,
+    runStep: 1,
     plays: [
       {
         id: '1',

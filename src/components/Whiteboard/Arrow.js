@@ -29,8 +29,11 @@ const Arrow2 = ({ playerPos, initPath }) => {
   const { state } = useContext(PlayContext);
   const [posEnd, gestureHandler, animatedStyle] = useDraggable(
     {
-      initX: initPath.curves[initPath.curves.length - 1].to.x,
-      initY: initPath.curves[initPath.curves.length - 1].to.y,
+      initX:
+        initPath?.curves[initPath.curves.length - 1].to.x || playerPos.value.x,
+      initY:
+        initPath?.curves[initPath.curves.length - 1].to.y ||
+        playerPos.value.y + 100,
     },
     state.isEditMode
   );
