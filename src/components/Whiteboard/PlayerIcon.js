@@ -12,18 +12,17 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PlayerIcon = ({ player }) => {
   const { state } = useContext(PlayContext);
+  const step = player.steps[state.runStep];
+
   const [pos, gestureHandler, animatedStyle] = useDraggable(
-    {
-      initX: player.steps[0].initialPos.x,
-      initY: player.steps[0].initialPos.y,
-    },
+    { initX: player.initialPos.x, initY: player.initialPos.y },
     state.isEditMode
   );
 
   return (
     <>
       {/* <Arrow positionStart={position} /> */}
-      <Arrow2 playerPos={pos} />
+      <Arrow2 playerPos={pos} initPath={step.path} />
 
       <PanGestureHandler onGestureEvent={gestureHandler}>
         <AnimatedCircle

@@ -25,22 +25,22 @@ const { Value, interpolate } = Animated;
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const Arrow2 = ({ playerPos }) => {
+const Arrow2 = ({ playerPos, initPath }) => {
   const { state } = useContext(PlayContext);
   const [posEnd, gestureHandler, animatedStyle] = useDraggable(
     {
-      initX: playerPos.value.x,
-      initY: playerPos.value.y + 40,
+      initX: initPath.curves[initPath.curves.length - 1].to.x,
+      initY: initPath.curves[initPath.curves.length - 1].to.y,
     },
     state.isEditMode
   );
 
   const animatedProps = useAnimatedProps(() => {
     //   TODO add curve functionality
-    const path = createPath(playerPos.value);
-    addLine(path, posEnd.value);
+    const p = createPath(playerPos.value);
+    addLine(p, posEnd.value);
 
-    return { d: serialize(path) };
+    return { d: serialize(p) };
   });
 
   return (
