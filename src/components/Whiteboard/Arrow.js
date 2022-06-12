@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { Svg, Defs, Marker, Rect, Path } from 'react-native-svg';
+import { Svg, Defs, Marker, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
 import Animated, {
   useAnimatedReaction,
@@ -11,7 +11,7 @@ import { createPath, addArc, serialize } from 'react-native-redash';
 import useDraggable from '../../hooks/useDraggable';
 import { Context as PlayContext } from '../../context/PlayContext';
 
-const SNAP_THRESHOLD = 100; // min distance from straight line for curve
+const SNAP_THRESHOLD = 20; // min distance from straight line for curve
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
