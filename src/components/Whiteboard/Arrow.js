@@ -1,29 +1,18 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Dimensions, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Svg, Defs, Marker, Rect, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
 import Animated, {
-  useSharedValue,
-  withSpring,
-  useAnimatedStyle,
+  useAnimatedReaction,
   useAnimatedProps,
-  useAnimatedGestureHandler,
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import {
-  createPath,
-  addArc,
-  addLine,
-  getYForX,
-  serialize,
-  interpolatePath,
-} from 'react-native-redash';
+import { createPath, addArc, serialize } from 'react-native-redash';
 import useDraggable from '../../hooks/useDraggable';
 import { Context as PlayContext } from '../../context/PlayContext';
 
-const SNAP_THRESHOLD = 30; // min distance from straight line for curve
+const SNAP_THRESHOLD = 100; // min distance from straight line for curve
 
-const { Value, interpolate } = Animated;
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -45,10 +34,18 @@ const triangleHeight = (a, b, c) => {
   return (2 * T) / ab;
 };
 
+// determines if line is straight
+const isStraight = (a, b, c) => {
+  'worklet';
+  return triangleHeight(a, b, c) < SNAP_THRESHOLD;
+};
+
 const Arrow = ({ playerPos, initPath }) => {
   const { state } = useContext(PlayContext);
+
   const initEndX =
     initPath?.curves[initPath.curves.length - 1].to.x || playerPos.value.x;
+
   const initEndY =
     initPath?.curves[initPath.curves.length - 1].to.y ||
     playerPos.value.y + 100;
@@ -61,6 +58,7 @@ const Arrow = ({ playerPos, initPath }) => {
     state.isEditMode
   );
 
+  // TODO set initial midpoint for existing path
   const [posMid, gestureHandlerMid, animatedStyleMid] = useDraggable(
     {
       initX: (playerPos.value.x + initEndX) / 2,
@@ -69,11 +67,8 @@ const Arrow = ({ playerPos, initPath }) => {
     state.isEditMode,
     (pos) => {
       'worklet';
-      //snap position to middle if line is almost straight
-      if (
-        triangleHeight(playerPos.value, posEnd.value, pos.value) <
-        SNAP_THRESHOLD
-      ) {
+      // snap position to middle if line is almost straight
+      if (isStraight(playerPos.value, posEnd.value, pos.value)) {
         pos.value = {
           ...pos.value,
           x: (playerPos.value.x + posEnd.value.x) / 2,
@@ -84,24 +79,23 @@ const Arrow = ({ playerPos, initPath }) => {
   );
 
   // moves midpoint when end or player are dragged
-  const animatedPropsMid = useAnimatedProps(() => {
-    return {
-      transform: [
-        { translateX: (playerPos.value.x + posEnd.value.x) / 2 },
-        { translateY: (playerPos.value.y + posEnd.value.y) / 2 },
-      ],
-    };
-  });
+  useAnimatedReaction(
+    () => {
+      return [playerPos.value, posEnd.value];
+    },
+    (result) => {
+      if (isStraight(result[0], result[1], posMid.value)) {
+        posMid.value = {
+          x: (result[0].x + result[1].x) / 2,
+          y: (result[0].y + result[1].y) / 2,
+        };
+      }
+    }
+  );
 
   const animatedPropsArrow = useAnimatedProps(() => {
-    // if (!state.isEditMode) return { d: serialize(initPath) };
-    //   TODO add curve functionality
     const p = createPath(playerPos.value);
     addArc(p, posMid.value, posEnd.value);
-
-    // addLine(p, posEnd.value);
-    // console.log(gestureHandlerEnd);
-    // console.log(p);
     return { d: serialize(p) };
   });
 
@@ -129,10 +123,6 @@ const Arrow = ({ playerPos, initPath }) => {
         </Defs>
         <AnimatedPath
           animatedProps={animatedPropsArrow}
-          //   style={[animatedStylePath]}
-          //   d="M20,20 C70,20 50,10 100,100"
-          //   d="M20,20 C36.875,25.625 71.875,60.625 100,100"
-          //   fill="black"
           stroke="black"
           strokeWidth="6"
           markerEnd="url(#Triangle)"
@@ -140,7 +130,6 @@ const Arrow = ({ playerPos, initPath }) => {
       </Svg>
       <PanGestureHandler onGestureEvent={gestureHandlerMid}>
         <AnimatedCircle
-          animatedProps={animatedPropsMid}
           style={[styles.container, animatedStyleMid]}
           size="10"
           bg="green.600"
