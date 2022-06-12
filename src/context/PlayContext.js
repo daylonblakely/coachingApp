@@ -12,7 +12,7 @@ export const { Provider, Context } = createDataContext(
   {},
   {
     isEditMode: true,
-    runStep: 1,
+    runStep: 0,
     plays: [
       {
         id: '1',
@@ -20,17 +20,17 @@ export const { Provider, Context } = createDataContext(
           {
             id: '1',
             label: '1',
-            initialPos: { x: 100, y: 100 },
+            initialPos: { x: 50, y: 100 },
             steps: [
               {
                 hasBall: false,
                 path: {
-                  move: { y: 100, x: 100 },
+                  move: { y: 100, x: 50 },
                   curves: [
                     {
-                      c1: { y: 100, x: 100 },
-                      c2: { y: 140, x: 100 },
-                      to: { y: 140, x: 100 },
+                      c1: { y: 100, x: 50 },
+                      c2: { y: 440, x: 50 },
+                      to: { y: 440, x: 50 },
                     },
                   ],
                   close: false,
@@ -46,10 +46,10 @@ export const { Provider, Context } = createDataContext(
               {
                 hasBall: false,
                 path: {
-                  move: { y: 200, x: 300 },
+                  move: { y: 300, x: 100 },
                   curves: [
                     {
-                      c1: { y: 200, x: 300 },
+                      c1: { y: 300, x: 100 },
                       c2: { y: 240, x: 300 },
                       to: { y: 240, x: 300 },
                     },
@@ -67,11 +67,11 @@ export const { Provider, Context } = createDataContext(
               {
                 hasBall: false,
                 path: {
-                  move: { y: 300, x: 200 },
+                  move: { y: 200, x: 300 },
                   curves: [
                     {
-                      c1: { y: 300, x: 200 },
-                      c2: { y: 340, x: 200 },
+                      c1: { y: 200, x: 300 }, //for a strait line this is the same as move
+                      c2: { y: 340, x: 200 }, // this is the same as to
                       to: { y: 340, x: 200 },
                     },
                   ],

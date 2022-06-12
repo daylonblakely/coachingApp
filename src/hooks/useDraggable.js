@@ -4,7 +4,7 @@ import {
   useAnimatedGestureHandler,
 } from 'react-native-reanimated';
 
-export default ({ initX, initY }, isDraggable) => {
+export default ({ initX, initY }, isDraggable, onEnd) => {
   const pos = useSharedValue({ x: initX, y: initY });
 
   const gestureHandler = useAnimatedGestureHandler({
@@ -22,8 +22,9 @@ export default ({ initX, initY }, isDraggable) => {
       }
     },
     onEnd: (_) => {
-      //   pos.value = { x: 50, y: 100 };
-      console.log('end drag');
+      if (onEnd) {
+        onEnd(pos);
+      }
     },
   });
 
