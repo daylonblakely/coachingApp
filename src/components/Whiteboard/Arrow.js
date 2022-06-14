@@ -84,12 +84,11 @@ const Arrow = ({ playerPos, initPath }) => {
       return [playerPos.value, posEnd.value];
     },
     (result) => {
-      if (isStraight(result[0], result[1], posMid.value)) {
-        posMid.value = {
-          x: (result[0].x + result[1].x) / 2,
-          y: (result[0].y + result[1].y) / 2,
-        };
-      }
+      // isStraight(result[0], result[1], posMid.value)
+      posMid.value = {
+        x: (result[0].x + result[1].x) / 2,
+        y: (result[0].y + result[1].y) / 2,
+      };
     }
   );
 
