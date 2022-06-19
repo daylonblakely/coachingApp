@@ -43,21 +43,28 @@ const isStraight = (a, b, c) => {
 
 const Arrow = ({ playerPos, initPath }) => {
   const { state } = useContext(PlayContext);
-  const straightenOnDrag = useSharedValue(false);
+
   const lastCurve = initPath?.curves[initPath.curves.length - 1];
+
+  // c2 === to on straight curves
+  const isInitStraight =
+    lastCurve?.c2.x === lastCurve?.to.x && lastCurve?.c2.y === lastCurve?.to.y;
+  const straightenOnDrag = useSharedValue(isInitStraight);
 
   const initEndX = lastCurve?.to.x || playerPos.value.x;
 
   const initEndY = lastCurve?.to.y || playerPos.value.y + 100;
 
   // handle curves in saved plays
-  const initMidX = lastCurve
-    ? (lastCurve.c2.x - initEndX) / (9 / 16) + initEndX
-    : (playerPos.value.x + initEndX) / 2;
+  const initMidX =
+    lastCurve && !isInitStraight
+      ? (lastCurve.c2.x - initEndX) / (9 / 16) + initEndX //https://github.com/wcandillon/react-native-redash/blob/master/src/Paths.ts
+      : (playerPos.value.x + initEndX) / 2;
 
-  const initMidY = lastCurve
-    ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
-    : (playerPos.value.y + initEndY) / 2;
+  const initMidY =
+    lastCurve && !isInitStraight
+      ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
+      : (playerPos.value.y + initEndY) / 2;
 
   const [posEnd, gestureHandlerEnd, animatedStyleEnd] = useDraggable(
     {
@@ -93,7 +100,6 @@ const Arrow = ({ playerPos, initPath }) => {
       return [playerPos.value, posEnd.value];
     },
     (result) => {
-      // isStraight(result[0], result[1], posMid.value)
       if (straightenOnDrag.value) {
         posMid.value = {
           x: (result[0].x + result[1].x) / 2,
