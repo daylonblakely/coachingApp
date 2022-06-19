@@ -5,6 +5,7 @@ import { Circle } from 'native-base';
 import Animated, {
   useAnimatedReaction,
   useAnimatedProps,
+  useSharedValue,
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { createPath, addArc, serialize } from 'react-native-redash';
@@ -42,13 +43,21 @@ const isStraight = (a, b, c) => {
 
 const Arrow = ({ playerPos, initPath }) => {
   const { state } = useContext(PlayContext);
+  const straightenOnDrag = useSharedValue(false);
+  const lastCurve = initPath?.curves[initPath.curves.length - 1];
 
-  const initEndX =
-    initPath?.curves[initPath.curves.length - 1].to.x || playerPos.value.x;
+  const initEndX = lastCurve?.to.x || playerPos.value.x;
 
-  const initEndY =
-    initPath?.curves[initPath.curves.length - 1].to.y ||
-    playerPos.value.y + 100;
+  const initEndY = lastCurve?.to.y || playerPos.value.y + 100;
+
+  // handle curves in saved plays
+  const initMidX = lastCurve
+    ? (lastCurve.c2.x - initEndX) / (9 / 16) + initEndX
+    : (playerPos.value.x + initEndX) / 2;
+
+  const initMidY = lastCurve
+    ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
+    : (playerPos.value.y + initEndY) / 2;
 
   const [posEnd, gestureHandlerEnd, animatedStyleEnd] = useDraggable(
     {
@@ -58,11 +67,11 @@ const Arrow = ({ playerPos, initPath }) => {
     state.isEditMode
   );
 
-  // TODO set initial midpoint for existing path
+  // set initial midpoint for existing path
   const [posMid, gestureHandlerMid, animatedStyleMid] = useDraggable(
     {
-      initX: (playerPos.value.x + initEndX) / 2,
-      initY: (playerPos.value.y + initEndY) / 2,
+      initX: initMidX,
+      initY: initMidY,
     },
     state.isEditMode,
     (pos) => {
@@ -85,10 +94,13 @@ const Arrow = ({ playerPos, initPath }) => {
     },
     (result) => {
       // isStraight(result[0], result[1], posMid.value)
-      posMid.value = {
-        x: (result[0].x + result[1].x) / 2,
-        y: (result[0].y + result[1].y) / 2,
-      };
+      if (straightenOnDrag.value) {
+        posMid.value = {
+          x: (result[0].x + result[1].x) / 2,
+          y: (result[0].y + result[1].y) / 2,
+        };
+      }
+      straightenOnDrag.value = true; // this is needed to keep middle pos on initial render
     }
   );
 

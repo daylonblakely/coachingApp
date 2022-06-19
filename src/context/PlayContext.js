@@ -20,20 +20,32 @@ export const { Provider, Context } = createDataContext(
           {
             id: '1',
             label: '1',
-            initialPos: { x: 50, y: 100 },
+            initialPos: { x: 49.72498667240143, y: 333.2830505371094 },
             steps: [
               {
                 hasBall: false,
                 path: {
-                  move: { y: 100, x: 50 },
+                  close: false,
                   curves: [
                     {
-                      c1: { y: 100, x: 50 },
-                      c2: { y: 440, x: 50 },
-                      to: { y: 440, x: 50 },
+                      c1: {
+                        x: 45.52826250344515,
+                        y: 200.82778292894363,
+                      },
+                      c2: {
+                        x: 129.6306822374463,
+                        y: 97.47234910726547,
+                      },
+                      to: {
+                        x: 241.95908892154694,
+                        y: 97.04205894470215,
+                      },
                     },
                   ],
-                  close: false,
+                  move: {
+                    x: 49.72498667240143,
+                    y: 333.2830505371094,
+                  },
                 },
               },
             ],
