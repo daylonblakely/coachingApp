@@ -6,7 +6,7 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import useDraggable from '../../hooks/useDraggable';
 import { Context as PlayContext } from '../../context/PlayContext';
 
-import Arrow2 from './Arrow';
+import Arrow from './Arrow';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -22,7 +22,7 @@ const PlayerIcon = ({ player }) => {
   return (
     <>
       {/* <Arrow positionStart={position} /> */}
-      <Arrow2 playerPos={pos} initPath={step?.path} />
+      <Arrow playerPos={pos} initPath={step?.path} />
 
       <PanGestureHandler onGestureEvent={gestureHandler}>
         <AnimatedCircle
