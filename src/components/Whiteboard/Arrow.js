@@ -6,11 +6,11 @@ import Animated, {
   useAnimatedReaction,
   useAnimatedProps,
   useSharedValue,
+  runOnJS,
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { createPath, addArc, serialize } from 'react-native-redash';
 import useDraggable from '../../hooks/useDraggable';
-import { Context as PlayContext } from '../../context/PlayContext';
 
 const SNAP_THRESHOLD = 20; // min distance from straight line for curve
 
@@ -41,9 +41,7 @@ const isStraight = (a, b, c) => {
   return triangleHeight(a, b, c) < SNAP_THRESHOLD;
 };
 
-const Arrow = ({ playerPos, initPath }) => {
-  const { state } = useContext(PlayContext);
-
+const Arrow = ({ playerPos, initPath, isEditMode }) => {
   const lastCurve = initPath?.curves[initPath.curves.length - 1];
 
   // c2 === to on straight curves
@@ -71,7 +69,7 @@ const Arrow = ({ playerPos, initPath }) => {
       initX: initEndX,
       initY: initEndY,
     },
-    state.isEditMode
+    isEditMode
   );
 
   // set initial midpoint for existing path
@@ -80,7 +78,7 @@ const Arrow = ({ playerPos, initPath }) => {
       initX: initMidX,
       initY: initMidY,
     },
-    state.isEditMode,
+    isEditMode,
     (pos) => {
       'worklet';
       // snap position to middle if line is almost straight
