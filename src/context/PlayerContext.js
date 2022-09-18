@@ -16,7 +16,7 @@ const playerReducer = (state, action) => {
 };
 
 const updatePath = (dispatch) => (id, path) => {
-  console.log('updating path');
+  console.log('updating path ', id);
   dispatch({ type: 'update_path', payload: { id, path } });
 };
 

@@ -1,4 +1,7 @@
+import { useContext } from 'react';
+import { runOnJS } from 'react-native-reanimated';
 import useDraggable from './useDraggable';
+import { Context as PlayerContext } from '../context/PlayerContext';
 
 const SNAP_THRESHOLD = 20; // min distance from straight line for curve
 const DEFAULT_LENGTH = 100;
@@ -28,18 +31,11 @@ const isStraight = (a, b, c) => {
 };
 
 export default (player, isEditMode) => {
+  const { updatePath } = useContext(PlayerContext);
+  const updatePathWrapper = (path) => updatePath(player.id, path); //https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
+
   const { x: initialPlayerX, y: initialPlayerY } = player.initialPos;
   const { initialPathToNextPos } = player;
-
-  const [playerPos, gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
-    { initX: initialPlayerX, initY: initialPlayerY },
-    isEditMode,
-    () => {
-      'worklet';
-
-      //   runOnJS(wrapper)(player.id, {});
-    }
-  );
 
   const lastCurve =
     initialPathToNextPos?.curves[initialPathToNextPos.curves.length - 1];
@@ -63,13 +59,30 @@ export default (player, isEditMode) => {
       ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
       : (initialPlayerY + initEndY) / 2;
 
+  const [playerPos, gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
+    { initX: initialPlayerX, initY: initialPlayerY },
+    isEditMode,
+    () => {
+      'worklet';
+
+      runOnJS(updatePathWrapper)({});
+    }
+  );
+
   const [posEnd, gestureHandlerEnd, animatedStyleEnd] = useDraggable(
     {
       initX: initEndX,
       initY: initEndY,
     },
-    isEditMode
+    isEditMode,
+    () => {
+      'worklet';
+
+      runOnJS(updatePathWrapper)({});
+    }
   );
+
+  console.log('rerender');
 
   // set initial midpoint for existing path
   const [posMid, gestureHandlerMid, animatedStyleMid] = useDraggable(
@@ -88,6 +101,8 @@ export default (player, isEditMode) => {
           y: (playerPos.value.y + posEnd.value.y) / 2,
         };
       }
+
+      runOnJS(updatePathWrapper)({});
     }
   );
 

@@ -3,10 +3,8 @@ import { StyleSheet, Button } from 'react-native';
 import { Circle } from 'native-base';
 import Animated, { runOnJS } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import useDraggable from '../../hooks/useDraggable';
 import useArrowPoints from '../../hooks/useArrowPoints';
 import { Context as PlayContext } from '../../context/PlayContext';
-import { Context as PlayerContext } from '../../context/PlayerContext';
 
 import Arrow from './Arrow';
 
@@ -17,7 +15,7 @@ const PlayerIcon = ({ player }) => {
     state: { isEditMode },
   } = useContext(PlayContext);
   // const step = player.steps[state.runStep];
-  const { updatePath } = useContext(PlayerContext);
+
   const {
     playerPos,
     gestureHandlerPlayer,
@@ -31,24 +29,10 @@ const PlayerIcon = ({ player }) => {
     isInitStraight,
   } = useArrowPoints(player, isEditMode);
 
-  const wrapper = (a, b) => updatePath(a, b);
-
-  // const [pos, gestureHandler, animatedStyle] = useDraggable(
-  //   { initX: player.initialPos.x, initY: player.initialPos.y },
-  //   isEditMode,
-  //   () => {
-  //     'worklet';
-
-  //     runOnJS(wrapper)(player.id, {});
-  //   }
-  // );
-
   return (
     <>
-      {/* <Arrow positionStart={position} /> */}
       <Arrow
         playerPos={playerPos}
-        // initPath={player.initialPathToNextPos}
         posEnd={posEnd}
         gestureHandlerEnd={gestureHandlerEnd}
         animatedStyleEnd={animatedStyleEnd}
