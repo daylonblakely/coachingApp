@@ -36,11 +36,19 @@ const isStraight = (a, b, c) => {
   return triangleHeight(a, b, c) < SNAP_THRESHOLD;
 };
 
+const getPath = (playerPos, posMid, posEnd) => {
+  'worklet';
+
+  const p = createPath(playerPos.value);
+  addArc(p, posMid.value, posEnd.value);
+  return p;
+};
+
 export default (player, isEditMode) => {
   const { updatePath } = useContext(PlayerContext);
   const updatePathWrapper = (path) => updatePath(player.id, path); //https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
 
-  const { x: initialPlayerX, y: initialPlayerY } = player.initialPos;
+  const { x: initPlayerX, y: initPlayerY } = player.initialPos;
   const { initialPathToNextPos } = player;
 
   const lastCurve =
@@ -50,23 +58,27 @@ export default (player, isEditMode) => {
   const isInitStraight =
     lastCurve?.c2.x === lastCurve?.to.x && lastCurve?.c2.y === lastCurve?.to.y;
 
-  const initEndX = lastCurve?.to.x || initialPlayerX;
+  const initEndX = lastCurve?.to.x || initPlayerX;
 
-  const initEndY = lastCurve?.to.y || initialPlayerY + DEFAULT_LENGTH;
+  const initEndY = lastCurve?.to.y || initPlayerY + DEFAULT_LENGTH;
 
   // handle curves in saved plays
   const initMidX =
     lastCurve && !isInitStraight
       ? (lastCurve.c2.x - initEndX) / (9 / 16) + initEndX //https://github.com/wcandillon/react-native-redash/blob/master/src/Paths.ts
-      : (initialPlayerX + initEndX) / 2;
+      : (initPlayerX + initEndX) / 2;
 
   const initMidY =
     lastCurve && !isInitStraight
       ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
-      : (initialPlayerY + initEndY) / 2;
+      : (initPlayerY + initEndY) / 2;
 
-  const [playerPos, gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
-    { initX: initialPlayerX, initY: initialPlayerY },
+  const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
+  const posEnd = useSharedValue({ x: initEndX, y: initEndY });
+  const posMid = useSharedValue({ x: initMidX, y: initMidY });
+
+  const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
+    playerPos,
     isEditMode,
     () => {
       'worklet';
@@ -75,11 +87,8 @@ export default (player, isEditMode) => {
     }
   );
 
-  const [posEnd, gestureHandlerEnd, animatedStyleEnd] = useDraggable(
-    {
-      initX: initEndX,
-      initY: initEndY,
-    },
+  const [gestureHandlerEnd, animatedStyleEnd] = useDraggable(
+    posEnd,
     isEditMode,
     () => {
       'worklet';
@@ -89,11 +98,8 @@ export default (player, isEditMode) => {
   );
 
   // set initial midpoint for existing path
-  const [posMid, gestureHandlerMid, animatedStyleMid] = useDraggable(
-    {
-      initX: initMidX,
-      initY: initMidY,
-    },
+  const [gestureHandlerMid, animatedStyleMid] = useDraggable(
+    posMid,
     isEditMode,
     (pos) => {
       'worklet';
@@ -129,20 +135,17 @@ export default (player, isEditMode) => {
     }
   );
 
+  // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {
-    const p = createPath(playerPos.value);
-    addArc(p, posMid.value, posEnd.value);
+    const p = getPath(playerPos, posMid, posEnd);
     return { d: serialize(p) };
   });
 
   return {
-    playerPos,
     gestureHandlerPlayer,
     animatedStylePlayer,
-    posEnd,
     gestureHandlerEnd,
     animatedStyleEnd,
-    posMid,
     gestureHandlerMid,
     animatedStyleMid,
     animatedPropsArrow,

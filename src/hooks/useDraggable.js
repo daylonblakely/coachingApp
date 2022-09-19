@@ -1,12 +1,9 @@
 import {
-  useSharedValue,
   useAnimatedStyle,
   useAnimatedGestureHandler,
 } from 'react-native-reanimated';
 
-export default ({ initX, initY }, isDraggable, onEnd) => {
-  const pos = useSharedValue({ x: initX, y: initY });
-
+export default (pos, isDraggable, onEnd) => {
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
       ctx.startX = pos.value.x;
@@ -34,5 +31,5 @@ export default ({ initX, initY }, isDraggable, onEnd) => {
     };
   });
 
-  return [pos, gestureHandler, animatedStyle];
+  return [gestureHandler, animatedStyle];
 };
