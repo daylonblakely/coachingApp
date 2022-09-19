@@ -1,5 +1,11 @@
 import { useContext } from 'react';
-import { runOnJS } from 'react-native-reanimated';
+import {
+  runOnJS,
+  useSharedValue,
+  useAnimatedReaction,
+  useAnimatedProps,
+} from 'react-native-reanimated';
+import { createPath, addArc, serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
 import { Context as PlayerContext } from '../context/PlayerContext';
 
@@ -82,8 +88,6 @@ export default (player, isEditMode) => {
     }
   );
 
-  console.log('rerender');
-
   // set initial midpoint for existing path
   const [posMid, gestureHandlerMid, animatedStyleMid] = useDraggable(
     {
@@ -106,6 +110,31 @@ export default (player, isEditMode) => {
     }
   );
 
+  const straightenOnDrag = useSharedValue(isInitStraight);
+
+  // moves midpoint when end or player are dragged
+  useAnimatedReaction(
+    () => {
+      return [playerPos.value, posEnd.value];
+    },
+    (result) => {
+      if (straightenOnDrag.value) {
+        // console.log('here', player.id);
+        posMid.value = {
+          x: (result[0].x + result[1].x) / 2,
+          y: (result[0].y + result[1].y) / 2,
+        };
+      }
+      straightenOnDrag.value = true; // this is needed to keep middle pos on initial render
+    }
+  );
+
+  const animatedPropsArrow = useAnimatedProps(() => {
+    const p = createPath(playerPos.value);
+    addArc(p, posMid.value, posEnd.value);
+    return { d: serialize(p) };
+  });
+
   return {
     playerPos,
     gestureHandlerPlayer,
@@ -116,6 +145,6 @@ export default (player, isEditMode) => {
     posMid,
     gestureHandlerMid,
     animatedStyleMid,
-    isInitStraight,
+    animatedPropsArrow,
   };
 };

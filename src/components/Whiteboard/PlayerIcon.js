@@ -17,29 +17,23 @@ const PlayerIcon = ({ player }) => {
   // const step = player.steps[state.runStep];
 
   const {
-    playerPos,
     gestureHandlerPlayer,
     animatedStylePlayer,
-    posEnd,
     gestureHandlerEnd,
     animatedStyleEnd,
-    posMid,
     gestureHandlerMid,
     animatedStyleMid,
-    isInitStraight,
+    animatedPropsArrow,
   } = useArrowPoints(player, isEditMode);
 
   return (
     <>
       <Arrow
-        playerPos={playerPos}
-        posEnd={posEnd}
         gestureHandlerEnd={gestureHandlerEnd}
         animatedStyleEnd={animatedStyleEnd}
-        posMid={posMid}
         gestureHandlerMid={gestureHandlerMid}
         animatedStyleMid={animatedStyleMid}
-        isInitStraight={isInitStraight}
+        animatedPropsArrow={animatedPropsArrow}
       />
 
       <PanGestureHandler onGestureEvent={gestureHandlerPlayer}>

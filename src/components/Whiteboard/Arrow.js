@@ -1,53 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Svg, Defs, Marker, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
-import Animated, {
-  useAnimatedReaction,
-  useAnimatedProps,
-  useSharedValue,
-  runOnJS,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import { createPath, addArc, serialize } from 'react-native-redash';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const Arrow = ({
-  playerPos,
-  posEnd,
   gestureHandlerEnd,
   animatedStyleEnd,
-  posMid,
   gestureHandlerMid,
   animatedStyleMid,
-  isInitStraight,
+  animatedPropsArrow,
 }) => {
-  const straightenOnDrag = useSharedValue(isInitStraight);
-
-  // moves midpoint when end or player are dragged
-  useAnimatedReaction(
-    () => {
-      return [playerPos.value, posEnd.value];
-    },
-    (result) => {
-      if (straightenOnDrag.value) {
-        posMid.value = {
-          x: (result[0].x + result[1].x) / 2,
-          y: (result[0].y + result[1].y) / 2,
-        };
-      }
-      straightenOnDrag.value = true; // this is needed to keep middle pos on initial render
-    }
-  );
-
-  const animatedPropsArrow = useAnimatedProps(() => {
-    const p = createPath(playerPos.value);
-    addArc(p, posMid.value, posEnd.value);
-    return { d: serialize(p) };
-  });
-
   return (
     <>
       <Svg
