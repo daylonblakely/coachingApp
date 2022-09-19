@@ -36,9 +36,9 @@ const isStraight = (a, b, c) => {
   return triangleHeight(a, b, c) < SNAP_THRESHOLD;
 };
 
+// gets a path object with one arc for three positions (sharedValues)
 const getPath = (playerPos, posMid, posEnd) => {
   'worklet';
-
   const p = createPath(playerPos.value);
   addArc(p, posMid.value, posEnd.value);
   return p;
@@ -46,23 +46,24 @@ const getPath = (playerPos, posMid, posEnd) => {
 
 export default (player, isEditMode) => {
   const { updatePath } = useContext(PlayerContext);
-  const updatePathWrapper = (path) => updatePath(player.id, path); //https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
 
   const { x: initPlayerX, y: initPlayerY } = player.initialPos;
   const { initialPathToNextPos } = player;
 
+  // get last curve of an existing path
   const lastCurve =
     initialPathToNextPos?.curves[initialPathToNextPos.curves.length - 1];
 
+  // endX defaults to X val of the player
+  // endY defaults to player Y + DEFAULT_LENGTH to make vertical arrow
+  const initEndX = lastCurve?.to.x || initPlayerX;
+  const initEndY = lastCurve?.to.y || initPlayerY + DEFAULT_LENGTH;
+
+  // handle curves in saved plays for midpoint
   // c2 === to on straight curves
   const isInitStraight =
     lastCurve?.c2.x === lastCurve?.to.x && lastCurve?.c2.y === lastCurve?.to.y;
 
-  const initEndX = lastCurve?.to.x || initPlayerX;
-
-  const initEndY = lastCurve?.to.y || initPlayerY + DEFAULT_LENGTH;
-
-  // handle curves in saved plays
   const initMidX =
     lastCurve && !isInitStraight
       ? (lastCurve.c2.x - initEndX) / (9 / 16) + initEndX //https://github.com/wcandillon/react-native-redash/blob/master/src/Paths.ts
@@ -73,31 +74,32 @@ export default (player, isEditMode) => {
       ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
       : (initPlayerY + initEndY) / 2;
 
+  // player/arrow position shared values
   const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
   const posEnd = useSharedValue({ x: initEndX, y: initEndY });
   const posMid = useSharedValue({ x: initMidX, y: initMidY });
 
+  // setCurrentPath is a helper to update the state with current paths onEnd drag for player/position
+  // https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
+  const updatePathWrapper = (path) => updatePath(player.id, path);
+  const setCurrentPath = () => {
+    'worklet';
+    runOnJS(updatePathWrapper)(getPath(playerPos, posMid, posEnd));
+  };
+
+  // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
     isEditMode,
-    () => {
-      'worklet';
-
-      runOnJS(updatePathWrapper)({});
-    }
+    setCurrentPath
   );
 
   const [gestureHandlerEnd, animatedStyleEnd] = useDraggable(
     posEnd,
     isEditMode,
-    () => {
-      'worklet';
-
-      runOnJS(updatePathWrapper)({});
-    }
+    setCurrentPath
   );
 
-  // set initial midpoint for existing path
   const [gestureHandlerMid, animatedStyleMid] = useDraggable(
     posMid,
     isEditMode,
@@ -112,13 +114,12 @@ export default (player, isEditMode) => {
         };
       }
 
-      runOnJS(updatePathWrapper)({});
+      setCurrentPath();
     }
   );
 
-  const straightenOnDrag = useSharedValue(isInitStraight);
-
   // moves midpoint when end or player are dragged
+  const straightenOnDrag = useSharedValue(isInitStraight);
   useAnimatedReaction(
     () => {
       return [playerPos.value, posEnd.value];
