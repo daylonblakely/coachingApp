@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   runOnJS,
   useSharedValue,
@@ -118,22 +118,27 @@ export default (player, isEditMode) => {
     }
   );
 
+  // don't move midpoint on first render in useAnimatedReaction
+  const shouldMoveMid = useSharedValue();
+  useEffect(() => {
+    shouldMoveMid.value = false;
+  }, []);
+
   // moves midpoint when end or player are dragged
-  const straightenOnDrag = useSharedValue(isInitStraight);
   useAnimatedReaction(
     () => {
-      return [playerPos.value, posEnd.value];
+      return {
+        x: (playerPos.value.x + posEnd.value.x) / 2,
+        y: (playerPos.value.y + posEnd.value.y) / 2,
+      };
     },
     (result) => {
-      if (straightenOnDrag.value) {
-        // console.log('here', player.id);
-        posMid.value = {
-          x: (result[0].x + result[1].x) / 2,
-          y: (result[0].y + result[1].y) / 2,
-        };
+      if (shouldMoveMid.value) {
+        posMid.value = result;
       }
-      straightenOnDrag.value = true; // this is needed to keep middle pos on initial render
-    }
+      shouldMoveMid.value = true;
+    },
+    []
   );
 
   // moves arrow svg
