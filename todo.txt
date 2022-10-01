@@ -1,0 +1,4 @@
+9/17/22
+moving arrow points is rerendering the player components and resetting the mid point position.
+consider saving the player/arrow positions in state instead of the path. Or possibly along with the path
+

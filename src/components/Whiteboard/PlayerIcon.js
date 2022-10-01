@@ -1,24 +1,44 @@
-import React, { useState } from 'react';
-import { Animated, StyleSheet, Button } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { StyleSheet, Button } from 'react-native';
 import { Circle } from 'native-base';
+import Animated, { runOnJS } from 'react-native-reanimated';
+import { PanGestureHandler } from 'react-native-gesture-handler';
+import useArrowPoints from '../../hooks/useArrowPoints';
+import { Context as PlayContext } from '../../context/PlayContext';
 
-const PlayerIcon = ({ position, panResponder }) => {
-  const [isMovable, setIsMovable] = useState(true);
-  // const resetPosition = () => {
-  //   Animated.spring(position, {
-  //     toValue: { x: 200, y: 200 },
-  //     useNativeDriver: false,
-  //   }).start();
-  // };
+import Arrow from './Arrow';
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+const PlayerIcon = ({ player }) => {
+  const {
+    state: { isEditMode },
+  } = useContext(PlayContext);
+  // const step = player.steps[state.runStep];
+
+  const {
+    gestureHandlerPlayer,
+    animatedStylePlayer,
+    gestureHandlerEnd,
+    animatedStyleEnd,
+    gestureHandlerMid,
+    animatedStyleMid,
+    animatedPropsArrow,
+  } = useArrowPoints(player, isEditMode);
+
   return (
     <>
-      {/* <Button onPress={resetPosition} title="reset pos" />
-      <Button onPress={() => setIsMovable(!isMovable)} title="toggle" /> */}
-      <Animated.View
-        style={[{ ...position.getLayout() }, styles.container]}
-        {...(isMovable && panResponder.panHandlers)}
-      >
-        <Circle
+      <Arrow
+        gestureHandlerEnd={gestureHandlerEnd}
+        animatedStyleEnd={animatedStyleEnd}
+        gestureHandlerMid={gestureHandlerMid}
+        animatedStyleMid={animatedStyleMid}
+        animatedPropsArrow={animatedPropsArrow}
+      />
+
+      <PanGestureHandler onGestureEvent={gestureHandlerPlayer}>
+        <AnimatedCircle
+          style={[styles.container, animatedStylePlayer]}
           size="xs"
           //   bg={useColorModeValue('secondary.600', 'primary.600')}
           _text={{
@@ -27,9 +47,9 @@ const PlayerIcon = ({ position, panResponder }) => {
           }}
           bg="secondary.600"
         >
-          2
-        </Circle>
-      </Animated.View>
+          {player.label}
+        </AnimatedCircle>
+      </PanGestureHandler>
     </>
   );
 };

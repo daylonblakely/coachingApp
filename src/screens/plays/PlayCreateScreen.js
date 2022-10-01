@@ -5,7 +5,7 @@ import Whiteboard from '../../components/Whiteboard';
 const PlayCreateScreen = ({ navigation }) => {
   return (
     <View>
-      <Whiteboard />
+      <Whiteboard playId="1" />
     </View>
   );
 };
