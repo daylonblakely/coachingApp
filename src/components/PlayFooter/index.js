@@ -6,14 +6,18 @@ import MenuIcon from './MenuIcon';
 const PlayFooter = () => {
   const { isOpen, onToggle } = useDisclose();
 
+  //   putting a bg on the parent Box prevents clicks to Fab for some reason
   return (
-    <Box bg="blue.300">
-      <HStack justifyContent="flex-start" space={2}>
+    <Box>
+      <HStack justifyContent="flex-start" space={2} bg="red.600">
         <FooterIcon icon="save" text="Save" />
         <FooterIcon icon="play-skip-back" text="Last Step" />
         <FooterIcon icon="play" text="Run Play" />
         <FooterIcon icon="play-skip-forward" text="Next Step" />
       </HStack>
+      <Box position="absolute" top="-50%" right="5">
+        <MenuIcon bg="cyan.600" icon="ellipsis-horizontal" onPress={onToggle} />
+      </Box>
       <Modal isOpen={isOpen} onClose={onToggle}>
         <Stagger
           visible={isOpen}
@@ -43,9 +47,6 @@ const PlayFooter = () => {
           <MenuIcon bg="red.400" icon="play-back" />
         </Stagger>
       </Modal>
-      <Box position="absolute" top="-50%" right="5">
-        <MenuIcon bg="cyan.600" icon="ellipsis-horizontal" onPress={onToggle} />
-      </Box>
     </Box>
   );
 };
