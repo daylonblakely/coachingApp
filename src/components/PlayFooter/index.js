@@ -6,14 +6,26 @@ import MenuIcon from './MenuIcon';
 const PlayFooter = () => {
   const { isOpen, onToggle } = useDisclose();
 
+  const footerIcons = [
+    { icon: 'save', text: 'Save' },
+    { icon: 'play-skip-back', text: 'Last Step' },
+    { icon: 'play', text: 'Run Play' },
+    { icon: 'play-skip-forward', text: 'Next Step' },
+  ];
+
+  const menuIcons = [
+    { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Offense' },
+    { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Defense' },
+    { bg: 'red.400', icon: 'arrow-undo', text: 'Reset' },
+  ];
+
   //   putting a bg on the parent Box prevents clicks to Fab for some reason
   return (
     <Box>
       <HStack justifyContent="flex-start" space={2} bg="red.600">
-        <FooterIcon icon="save" text="Save" />
-        <FooterIcon icon="play-skip-back" text="Last Step" />
-        <FooterIcon icon="play" text="Run Play" />
-        <FooterIcon icon="play-skip-forward" text="Next Step" />
+        {footerIcons.map(({ icon, text, onPress }, i) => (
+          <FooterIcon icon={icon} text={text} onPress={onPress} key={i} />
+        ))}
       </HStack>
       <Box position="absolute" top="-50%" right="5">
         <MenuIcon bg="cyan.600" icon="ellipsis-horizontal" onPress={onToggle} />
@@ -38,13 +50,15 @@ const PlayFooter = () => {
             },
           }}
         >
-          {/* TODO map over an object here, and arrange menu items */}
-          <MenuIcon bg="yellow.400" icon="add-sharp" />
-          <MenuIcon bg="red.400" icon="save" />
-          <MenuIcon bg="red.400" icon="arrow-undo" />
-          <MenuIcon bg="red.400" icon="play-forward" />
-          <MenuIcon bg="green.400" icon="play" />
-          <MenuIcon bg="red.400" icon="play-back" />
+          {menuIcons.map(({ bg, icon, text, onPress }, i) => (
+            <MenuIcon
+              bg={bg}
+              icon={icon}
+              text={text}
+              onPress={onPress}
+              key={i}
+            />
+          ))}
         </Stagger>
       </Modal>
     </Box>
