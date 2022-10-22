@@ -2,11 +2,11 @@ import React from 'react';
 import { Box, useDisclose, Stagger, Modal } from 'native-base';
 import MenuIcon from './MenuIcon';
 
-const PlayMenu = () => {
+const PlayFab = () => {
   const { isOpen, onToggle } = useDisclose();
 
   return (
-    <Box position="absolute" right={5} bottom={5} alignItems="center">
+    <Box alignItems="center">
       <Modal isOpen={isOpen} onClose={onToggle}>
         <Stagger
           visible={isOpen}
@@ -41,4 +41,4 @@ const PlayMenu = () => {
   );
 };
 
-export default PlayMenu;
+export default PlayFab;

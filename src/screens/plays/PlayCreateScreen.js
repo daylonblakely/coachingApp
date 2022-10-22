@@ -2,13 +2,13 @@ import React from 'react';
 import { Box } from 'native-base';
 import { StyleSheet } from 'react-native';
 import Whiteboard from '../../components/Whiteboard';
-import PlayMenu from '../../components/PlayMenu';
+import PlayFooter from '../../components/PlayFooter';
 
 const PlayCreateScreen = ({ navigation }) => {
   return (
-    <Box h="100%">
-      <Whiteboard playId="1" />
-      <PlayMenu />
+    <Box flex={1}>
+      <Whiteboard />
+      <PlayFooter />
     </Box>
   );
 };

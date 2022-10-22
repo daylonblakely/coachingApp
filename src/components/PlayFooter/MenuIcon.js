@@ -9,7 +9,7 @@ const MenuIcon = ({ bg, icon, onPress, text }) => {
         // mb="4"
         variant="solid"
         bg={bg}
-        size={12}
+        size={16}
         colorScheme={bg.split('.')[0]} //color when pressed
         borderRadius="full"
         onPress={onPress}
