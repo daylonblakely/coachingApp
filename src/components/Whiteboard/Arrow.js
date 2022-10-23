@@ -14,6 +14,7 @@ const Arrow = ({
   gestureHandlerMid,
   animatedStyleMid,
   animatedPropsArrow,
+  color,
 }) => {
   return (
     <>
@@ -34,12 +35,16 @@ const Arrow = ({
             markerHeight="4"
             orient="auto"
           >
-            <Path d="M 0 0 L 10 5 L 0 10 z" stroke="black" fill="black" />
+            <Path
+              d="M 0 0 L 10 5 L 0 10 z"
+              stroke={color || 'black'}
+              fill={color || 'black'}
+            />
           </Marker>
         </Defs>
         <AnimatedPath
           animatedProps={animatedPropsArrow}
-          stroke="black"
+          stroke={color || 'black'}
           strokeWidth="6"
           markerEnd="url(#Triangle)"
         />

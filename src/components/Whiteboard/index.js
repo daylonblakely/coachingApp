@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Button } from 'react-native';
-import { Box } from 'native-base';
+import { Box, useColorModeValue } from 'native-base';
 import Svg from 'react-native-svg';
 import PlayerIcon from './PlayerIcon';
 import FullCourt from './FullCourt';
@@ -8,17 +8,23 @@ import FullCourt from './FullCourt';
 import { Context as PlayerContext } from '../../context/PlayerContext';
 
 const Whiteboard = () => {
+  const lineColor = useColorModeValue('black', 'white');
+
   const { state: players } = useContext(PlayerContext);
 
   const renderPlayers = () => {
     return Object.keys(players).map((playerId) => (
-      <PlayerIcon player={players[playerId]} key={playerId} />
+      <PlayerIcon
+        player={players[playerId]}
+        arrowColor={lineColor}
+        key={playerId}
+      />
     ));
   };
 
   return (
-    <Box bg="white" flex={1} padding={3}>
-      <FullCourt />
+    <Box flex={1} padding={3}>
+      <FullCourt color={lineColor} />
 
       {/* <Button onPress={runPlay} title="run play" /> */}
 
