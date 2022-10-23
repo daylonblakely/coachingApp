@@ -21,8 +21,8 @@ const PlayFooter = () => {
 
   //   putting a bg on the parent Box prevents clicks to Fab for some reason
   return (
-    <Box variant="card" borderTopWidth="1">
-      <HStack justifyContent="flex-start">
+    <Box>
+      <HStack justifyContent="flex-start" variant="card" borderTopWidth="1">
         {footerIcons.map(({ icon, text, onPress }, i) => (
           <FooterIcon icon={icon} text={text} onPress={onPress} key={i} />
         ))}
