@@ -31,6 +31,7 @@ export default () => {
           // height: 200, // Specify the height of your custom header
         },
         headerTintColor: 'white',
+        swipeEnabled: false,
       }}
     >
       <Drawer.Screen name="Home" component={HomeScreen} />

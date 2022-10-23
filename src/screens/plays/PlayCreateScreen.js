@@ -1,12 +1,15 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Box } from 'native-base';
+import { StyleSheet } from 'react-native';
 import Whiteboard from '../../components/Whiteboard';
+import PlayFooter from '../../components/PlayFooter';
 
 const PlayCreateScreen = ({ navigation }) => {
   return (
-    <View>
-      <Whiteboard playId="1" />
-    </View>
+    <Box flex={1}>
+      <Whiteboard />
+      <PlayFooter />
+    </Box>
   );
 };
 const styles = StyleSheet.create({});

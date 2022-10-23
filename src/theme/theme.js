@@ -23,6 +23,16 @@ export default theme = extendTheme({
         },
       },
     },
+    HStack: {
+      variants: {
+        card: (props) => {
+          return {
+            backgroundColor: themeTools.mode('gray.50', 'gray.900')(props),
+            borderColor: themeTools.mode('coolGray.200', 'gray.800')(props),
+          };
+        },
+      },
+    },
   },
   colors: {
     background: {

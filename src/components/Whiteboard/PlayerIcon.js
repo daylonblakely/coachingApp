@@ -1,7 +1,6 @@
-import React, { useState, useContext } from 'react';
-import { StyleSheet, Button } from 'react-native';
-import { Circle } from 'native-base';
-import Animated, { runOnJS } from 'react-native-reanimated';
+import React, { useContext } from 'react';
+import { Circle, Text } from 'native-base';
+import Animated from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import useArrowPoints from '../../hooks/useArrowPoints';
 import { Context as PlayContext } from '../../context/PlayContext';
@@ -10,7 +9,7 @@ import Arrow from './Arrow';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const PlayerIcon = ({ player }) => {
+const PlayerIcon = ({ player, arrowColor }) => {
   const {
     state: { isEditMode },
   } = useContext(PlayContext);
@@ -34,30 +33,23 @@ const PlayerIcon = ({ player }) => {
         gestureHandlerMid={gestureHandlerMid}
         animatedStyleMid={animatedStyleMid}
         animatedPropsArrow={animatedPropsArrow}
+        color={arrowColor}
       />
 
       <PanGestureHandler onGestureEvent={gestureHandlerPlayer}>
         <AnimatedCircle
-          style={[styles.container, animatedStylePlayer]}
+          style={animatedStylePlayer}
+          position="absolute"
           size="xs"
-          //   bg={useColorModeValue('secondary.600', 'primary.600')}
-          _text={{
-            fontWeight: 'bold',
-            fontSize: '3xl',
-          }}
           bg="secondary.600"
         >
-          {player.label}
+          <Text color="white" fontSize="xl">
+            {player.label}
+          </Text>
         </AnimatedCircle>
       </PanGestureHandler>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-  },
-});
 
 export default PlayerIcon;
