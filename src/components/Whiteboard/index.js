@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Button } from 'react-native';
 import { Box, useColorModeValue } from 'native-base';
 import Svg from 'react-native-svg';
 import PlayerIcon from './PlayerIcon';
@@ -25,9 +24,6 @@ const Whiteboard = () => {
   return (
     <Box flex={1} padding={3}>
       <FullCourt color={lineColor} />
-
-      {/* <Button onPress={runPlay} title="run play" /> */}
-
       <Box position="absolute" w="100%" h="100%">
         <Svg>{renderPlayers()}</Svg>
       </Box>

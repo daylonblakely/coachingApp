@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { Svg, Defs, Marker, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
 import Animated from 'react-native-reanimated';
@@ -18,12 +17,7 @@ const Arrow = ({
 }) => {
   return (
     <>
-      <Svg
-        width="100%"
-        height="100%"
-        // viewBox="0 0 1 1"
-        //   viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
-      >
+      <Svg width="100%" height="100%">
         <Defs>
           <Marker
             id="Triangle"
@@ -51,14 +45,16 @@ const Arrow = ({
       </Svg>
       <PanGestureHandler onGestureEvent={gestureHandlerMid}>
         <AnimatedCircle
-          style={[styles.container, animatedStyleMid]}
+          style={animatedStyleMid}
+          position="absolute"
           size="10"
           bg="green.600"
         />
       </PanGestureHandler>
       <PanGestureHandler onGestureEvent={gestureHandlerEnd}>
         <AnimatedCircle
-          style={[styles.container, animatedStyleEnd]}
+          style={animatedStyleEnd}
+          position="absolute"
           size="10"
           bg="primary.600"
         />
@@ -66,11 +62,5 @@ const Arrow = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-  },
-});
 
 export default Arrow;

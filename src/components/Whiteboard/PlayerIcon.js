@@ -1,7 +1,6 @@
-import React, { useState, useContext } from 'react';
-import { StyleSheet, Button } from 'react-native';
+import React, { useContext } from 'react';
 import { Circle, Text } from 'native-base';
-import Animated, { runOnJS } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import useArrowPoints from '../../hooks/useArrowPoints';
 import { Context as PlayContext } from '../../context/PlayContext';
@@ -39,13 +38,9 @@ const PlayerIcon = ({ player, arrowColor }) => {
 
       <PanGestureHandler onGestureEvent={gestureHandlerPlayer}>
         <AnimatedCircle
-          style={[styles.container, animatedStylePlayer]}
+          style={animatedStylePlayer}
+          position="absolute"
           size="xs"
-          //   bg={useColorModeValue('secondary.600', 'primary.600')}
-          // _text={{
-          //   fontWeight: 'bold',
-          //   fontSize: '3xl',
-          // }}
           bg="secondary.600"
         >
           <Text color="white" fontSize="xl">
@@ -56,11 +51,5 @@ const PlayerIcon = ({ player, arrowColor }) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-  },
-});
 
 export default PlayerIcon;
