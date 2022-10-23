@@ -3,6 +3,7 @@ import { Circle, Text } from 'native-base';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import useArrowPoints from '../../hooks/useArrowPoints';
+import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import { Context as PlayContext } from '../../context/PlayContext';
 
 import Arrow from './Arrow';
@@ -10,14 +11,16 @@ import Arrow from './Arrow';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PlayerIcon = ({ player, arrowColor }) => {
+  const {
+    state: { isEditMode, isAnimating },
+    stopAnimating,
+  } = useContext(PlayContext);
   const { x: initPlayerX, y: initPlayerY } = player.initialPos;
   const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
 
-  const {
-    state: { isEditMode, isAnimating },
-  } = useContext(PlayContext);
+  usePlayerAnimation(playerPos, isAnimating, stopAnimating);
+
   // const step = player.steps[state.runStep];
-  console.log(isAnimating);
 
   const {
     gestureHandlerPlayer,
@@ -27,7 +30,7 @@ const PlayerIcon = ({ player, arrowColor }) => {
     gestureHandlerMid,
     animatedStyleMid,
     animatedPropsArrow,
-  } = useArrowPoints(player, playerPos, isEditMode);
+  } = useArrowPoints(player, playerPos, !isAnimating && isEditMode);
 
   return (
     <>

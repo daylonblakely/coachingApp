@@ -44,7 +44,7 @@ const getPath = (playerPos, posMid, posEnd) => {
   return p;
 };
 
-export default (player, playerPos, isEditMode) => {
+export default (player, playerPos, shouldEdit) => {
   const { updatePath } = useContext(PlayerContext);
 
   const { x: initPlayerX, y: initPlayerY } = player.initialPos;
@@ -83,25 +83,27 @@ export default (player, playerPos, isEditMode) => {
   const updatePathWrapper = (path) => updatePath(player.id, path);
   const setCurrentPath = () => {
     'worklet';
-    runOnJS(updatePathWrapper)(getPath(playerPos, posMid, posEnd));
+    if (shouldEdit) {
+      runOnJS(updatePathWrapper)(getPath(playerPos, posMid, posEnd));
+    }
   };
 
   // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
-    isEditMode,
+    shouldEdit,
     setCurrentPath
   );
 
   const [gestureHandlerEnd, animatedStyleEnd] = useDraggable(
     posEnd,
-    isEditMode,
+    shouldEdit,
     setCurrentPath
   );
 
   const [gestureHandlerMid, animatedStyleMid] = useDraggable(
     posMid,
-    isEditMode,
+    shouldEdit,
     (pos) => {
       'worklet';
       // snap position to middle if line is almost straight
