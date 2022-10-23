@@ -44,7 +44,7 @@ const getPath = (playerPos, posMid, posEnd) => {
   return p;
 };
 
-export default (player, isEditMode) => {
+export default (player, playerPos, isEditMode) => {
   const { updatePath } = useContext(PlayerContext);
 
   const { x: initPlayerX, y: initPlayerY } = player.initialPos;
@@ -75,7 +75,6 @@ export default (player, isEditMode) => {
       : (initPlayerY + initEndY) / 2;
 
   // player/arrow position shared values
-  const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
   const posEnd = useSharedValue({ x: initEndX, y: initEndY });
   const posMid = useSharedValue({ x: initMidX, y: initMidY });
 

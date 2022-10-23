@@ -2,16 +2,29 @@ import createDataContext from './createDataContext';
 
 const playReducer = (state, action) => {
   switch (action.type) {
+    case 'start_animating':
+      return { ...state, isAnimating: true };
+    case 'stop_animating':
+      return { ...state, isAnimating: false };
     default:
       return state;
   }
 };
 
+const startAnimating = (dispatch) => () => {
+  dispatch({ type: 'start_animating' });
+};
+
+const stopAnimating = (dispatch) => () => {
+  dispatch({ type: 'stop_animating' });
+};
+
 export const { Provider, Context } = createDataContext(
   playReducer,
-  {},
+  { startAnimating, stopAnimating },
   {
     isEditMode: true,
+    isAnimating: false,
     runStep: 0,
     plays: [
       {
