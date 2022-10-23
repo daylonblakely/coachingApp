@@ -14,7 +14,7 @@ const PlayNavigator = () => {
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
           name="PlayCreate"
-          options={{ title: 'Plays', headerShown: false }}
+          options={{ headerShown: false }}
           component={PlayCreateScreen}
         />
       </Stack.Group>

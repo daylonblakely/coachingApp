@@ -21,14 +21,18 @@ const PlayFooter = () => {
 
   //   putting a bg on the parent Box prevents clicks to Fab for some reason
   return (
-    <Box>
-      <HStack justifyContent="flex-start" space={2} bg="red.600">
+    <Box variant="card" borderTopWidth="1">
+      <HStack justifyContent="flex-start">
         {footerIcons.map(({ icon, text, onPress }, i) => (
           <FooterIcon icon={icon} text={text} onPress={onPress} key={i} />
         ))}
       </HStack>
       <Box position="absolute" top="-50%" right="5">
-        <MenuIcon bg="cyan.600" icon="ellipsis-horizontal" onPress={onToggle} />
+        <MenuIcon
+          bg="primary.700"
+          icon="ellipsis-horizontal"
+          onPress={onToggle}
+        />
       </Box>
       <Modal isOpen={isOpen} onClose={onToggle}>
         <Stagger
