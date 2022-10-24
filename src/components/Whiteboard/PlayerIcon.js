@@ -18,7 +18,7 @@ const PlayerIcon = ({ player, arrowColor }) => {
   const { x: initPlayerX, y: initPlayerY } = player.initialPos;
   const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
 
-  usePlayerAnimation(playerPos, isAnimating, stopAnimating);
+  usePlayerAnimation(player.id, playerPos, isAnimating, stopAnimating);
 
   // const step = player.steps[state.runStep];
 

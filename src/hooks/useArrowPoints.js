@@ -46,6 +46,10 @@ const getPath = (playerPos, posMid, posEnd) => {
 
 export default (player, playerPos, shouldEdit) => {
   const { updatePath } = useContext(PlayerContext);
+  const shouldEditShared = useSharedValue(shouldEdit);
+  useEffect(() => {
+    shouldEditShared.value = shouldEdit;
+  }, [shouldEdit]);
 
   const { x: initPlayerX, y: initPlayerY } = player.initialPos;
   const { initialPathToNextPos } = player;
@@ -107,7 +111,10 @@ export default (player, playerPos, shouldEdit) => {
     (pos) => {
       'worklet';
       // snap position to middle if line is almost straight
-      if (isStraight(playerPos.value, posEnd.value, pos.value)) {
+      if (
+        isStraight(playerPos.value, posEnd.value, pos.value) &&
+        shouldEditShared.value
+      ) {
         pos.value = {
           ...pos.value,
           x: (playerPos.value.x + posEnd.value.x) / 2,
@@ -134,7 +141,7 @@ export default (player, playerPos, shouldEdit) => {
       };
     },
     (result) => {
-      if (shouldMoveMid.value) {
+      if (shouldMoveMid.value && shouldEditShared.value) {
         posMid.value = result;
       }
       shouldMoveMid.value = true;
@@ -144,6 +151,7 @@ export default (player, playerPos, shouldEdit) => {
 
   // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {
+    if (!shouldEditShared.value) return {};
     const p = getPath(playerPos, posMid, posEnd);
     return { d: serialize(p) };
   });
