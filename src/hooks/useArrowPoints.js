@@ -43,19 +43,11 @@ const getPath = (playerPos, posMid, posEnd) => {
   return p;
 };
 
-export default (
+const getInitialPositions = (
   initPlayerX,
   initPlayerY,
-  initialPathToNextPos,
-  playerPos,
-  shouldEdit,
-  afterMoveCallback
+  initialPathToNextPos
 ) => {
-  const shouldEditShared = useSharedValue(shouldEdit);
-  useEffect(() => {
-    shouldEditShared.value = shouldEdit;
-  }, [shouldEdit]);
-
   // get last curve of an existing path
   const lastCurve =
     initialPathToNextPos?.curves[initialPathToNextPos.curves.length - 1];
@@ -79,6 +71,26 @@ export default (
     lastCurve && !isInitStraight
       ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
       : (initPlayerY + initEndY) / 2;
+
+  return { initEndX, initEndY, initMidX, initMidY };
+};
+
+export default (
+  initialPathToNextPos,
+  playerPos,
+  shouldEdit,
+  afterMoveCallback
+) => {
+  const shouldEditShared = useSharedValue(shouldEdit);
+  useEffect(() => {
+    shouldEditShared.value = shouldEdit;
+  }, [shouldEdit]);
+
+  const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
+    playerPos.value.x,
+    playerPos.value.y,
+    initialPathToNextPos
+  );
 
   // player/arrow position shared values
   const posEnd = useSharedValue({ x: initEndX, y: initEndY });

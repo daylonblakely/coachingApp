@@ -35,8 +35,6 @@ const PlayerIcon = ({ player, arrowColor }) => {
     animatedStyleMid,
     animatedPropsArrow,
   } = useArrowPoints(
-    initPlayerX,
-    initPlayerY,
     initialPathToNextPos,
     playerPos,
     !isAnimating && isEditMode,
