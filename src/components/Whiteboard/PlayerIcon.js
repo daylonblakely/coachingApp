@@ -16,14 +16,25 @@ const PlayerIcon = ({ player, arrowColor }) => {
     state: { isEditMode, isAnimating },
     stopAnimating,
   } = useContext(PlayContext);
-  const { state: playerState, updatePath } = useContext(PlayerContext);
+  // TODO - figure out where to handle state/context for players and plays
+  // do I need two separate contexts???
+  // how to transition from one path to another when running plays
+  const { updatePath } = useContext(PlayerContext);
 
-  const { x: initPlayerX, y: initPlayerY } = player.initialPos;
-  const { initialPathToNextPos } = player;
-  const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
+  const {
+    initialPathToNextPos,
+    currentPathToNextPos,
+    initialPos: { x, y },
+    label,
+  } = player;
+  const playerPos = useSharedValue({ x, y });
 
-  const currentPath = playerState[player.id].currentPathToNextPos;
-  usePlayerAnimation(playerPos, currentPath, isAnimating, stopAnimating);
+  usePlayerAnimation(
+    playerPos,
+    currentPathToNextPos,
+    isAnimating,
+    stopAnimating
+  );
 
   // const step = player.steps[state.runStep];
 
@@ -61,7 +72,7 @@ const PlayerIcon = ({ player, arrowColor }) => {
           bg="secondary.600"
         >
           <Text color="white" fontSize="xl">
-            {player.label}
+            {label}
           </Text>
         </AnimatedCircle>
       </PanGestureHandler>
