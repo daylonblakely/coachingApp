@@ -5,6 +5,7 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import useArrowPoints from '../../hooks/useArrowPoints';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import { Context as PlayContext } from '../../context/PlayContext';
+import { Context as PlayerContext } from '../../context/PlayerContext';
 
 import Arrow from './Arrow';
 
@@ -15,7 +16,10 @@ const PlayerIcon = ({ player, arrowColor }) => {
     state: { isEditMode, isAnimating },
     stopAnimating,
   } = useContext(PlayContext);
+  const { updatePath } = useContext(PlayerContext);
+
   const { x: initPlayerX, y: initPlayerY } = player.initialPos;
+  const { initialPathToNextPos } = player;
   const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
 
   usePlayerAnimation(player.id, playerPos, isAnimating, stopAnimating);
@@ -30,7 +34,14 @@ const PlayerIcon = ({ player, arrowColor }) => {
     gestureHandlerMid,
     animatedStyleMid,
     animatedPropsArrow,
-  } = useArrowPoints(player, playerPos, !isAnimating && isEditMode);
+  } = useArrowPoints(
+    initPlayerX,
+    initPlayerY,
+    initialPathToNextPos,
+    playerPos,
+    !isAnimating && isEditMode,
+    updatePath(player.id)
+  );
 
   return (
     <>

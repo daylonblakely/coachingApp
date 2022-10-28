@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   runOnJS,
   useSharedValue,
@@ -7,7 +7,6 @@ import {
 } from 'react-native-reanimated';
 import { createPath, addArc, serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
-import { Context as PlayerContext } from '../context/PlayerContext';
 
 const SNAP_THRESHOLD = 20; // min distance from straight line for curve
 const DEFAULT_LENGTH = 100;
@@ -44,15 +43,18 @@ const getPath = (playerPos, posMid, posEnd) => {
   return p;
 };
 
-export default (player, playerPos, shouldEdit) => {
-  const { updatePath } = useContext(PlayerContext);
+export default (
+  initPlayerX,
+  initPlayerY,
+  initialPathToNextPos,
+  playerPos,
+  shouldEdit,
+  afterMoveCallback
+) => {
   const shouldEditShared = useSharedValue(shouldEdit);
   useEffect(() => {
     shouldEditShared.value = shouldEdit;
   }, [shouldEdit]);
-
-  const { x: initPlayerX, y: initPlayerY } = player.initialPos;
-  const { initialPathToNextPos } = player;
 
   // get last curve of an existing path
   const lastCurve =
@@ -84,7 +86,7 @@ export default (player, playerPos, shouldEdit) => {
 
   // setCurrentPath is a helper to update the state with current paths onEnd drag for player/position
   // https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
-  const updatePathWrapper = (path) => updatePath(player.id, path);
+  const updatePathWrapper = (path) => afterMoveCallback(path);
   const setCurrentPath = () => {
     'worklet';
     if (shouldEdit) {
