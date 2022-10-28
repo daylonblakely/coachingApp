@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   useSharedValue,
   useAnimatedReaction,
@@ -7,18 +7,15 @@ import {
 } from 'react-native-reanimated';
 import * as path from 'svg-path-properties';
 import { serialize } from 'react-native-redash';
-import { Context as PlayerContext } from '../context/PlayerContext';
 
 const ANIMATION_DURATION = 2000;
 
-export default (playerId, playerPos, shouldAnimate, callback) => {
-  const { state } = useContext(PlayerContext);
-  const currentPath = state[playerId].currentPathToNextPos;
+export default (playerPos, pathToNextPos, shouldAnimate, callback) => {
   const shouldAnimateShared = useSharedValue(false);
   const progress = useSharedValue(0);
 
   const properties =
-    currentPath.move && path.svgPathProperties(serialize(currentPath));
+    pathToNextPos.move && path.svgPathProperties(serialize(pathToNextPos));
   const totalLength = properties?.getTotalLength();
   const pointsAtLength = Array(Math.floor(totalLength + 1 || 0)) // + 1 to avoid destructuring undefined in animation hook
     .fill()

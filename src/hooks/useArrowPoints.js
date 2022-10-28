@@ -43,14 +43,9 @@ const getPath = (playerPos, posMid, posEnd) => {
   return p;
 };
 
-const getInitialPositions = (
-  initPlayerX,
-  initPlayerY,
-  initialPathToNextPos
-) => {
+const getInitialPositions = (initPlayerX, initPlayerY, pathToNextPos) => {
   // get last curve of an existing path
-  const lastCurve =
-    initialPathToNextPos?.curves[initialPathToNextPos.curves.length - 1];
+  const lastCurve = pathToNextPos?.curves[pathToNextPos.curves.length - 1];
 
   // endX defaults to X val of the player
   // endY defaults to player Y + DEFAULT_LENGTH to make vertical arrow
@@ -75,12 +70,7 @@ const getInitialPositions = (
   return { initEndX, initEndY, initMidX, initMidY };
 };
 
-export default (
-  initialPathToNextPos,
-  playerPos,
-  shouldEdit,
-  afterMoveCallback
-) => {
+export default (playerPos, pathToNextPos, shouldEdit, afterMoveCallback) => {
   const shouldEditShared = useSharedValue(shouldEdit);
   useEffect(() => {
     shouldEditShared.value = shouldEdit;
@@ -89,7 +79,7 @@ export default (
   const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
     playerPos.value.x,
     playerPos.value.y,
-    initialPathToNextPos
+    pathToNextPos
   );
 
   // player/arrow position shared values

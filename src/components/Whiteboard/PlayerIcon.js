@@ -16,13 +16,14 @@ const PlayerIcon = ({ player, arrowColor }) => {
     state: { isEditMode, isAnimating },
     stopAnimating,
   } = useContext(PlayContext);
-  const { updatePath } = useContext(PlayerContext);
+  const { state: playerState, updatePath } = useContext(PlayerContext);
 
   const { x: initPlayerX, y: initPlayerY } = player.initialPos;
   const { initialPathToNextPos } = player;
   const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
 
-  usePlayerAnimation(player.id, playerPos, isAnimating, stopAnimating);
+  const currentPath = playerState[player.id].currentPathToNextPos;
+  usePlayerAnimation(playerPos, currentPath, isAnimating, stopAnimating);
 
   // const step = player.steps[state.runStep];
 
@@ -35,8 +36,8 @@ const PlayerIcon = ({ player, arrowColor }) => {
     animatedStyleMid,
     animatedPropsArrow,
   } = useArrowPoints(
-    initialPathToNextPos,
     playerPos,
+    initialPathToNextPos,
     !isAnimating && isEditMode,
     updatePath(player.id)
   );
