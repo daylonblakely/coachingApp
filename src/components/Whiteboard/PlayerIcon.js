@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { Circle, Text } from 'native-base';
-import Animated from 'react-native-reanimated';
+import Animated, { useSharedValue } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import useArrowPoints from '../../hooks/useArrowPoints';
+import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import { Context as PlayContext } from '../../context/PlayContext';
+import { Context as PlayerContext } from '../../context/PlayerContext';
 
 import Arrow from './Arrow';
 
@@ -11,8 +13,29 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PlayerIcon = ({ player, arrowColor }) => {
   const {
-    state: { isEditMode },
+    state: { isEditMode, isAnimating },
+    stopAnimating,
   } = useContext(PlayContext);
+  // TODO - figure out where to handle state/context for players and plays
+  // do I need two separate contexts???
+  // how to transition from one path to another when running plays
+  const { updatePath } = useContext(PlayerContext);
+
+  const {
+    initialPathToNextPos,
+    currentPathToNextPos,
+    initialPos: { x, y },
+    label,
+  } = player;
+  const playerPos = useSharedValue({ x, y });
+
+  usePlayerAnimation(
+    playerPos,
+    currentPathToNextPos,
+    isAnimating,
+    stopAnimating
+  );
+
   // const step = player.steps[state.runStep];
 
   const {
@@ -23,7 +46,12 @@ const PlayerIcon = ({ player, arrowColor }) => {
     gestureHandlerMid,
     animatedStyleMid,
     animatedPropsArrow,
-  } = useArrowPoints(player, isEditMode);
+  } = useArrowPoints(
+    playerPos,
+    initialPathToNextPos,
+    !isAnimating && isEditMode,
+    updatePath(player.id)
+  );
 
   return (
     <>
@@ -44,7 +72,7 @@ const PlayerIcon = ({ player, arrowColor }) => {
           bg="secondary.600"
         >
           <Text color="white" fontSize="xl">
-            {player.label}
+            {label}
           </Text>
         </AnimatedCircle>
       </PanGestureHandler>

@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   runOnJS,
   useSharedValue,
@@ -7,7 +7,6 @@ import {
 } from 'react-native-reanimated';
 import { createPath, addArc, serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
-import { Context as PlayerContext } from '../context/PlayerContext';
 
 const SNAP_THRESHOLD = 20; // min distance from straight line for curve
 const DEFAULT_LENGTH = 100;
@@ -44,15 +43,9 @@ const getPath = (playerPos, posMid, posEnd) => {
   return p;
 };
 
-export default (player, isEditMode) => {
-  const { updatePath } = useContext(PlayerContext);
-
-  const { x: initPlayerX, y: initPlayerY } = player.initialPos;
-  const { initialPathToNextPos } = player;
-
+const getInitialPositions = (initPlayerX, initPlayerY, pathToNextPos) => {
   // get last curve of an existing path
-  const lastCurve =
-    initialPathToNextPos?.curves[initialPathToNextPos.curves.length - 1];
+  const lastCurve = pathToNextPos?.curves[pathToNextPos.curves.length - 1];
 
   // endX defaults to X val of the player
   // endY defaults to player Y + DEFAULT_LENGTH to make vertical arrow
@@ -74,39 +67,58 @@ export default (player, isEditMode) => {
       ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
       : (initPlayerY + initEndY) / 2;
 
+  return { initEndX, initEndY, initMidX, initMidY };
+};
+
+export default (playerPos, pathToNextPos, shouldEdit, afterMoveCallback) => {
+  const shouldEditShared = useSharedValue(shouldEdit);
+  useEffect(() => {
+    shouldEditShared.value = shouldEdit;
+  }, [shouldEdit]);
+
+  const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
+    playerPos.value.x,
+    playerPos.value.y,
+    pathToNextPos
+  );
+
   // player/arrow position shared values
-  const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
   const posEnd = useSharedValue({ x: initEndX, y: initEndY });
   const posMid = useSharedValue({ x: initMidX, y: initMidY });
 
   // setCurrentPath is a helper to update the state with current paths onEnd drag for player/position
   // https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
-  const updatePathWrapper = (path) => updatePath(player.id, path);
+  const updatePathWrapper = (path) => afterMoveCallback(path);
   const setCurrentPath = () => {
     'worklet';
-    runOnJS(updatePathWrapper)(getPath(playerPos, posMid, posEnd));
+    if (shouldEdit) {
+      runOnJS(updatePathWrapper)(getPath(playerPos, posMid, posEnd));
+    }
   };
 
   // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
-    isEditMode,
+    shouldEdit,
     setCurrentPath
   );
 
   const [gestureHandlerEnd, animatedStyleEnd] = useDraggable(
     posEnd,
-    isEditMode,
+    shouldEdit,
     setCurrentPath
   );
 
   const [gestureHandlerMid, animatedStyleMid] = useDraggable(
     posMid,
-    isEditMode,
+    shouldEdit,
     (pos) => {
       'worklet';
       // snap position to middle if line is almost straight
-      if (isStraight(playerPos.value, posEnd.value, pos.value)) {
+      if (
+        isStraight(playerPos.value, posEnd.value, pos.value) &&
+        shouldEditShared.value
+      ) {
         pos.value = {
           ...pos.value,
           x: (playerPos.value.x + posEnd.value.x) / 2,
@@ -133,7 +145,7 @@ export default (player, isEditMode) => {
       };
     },
     (result) => {
-      if (shouldMoveMid.value) {
+      if (shouldMoveMid.value && shouldEditShared.value) {
         posMid.value = result;
       }
       shouldMoveMid.value = true;
@@ -143,6 +155,7 @@ export default (player, isEditMode) => {
 
   // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {
+    if (!shouldEditShared.value) return {};
     const p = getPath(playerPos, posMid, posEnd);
     return { d: serialize(p) };
   });
