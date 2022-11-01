@@ -9,7 +9,6 @@ import { createPath, addArc, serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
 
 const SNAP_THRESHOLD = 20; // min distance from straight line for curve
-const DEFAULT_LENGTH = 100;
 
 const triangleHeight = (a, b, c) => {
   'worklet';
@@ -43,48 +42,11 @@ const getPath = (playerPos, posMid, posEnd) => {
   return p;
 };
 
-const getInitialPositions = (initPlayerX, initPlayerY, pathToNextPos) => {
-  // get last curve of an existing path
-  const lastCurve = pathToNextPos?.curves[pathToNextPos.curves.length - 1];
-
-  // endX defaults to X val of the player
-  // endY defaults to player Y + DEFAULT_LENGTH to make vertical arrow
-  const initEndX = lastCurve?.to.x || initPlayerX;
-  const initEndY = lastCurve?.to.y || initPlayerY + DEFAULT_LENGTH;
-
-  // handle curves in saved plays for midpoint
-  // c2 === to on straight curves
-  const isInitStraight =
-    lastCurve?.c2.x === lastCurve?.to.x && lastCurve?.c2.y === lastCurve?.to.y;
-
-  const initMidX =
-    lastCurve && !isInitStraight
-      ? (lastCurve.c2.x - initEndX) / (9 / 16) + initEndX //https://github.com/wcandillon/react-native-redash/blob/master/src/Paths.ts
-      : (initPlayerX + initEndX) / 2;
-
-  const initMidY =
-    lastCurve && !isInitStraight
-      ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
-      : (initPlayerY + initEndY) / 2;
-
-  return { initEndX, initEndY, initMidX, initMidY };
-};
-
-export default (playerPos, pathToNextPos, shouldEdit, afterMoveCallback) => {
+export default (playerPos, posEnd, posMid, shouldEdit, afterMoveCallback) => {
   const shouldEditShared = useSharedValue(shouldEdit);
   useEffect(() => {
     shouldEditShared.value = shouldEdit;
   }, [shouldEdit]);
-
-  const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
-    playerPos.value.x,
-    playerPos.value.y,
-    pathToNextPos
-  );
-
-  // player/arrow position shared values
-  const posEnd = useSharedValue({ x: initEndX, y: initEndY });
-  const posMid = useSharedValue({ x: initMidX, y: initMidY });
 
   // setCurrentPath is a helper to update the state with current paths onEnd drag for player/position
   // https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/

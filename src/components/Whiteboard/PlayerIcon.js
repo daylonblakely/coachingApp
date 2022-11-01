@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Circle, Text } from 'native-base';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
+import { createPath, addArc } from 'react-native-redash';
 import useArrowPoints from '../../hooks/useArrowPoints';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import { Context as PlayContext } from '../../context/PlayContext';
@@ -9,7 +10,47 @@ import { Context as PlayerContext } from '../../context/PlayerContext';
 
 import Arrow from './Arrow';
 
+// TODO - clean up helper functions into utils
+// remove duplicated code from useArrowPoints (getPath)
+// update next path after animation
+
+const DEFAULT_ARROW_LENGTH = 100;
+
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+const getInitialPositions = (initPlayerX, initPlayerY, pathToNextPos) => {
+  // get last curve of an existing path
+  const lastCurve = pathToNextPos?.curves[pathToNextPos.curves.length - 1];
+
+  // endX defaults to X val of the player
+  // endY defaults to player Y - DEFAULT_LENGTH to make vertical arrow
+  const initEndX = lastCurve?.to.x || initPlayerX;
+  const initEndY = lastCurve?.to.y || initPlayerY - DEFAULT_ARROW_LENGTH;
+
+  // handle curves in saved plays for midpoint
+  // c2 === to on straight curves
+  const isInitStraight =
+    lastCurve?.c2.x === lastCurve?.to.x && lastCurve?.c2.y === lastCurve?.to.y;
+
+  const initMidX =
+    lastCurve && !isInitStraight
+      ? (lastCurve.c2.x - initEndX) / (9 / 16) + initEndX //https://github.com/wcandillon/react-native-redash/blob/master/src/Paths.ts
+      : (initPlayerX + initEndX) / 2;
+
+  const initMidY =
+    lastCurve && !isInitStraight
+      ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
+      : (initPlayerY + initEndY) / 2;
+
+  return { initEndX, initEndY, initMidX, initMidY };
+};
+
+// gets a path object with one arc for three positions (sharedValues)
+const getPath = (playerPos, posMid, posEnd) => {
+  const p = createPath(playerPos);
+  addArc(p, posMid, posEnd);
+  return p;
+};
 
 const PlayerIcon = ({ player, arrowColor }) => {
   const {
@@ -28,15 +69,36 @@ const PlayerIcon = ({ player, arrowColor }) => {
     label,
   } = player;
   const playerPos = useSharedValue({ x, y });
+  const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
+    playerPos.value.x,
+    playerPos.value.y,
+    initialPathToNextPos
+  );
+  const posEnd = useSharedValue({ x: initEndX, y: initEndY });
+  const posMid = useSharedValue({ x: initMidX, y: initMidY });
 
   usePlayerAnimation(
     playerPos,
-    currentPathToNextPos,
+    currentPathToNextPos || initialPathToNextPos,
     isAnimating,
-    stopAnimating
-  );
+    () => {
+      stopAnimating();
+      const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
+        playerPos.value.x,
+        playerPos.value.y
+      );
 
-  // const step = player.steps[state.runStep];
+      posEnd.value = { x: initEndX, y: initEndY };
+      posMid.value = { x: initMidX, y: initMidY };
+      updatePath(player.id)(
+        getPath(
+          playerPos.value,
+          { x: initMidX, y: initMidY },
+          { x: initEndX, y: initEndY }
+        )
+      );
+    }
+  );
 
   const {
     gestureHandlerPlayer,
@@ -48,7 +110,8 @@ const PlayerIcon = ({ player, arrowColor }) => {
     animatedPropsArrow,
   } = useArrowPoints(
     playerPos,
-    initialPathToNextPos,
+    posEnd,
+    posMid,
     !isAnimating && isEditMode,
     updatePath(player.id)
   );

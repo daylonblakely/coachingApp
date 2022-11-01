@@ -52,7 +52,7 @@ export const { Provider, Context } = createDataContext(
           y: 333.2830505371094,
         },
       },
-      currentPathToNextPos: {},
+      currentPathToNextPos: null,
     },
     2: {
       id: 2,
@@ -70,7 +70,7 @@ export const { Provider, Context } = createDataContext(
         ],
         close: false,
       },
-      currentPathToNextPos: {},
+      currentPathToNextPos: null,
     },
     3: {
       id: 3,
@@ -88,7 +88,7 @@ export const { Provider, Context } = createDataContext(
         ],
         close: false,
       },
-      currentPathToNextPos: {},
+      currentPathToNextPos: null,
     },
   }
 );
