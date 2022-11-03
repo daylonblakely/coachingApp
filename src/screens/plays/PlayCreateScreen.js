@@ -7,7 +7,7 @@ import PlayFooter from '../../components/PlayFooter';
 const PlayCreateScreen = ({ navigation }) => {
   return (
     <Box flex={1}>
-      <Whiteboard />
+      <Whiteboard playId="1" />
       <PlayFooter />
     </Box>
   );

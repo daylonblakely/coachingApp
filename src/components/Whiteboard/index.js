@@ -4,19 +4,25 @@ import Svg from 'react-native-svg';
 import PlayerIcon from './PlayerIcon';
 import FullCourt from './FullCourt';
 
-import { Context as PlayerContext } from '../../context/PlayerContext';
+import { Context as PlayContext } from '../../context/PlayContext';
 
-const Whiteboard = () => {
+const Whiteboard = ({ playId }) => {
   const lineColor = useColorModeValue('black', 'white');
 
-  const { state: players } = useContext(PlayerContext);
+  const {
+    state: { currentPlay, runStep, isEditMode, shouldAnimate },
+    updateCurrentPlayerPath,
+  } = useContext(PlayContext);
 
   const renderPlayers = () => {
-    return Object.keys(players).map((playerId) => (
+    return currentPlay.steps[runStep].players.map((player) => (
       <PlayerIcon
-        player={players[playerId]}
+        player={player}
         arrowColor={lineColor}
-        key={playerId}
+        key={player.id}
+        isEditMode={isEditMode}
+        shouldAnimate={shouldAnimate}
+        afterMoveCallback={updateCurrentPlayerPath(player.id)}
       />
     ));
   };

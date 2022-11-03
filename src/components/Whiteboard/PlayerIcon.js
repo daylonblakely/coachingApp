@@ -1,12 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Circle, Text } from 'native-base';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { createPath, addArc } from 'react-native-redash';
 import useArrowPoints from '../../hooks/useArrowPoints';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
-import { Context as PlayContext } from '../../context/PlayContext';
-import { Context as PlayerContext } from '../../context/PlayerContext';
 
 import Arrow from './Arrow';
 
@@ -52,19 +50,18 @@ const getPath = (playerPos, posMid, posEnd) => {
   return p;
 };
 
-const PlayerIcon = ({ player, arrowColor }) => {
-  const {
-    state: { isEditMode, isAnimating },
-    stopAnimating,
-  } = useContext(PlayContext);
-  // TODO - figure out where to handle state/context for players and plays
-  // do I need two separate contexts???
-  // how to transition from one path to another when running plays
-  const { updatePath } = useContext(PlayerContext);
+const PlayerIcon = ({
+  player,
+  arrowColor,
+  isEditMode,
+  shouldAnimate,
+  afterMoveCallback,
+}) => {
+  // how to transition from one path to another when running plays????
+  console.log('---------RENDERING PLAYER: ', player.id);
 
   const {
-    initialPathToNextPos,
-    currentPathToNextPos,
+    pathToNextPos,
     initialPos: { x, y },
     label,
   } = player;
@@ -72,33 +69,28 @@ const PlayerIcon = ({ player, arrowColor }) => {
   const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
     playerPos.value.x,
     playerPos.value.y,
-    initialPathToNextPos
+    pathToNextPos
   );
   const posEnd = useSharedValue({ x: initEndX, y: initEndY });
   const posMid = useSharedValue({ x: initMidX, y: initMidY });
 
-  usePlayerAnimation(
-    playerPos,
-    currentPathToNextPos || initialPathToNextPos,
-    isAnimating,
-    () => {
-      stopAnimating();
-      const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
-        playerPos.value.x,
-        playerPos.value.y
-      );
+  usePlayerAnimation(playerPos, pathToNextPos, shouldAnimate, () => {
+    // stopAnimating();
+    const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
+      playerPos.value.x,
+      playerPos.value.y
+    );
 
-      posEnd.value = { x: initEndX, y: initEndY };
-      posMid.value = { x: initMidX, y: initMidY };
-      updatePath(player.id)(
-        getPath(
-          playerPos.value,
-          { x: initMidX, y: initMidY },
-          { x: initEndX, y: initEndY }
-        )
-      );
-    }
-  );
+    posEnd.value = { x: initEndX, y: initEndY };
+    posMid.value = { x: initMidX, y: initMidY };
+    afterMoveCallback(
+      getPath(
+        playerPos.value,
+        { x: initMidX, y: initMidY },
+        { x: initEndX, y: initEndY }
+      )
+    );
+  });
 
   const {
     gestureHandlerPlayer,
@@ -112,8 +104,8 @@ const PlayerIcon = ({ player, arrowColor }) => {
     playerPos,
     posEnd,
     posMid,
-    !isAnimating && isEditMode,
-    updatePath(player.id)
+    !shouldAnimate && isEditMode,
+    afterMoveCallback
   );
 
   return (
