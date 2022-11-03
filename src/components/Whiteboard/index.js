@@ -12,6 +12,7 @@ const Whiteboard = ({ playId }) => {
   const {
     state: { currentPlay, runStep, isEditMode, shouldAnimate },
     updateCurrentPlayerPath,
+    stopAnimating,
   } = useContext(PlayContext);
 
   const renderPlayers = () => {
@@ -23,6 +24,7 @@ const Whiteboard = ({ playId }) => {
         isEditMode={isEditMode}
         shouldAnimate={shouldAnimate}
         afterMoveCallback={updateCurrentPlayerPath(player.id)}
+        afterAnimateCallback={stopAnimating}
       />
     ));
   };

@@ -5,42 +5,9 @@ import {
   useAnimatedReaction,
   useAnimatedProps,
 } from 'react-native-reanimated';
-import { createPath, addArc, serialize } from 'react-native-redash';
+import { serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
-
-const SNAP_THRESHOLD = 20; // min distance from straight line for curve
-
-const triangleHeight = (a, b, c) => {
-  'worklet';
-
-  const distance = (a, b) => {
-    return Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2);
-  };
-
-  const ab = distance(a, b);
-  const ac = distance(a, c);
-  const bc = distance(b, c);
-
-  const p = ab + ac + bc;
-  const s = p / 2;
-
-  const T = Math.sqrt(s * (s - ab) * (s - ac) * (s - bc));
-  return (2 * T) / ab;
-};
-
-// determines if line is straight
-const isStraight = (a, b, c) => {
-  'worklet';
-  return triangleHeight(a, b, c) < SNAP_THRESHOLD;
-};
-
-// gets a path object with one arc for three positions (sharedValues)
-const getPath = (playerPos, posMid, posEnd) => {
-  'worklet';
-  const p = createPath(playerPos.value);
-  addArc(p, posMid.value, posEnd.value);
-  return p;
-};
+import { getPath, isStraight } from '../utils/pathUtils';
 
 export default (playerPos, posEnd, posMid, shouldEdit, afterMoveCallback) => {
   const shouldEditShared = useSharedValue(shouldEdit);
@@ -54,7 +21,9 @@ export default (playerPos, posEnd, posMid, shouldEdit, afterMoveCallback) => {
   const setCurrentPath = () => {
     'worklet';
     if (shouldEdit) {
-      runOnJS(updatePathWrapper)(getPath(playerPos, posMid, posEnd));
+      runOnJS(updatePathWrapper)(
+        getPath(playerPos.value, posMid.value, posEnd.value)
+      );
     }
   };
 
@@ -118,7 +87,7 @@ export default (playerPos, posEnd, posMid, shouldEdit, afterMoveCallback) => {
   // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {
     if (!shouldEditShared.value) return {};
-    const p = getPath(playerPos, posMid, posEnd);
+    const p = getPath(playerPos.value, posMid.value, posEnd.value);
     return { d: serialize(p) };
   });
 
