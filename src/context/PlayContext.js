@@ -6,9 +6,11 @@ const playReducer = (state, action) => {
       return { ...state, shouldAnimate: true };
     case 'stop_animating':
       return { ...state, shouldAnimate: false };
+    case 'fetch_play':
+      return { ...state, currentPlay: action.payload };
     case 'update_path':
       const runStep = state.runStep;
-      const playerIndex = state.currentPlay.steps[runStep].players.findIndex(
+      const playerIndex = state.currentPlay.players.findIndex(
         ({ id }) => id === action.payload.playerId
       );
 
@@ -16,25 +18,25 @@ const playReducer = (state, action) => {
         ...state,
         currentPlay: {
           ...state.currentPlay,
-          steps: [
-            ...state.currentPlay.steps.slice(0, runStep),
+          players: [
+            ...state.currentPlay.players.slice(0, playerIndex),
             {
-              ...state.currentPlay.steps[runStep],
-              players: [
-                ...state.currentPlay.steps[runStep].players.slice(
+              ...state.currentPlay.players[playerIndex],
+              steps: [
+                ...state.currentPlay.players[playerIndex].steps.slice(
                   0,
-                  playerIndex
+                  runStep
                 ),
                 {
-                  ...state.currentPlay.steps[runStep].players[playerIndex],
+                  ...state.currentPlay.players[playerIndex].steps[runStep],
                   pathToNextPos: action.payload.path,
                 },
-                ...state.currentPlay.steps[runStep].players.slice(
-                  playerIndex + 1
+                ...state.currentPlay.players[playerIndex].steps.slice(
+                  runStep + 1
                 ),
               ],
             },
-            ...state.currentPlay.steps.slice(runStep + 1),
+            ...state.currentPlay.players.slice(playerIndex + 1),
           ],
         },
       };
@@ -56,25 +58,16 @@ const updateCurrentPlayerPath = (dispatch) => (playerId) => (path) => {
   dispatch({ type: 'update_path', payload: { playerId, path } });
 };
 
-export const { Provider, Context } = createDataContext(
-  playReducer,
-  { startAnimating, stopAnimating, updateCurrentPlayerPath },
-  {
-    isEditMode: true,
-    shouldAnimate: false,
-    runStep: 0,
-    plays: [
-      { id: '1', name: 'test play 1' },
-      { id: '2', name: 'test play 2' },
-    ],
-    currentPlay: {
-      steps: [
+const fetchPlayById = (dispatch) => async (playId) => {
+  try {
+    console.log('fetching play');
+    const data = {
+      players: [
         {
-          players: [
+          id: 1,
+          label: '1',
+          steps: [
             {
-              id: 1,
-              label: '1',
-              initialPos: { x: 49.72498667240143, y: 333.2830505371094 },
               hasBall: false,
               pathToNextPos: {
                 close: false,
@@ -100,10 +93,13 @@ export const { Provider, Context } = createDataContext(
                 },
               },
             },
+          ],
+        },
+        {
+          id: 2,
+          label: '2',
+          steps: [
             {
-              id: 2,
-              label: '2',
-              initialPos: { x: 100, y: 300 },
               hasBall: false,
               pathToNextPos: {
                 move: { y: 300, x: 100 },
@@ -117,10 +113,14 @@ export const { Provider, Context } = createDataContext(
                 close: false,
               },
             },
+          ],
+        },
+        {
+          id: 3,
+          label: '3',
+          steps: [
             {
-              id: 3,
-              label: '3',
-              initialPos: { x: 300, y: 200 },
+              playerId: 3,
               hasBall: false,
               pathToNextPos: {
                 move: { y: 200, x: 300 },
@@ -137,6 +137,25 @@ export const { Provider, Context } = createDataContext(
           ],
         },
       ],
-    },
+    };
+
+    dispatch({ type: 'fetch_play', payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const { Provider, Context } = createDataContext(
+  playReducer,
+  { startAnimating, stopAnimating, updateCurrentPlayerPath, fetchPlayById },
+  {
+    isEditMode: true,
+    shouldAnimate: false,
+    runStep: 0,
+    plays: [
+      { id: '1', name: 'test play 1' },
+      { id: '2', name: 'test play 2' },
+    ],
+    currentPlay: null,
   }
 );

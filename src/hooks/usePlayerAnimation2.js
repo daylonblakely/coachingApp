@@ -20,7 +20,7 @@ export default (playerPositions) => {
   //   const shouldAnimateShared = useSharedValue(false);
 
   const progressValues = playerPositions.map(({ pos, playerId }) => {
-    const { pathToNextPos } = currentPlay.steps[runStep].players.find(
+    const { pathToNextPos } = currentPlay?.steps[runStep].players.find(
       ({ id }) => id === playerId
     );
 

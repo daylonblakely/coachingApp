@@ -11,23 +11,23 @@ import Arrow from './Arrow';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PlayerIcon = ({
-  player,
-  playerPos,
+  // playerPos,
+  pathToNextPos,
   arrowColor,
   isEditMode,
   shouldAnimate,
   afterMoveCallback,
   afterAnimateCallback,
+  label,
 }) => {
   // how to transition from one path to another when running plays????
-  console.log('---------RENDERING PLAYER: ', player.id);
+  console.log('---------RENDERING PLAYER: ', label);
 
-  const {
-    pathToNextPos,
-    initialPos: { x, y },
-    label,
-  } = player;
-  // const playerPos = useSharedValue({ x, y });
+  // const { pathToNextPos, label } = player;
+  const playerPos = useSharedValue({
+    x: pathToNextPos.move.x,
+    y: pathToNextPos.move.y,
+  });
   const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
     playerPos.value.x,
     playerPos.value.y,
