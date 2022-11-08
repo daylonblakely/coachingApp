@@ -3,7 +3,7 @@ import { Circle, Text } from 'native-base';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import useArrowPoints from '../../hooks/useArrowPoints';
-import usePlayerAnimation from '../../hooks/usePlayerAnimation';
+import usePlayerAnimation from '../../hooks/usePlayerAnimation2';
 import { getPath, getInitialPositions } from '../../utils/pathUtils';
 
 import Arrow from './Arrow';
@@ -12,6 +12,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PlayerIcon = ({
   player,
+  playerPos,
   arrowColor,
   isEditMode,
   shouldAnimate,
@@ -26,7 +27,7 @@ const PlayerIcon = ({
     initialPos: { x, y },
     label,
   } = player;
-  const playerPos = useSharedValue({ x, y });
+  // const playerPos = useSharedValue({ x, y });
   const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
     playerPos.value.x,
     playerPos.value.y,
@@ -35,23 +36,25 @@ const PlayerIcon = ({
   const posEnd = useSharedValue({ x: initEndX, y: initEndY });
   const posMid = useSharedValue({ x: initMidX, y: initMidY });
 
-  usePlayerAnimation(playerPos, pathToNextPos, shouldAnimate, () => {
-    afterAnimateCallback();
-    const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
-      playerPos.value.x,
-      playerPos.value.y
-    );
+  // () => {
+  //   afterAnimateCallback();
+  //   const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
+  //     playerPos.value.x,
+  //     playerPos.value.y
+  //   );
 
-    posEnd.value = { x: initEndX, y: initEndY };
-    posMid.value = { x: initMidX, y: initMidY };
-    afterMoveCallback(
-      getPath(
-        playerPos.value,
-        { x: initMidX, y: initMidY },
-        { x: initEndX, y: initEndY }
-      )
-    );
-  });
+  //   posEnd.value = { x: initEndX, y: initEndY };
+  //   posMid.value = { x: initMidX, y: initMidY };
+  //   afterMoveCallback(
+  //     getPath(
+  //       playerPos.value,
+  //       { x: initMidX, y: initMidY },
+  //       { x: initEndX, y: initEndY }
+  //     )
+  //   );
+  // }
+
+  // usePlayerAnimation(player.id, playerPos);
 
   const {
     gestureHandlerPlayer,
