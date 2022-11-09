@@ -3,7 +3,7 @@ import { Circle, Text } from 'native-base';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import useArrowPoints from '../../hooks/useArrowPoints';
-import usePlayerAnimation from '../../hooks/usePlayerAnimation2';
+import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import { getPath, getInitialPositions } from '../../utils/pathUtils';
 
 import Arrow from './Arrow';
@@ -11,13 +11,10 @@ import Arrow from './Arrow';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PlayerIcon = ({
-  // playerPos,
   pathToNextPos,
   arrowColor,
   isEditMode,
-  shouldAnimate,
   afterMoveCallback,
-  afterAnimateCallback,
   label,
 }) => {
   // how to transition from one path to another when running plays????
@@ -54,7 +51,7 @@ const PlayerIcon = ({
   //   );
   // }
 
-  // usePlayerAnimation(player.id, playerPos);
+  usePlayerAnimation(playerPos, pathToNextPos);
 
   const {
     gestureHandlerPlayer,
@@ -64,13 +61,7 @@ const PlayerIcon = ({
     gestureHandlerMid,
     animatedStyleMid,
     animatedPropsArrow,
-  } = useArrowPoints(
-    playerPos,
-    posEnd,
-    posMid,
-    !shouldAnimate && isEditMode,
-    afterMoveCallback
-  );
+  } = useArrowPoints(playerPos, posEnd, posMid, isEditMode, afterMoveCallback);
 
   return (
     <>

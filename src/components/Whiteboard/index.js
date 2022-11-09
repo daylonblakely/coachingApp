@@ -40,14 +40,11 @@ const Whiteboard = ({}) => {
     return currentPlay?.players.map((player, i) => (
       <PlayerIcon
         label={player.label}
-        // playerPos={playerPositions[i].pos}
         pathToNextPos={player.steps[runStep].pathToNextPos}
         arrowColor={lineColor}
-        key={player.id}
-        isEditMode={isEditMode}
-        shouldAnimate={shouldAnimate}
+        isEditMode={!shouldAnimate && isEditMode}
         afterMoveCallback={updateCurrentPlayerPath(player.id)}
-        afterAnimateCallback={stopAnimating}
+        key={player.id}
       />
     ));
   };

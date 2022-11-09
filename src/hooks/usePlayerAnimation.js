@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo, useContext } from 'react';
 import {
   useSharedValue,
   useAnimatedReaction,
@@ -7,19 +7,36 @@ import {
 } from 'react-native-reanimated';
 import * as path from 'svg-path-properties';
 import { serialize } from 'react-native-redash';
+import { Context as PlayContext } from '../context/PlayContext';
 
 const ANIMATION_DURATION = 2000;
 
-export default (playerPos, pathToNextPos, shouldAnimate, callback) => {
-  const shouldAnimateShared = useSharedValue(false);
-  const progress = useSharedValue(0);
-
+const getPointsAtLength = (pathToNextPos) => {
   const properties =
     pathToNextPos.move && path.svgPathProperties(serialize(pathToNextPos));
   const totalLength = properties?.getTotalLength();
-  const pointsAtLength = Array(Math.floor(totalLength + 1 || 0)) // + 1 to avoid destructuring undefined in animation hook
-    .fill()
-    .map((_, i) => properties.getPointAtLength(i));
+
+  return [
+    Array(Math.floor(totalLength + 1 || 0)) // + 1 to avoid destructuring undefined in animation hook
+      .fill()
+      .map((_, i) => properties.getPointAtLength(i)),
+    totalLength,
+  ];
+};
+
+export default (playerPos, pathToNextPos) => {
+  const {
+    state: { shouldAnimate },
+    stopAnimating,
+  } = useContext(PlayContext);
+
+  const shouldAnimateShared = useSharedValue(false);
+  const progress = useSharedValue(0);
+
+  const [pointsAtLength, totalLength] = useMemo(
+    () => getPointsAtLength(pathToNextPos),
+    [pathToNextPos]
+  );
 
   useAnimatedReaction(
     () => {
@@ -50,7 +67,11 @@ export default (playerPos, pathToNextPos, shouldAnimate, callback) => {
             console.log('ANIMATION ENDED');
             shouldAnimateShared.value = false;
             progress.value = 0;
-            runOnJS(callback)();
+
+            // TODO - figure out a way to stop animating ONCE
+            // after all are finished
+            // this should avoid extra renders
+            runOnJS(stopAnimating)();
           } else {
             console.log('ANIMATION CANCELLED');
           }
