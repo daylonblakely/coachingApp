@@ -16,6 +16,7 @@ const PlayerIcon = ({
   isEditMode,
   afterMoveCallback,
   label,
+  animationProgress,
 }) => {
   // how to transition from one path to another when running plays????
   console.log('---------RENDERING PLAYER: ', label);
@@ -51,7 +52,7 @@ const PlayerIcon = ({
   //   );
   // }
 
-  const [error] = usePlayerAnimation(playerPos, pathToNextPos);
+  usePlayerAnimation(playerPos, pathToNextPos, animationProgress);
 
   const {
     gestureHandlerPlayer,

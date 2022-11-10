@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Box, useColorModeValue } from 'native-base';
 import Svg from 'react-native-svg';
-import { useSharedValue } from 'react-native-reanimated';
+import { useSharedValue, withTiming, runOnJS } from 'react-native-reanimated';
 import PlayerIcon from './PlayerIcon';
 import FullCourt from './FullCourt';
-import usePlayerAnimation from '../../hooks/usePlayerAnimation2';
 
 import { Context as PlayContext } from '../../context/PlayContext';
+
+const ANIMATION_DURATION = 2000;
 
 const Whiteboard = ({}) => {
   console.log('--------------RENDER WHITEBOARD');
@@ -18,23 +19,31 @@ const Whiteboard = ({}) => {
     stopAnimating,
   } = useContext(PlayContext);
 
-  // TODO - add a position shared value to each player in context
-  // then access those positions from an animation hook
-  // return a function from the hook to run animations for all players
-  // use the function in an onclick somewhere
-  // figure out a way to have a single callback after all animations finish
-  // const playerPositions = players.map(
-  //   ({
-  //     pathToNextPos: {
-  //       move: { x, y },
-  //     },
-  //     id,
-  //   }) => {
-  //     console.log('heeerrrrrr');
-  //     return { pos: useSharedValue({ x, y }), playerId: id };
-  //   }
-  // );
-  // usePlayerAnimation(playerPositions);
+  const animationProgress = useSharedValue(0);
+
+  const runAnimation = () => {
+    console.log('START ANIMATION');
+
+    animationProgress.value = withTiming(
+      100,
+      { duration: ANIMATION_DURATION },
+      (finished) => {
+        if (finished) {
+          console.log('ANIMATION ENDED');
+          animationProgress.value = 0;
+          runOnJS(stopAnimating)();
+        } else {
+          console.log('ANIMATION CANCELLED');
+        }
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (shouldAnimate) {
+      runAnimation();
+    }
+  }, [shouldAnimate]);
 
   const renderPlayers = () => {
     return currentPlay?.players.map((player, i) => (
@@ -44,6 +53,7 @@ const Whiteboard = ({}) => {
         arrowColor={lineColor}
         isEditMode={!shouldAnimate && isEditMode}
         afterMoveCallback={updateCurrentPlayerPath(player.id)}
+        animationProgress={animationProgress}
         key={player.id}
       />
     ));
