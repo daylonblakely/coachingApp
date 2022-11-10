@@ -51,7 +51,7 @@ const PlayerIcon = ({
   //   );
   // }
 
-  usePlayerAnimation(playerPos, pathToNextPos);
+  const [error] = usePlayerAnimation(playerPos, pathToNextPos);
 
   const {
     gestureHandlerPlayer,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useContext } from 'react';
+import { useEffect, useMemo, useContext, useState } from 'react';
 import {
   useSharedValue,
   useAnimatedReaction,
@@ -29,6 +29,7 @@ export default (playerPos, pathToNextPos) => {
     state: { shouldAnimate },
     stopAnimating,
   } = useContext(PlayContext);
+  const [error, setError] = useState(null);
 
   const shouldAnimateShared = useSharedValue(false);
   const progress = useSharedValue(0);
@@ -56,27 +57,38 @@ export default (playerPos, pathToNextPos) => {
 
   useEffect(() => {
     shouldAnimateShared.value = shouldAnimate;
-    if (shouldAnimate) {
-      console.log('START ANIMATION');
 
-      progress.value = withTiming(
-        totalLength,
-        { duration: ANIMATION_DURATION },
-        (finished) => {
-          if (finished) {
-            console.log('ANIMATION ENDED');
-            shouldAnimateShared.value = false;
-            progress.value = 0;
+    const runAnimation = () => {
+      try {
+        console.log('START ANIMATION');
 
-            // TODO - figure out a way to stop animating ONCE
-            // after all are finished
-            // this should avoid extra renders
-            runOnJS(stopAnimating)();
-          } else {
-            console.log('ANIMATION CANCELLED');
+        progress.value = withTiming(
+          totalLength,
+          { duration: ANIMATION_DURATION },
+          (finished) => {
+            if (finished) {
+              console.log('ANIMATION ENDED');
+              shouldAnimateShared.value = false;
+              progress.value = 0;
+
+              // TODO - figure out a way to stop animating ONCE
+              // after all are finished
+              // this should avoid extra renders
+              runOnJS(stopAnimating)();
+            } else {
+              console.log('ANIMATION CANCELLED');
+            }
           }
-        }
-      );
+        );
+      } catch (error) {
+        setError(error);
+      }
+    };
+
+    if (shouldAnimate) {
+      runAnimation();
     }
   }, [shouldAnimate]);
+
+  return [error];
 };
