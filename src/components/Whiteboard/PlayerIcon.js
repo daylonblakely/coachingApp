@@ -14,6 +14,7 @@ const PlayerIcon = ({
   pathToNextPos,
   arrowColor,
   isEditMode,
+  shouldAnimate,
   afterMoveCallback,
   label,
   animationProgress,
@@ -52,7 +53,12 @@ const PlayerIcon = ({
   //   );
   // }
 
-  usePlayerAnimation(playerPos, pathToNextPos, animationProgress);
+  usePlayerAnimation(
+    playerPos,
+    pathToNextPos,
+    animationProgress,
+    shouldAnimate
+  );
 
   const {
     gestureHandlerPlayer,
@@ -62,7 +68,13 @@ const PlayerIcon = ({
     gestureHandlerMid,
     animatedStyleMid,
     animatedPropsArrow,
-  } = useArrowPoints(playerPos, posEnd, posMid, isEditMode, afterMoveCallback);
+  } = useArrowPoints(
+    playerPos,
+    posEnd,
+    posMid,
+    !shouldAnimate && isEditMode,
+    afterMoveCallback
+  );
 
   return (
     <>

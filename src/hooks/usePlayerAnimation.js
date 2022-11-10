@@ -16,7 +16,7 @@ const getPointsAtLength = (pathToNextPos) => {
   ];
 };
 
-export default (playerPos, pathToNextPos, animationProgress) => {
+export default (playerPos, pathToNextPos, animationProgress, shouldAnimate) => {
   const [pointsAtLength, totalLength] = useMemo(
     () => getPointsAtLength(pathToNextPos),
     [pathToNextPos]
@@ -29,12 +29,14 @@ export default (playerPos, pathToNextPos, animationProgress) => {
       );
     },
     (result) => {
-      const { x, y } = pointsAtLength[result];
-      playerPos.value = {
-        x,
-        y,
-      };
+      if (shouldAnimate) {
+        const { x, y } = pointsAtLength[result];
+        playerPos.value = {
+          x,
+          y,
+        };
+      }
     },
-    [pointsAtLength]
+    [pointsAtLength, shouldAnimate]
   );
 };

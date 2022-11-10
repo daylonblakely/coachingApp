@@ -51,7 +51,8 @@ const Whiteboard = ({}) => {
         label={player.label}
         pathToNextPos={player.steps[runStep].pathToNextPos}
         arrowColor={lineColor}
-        isEditMode={!shouldAnimate && isEditMode}
+        isEditMode={isEditMode}
+        shouldAnimate={shouldAnimate}
         afterMoveCallback={updateCurrentPlayerPath(player.id)}
         animationProgress={animationProgress}
         key={player.id}
