@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Circle, Text } from 'native-base';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import useArrowPoints from '../../hooks/useArrowPoints';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
-import { getPath, getInitialPositions } from '../../utils/pathUtils';
-
+import { getInitialPositions } from '../../utils/pathUtils';
 import Arrow from './Arrow';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -13,51 +12,29 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const PlayerIcon = ({
   pathToNextPos,
   arrowColor,
-  isEditMode,
-  shouldAnimate,
   afterMoveCallback,
   label,
   animationProgress,
+  isEditMode,
 }) => {
-  // how to transition from one path to another when running plays????
   console.log('---------RENDERING PLAYER: ', label);
 
-  // const { pathToNextPos, label } = player;
+  const [{ initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY }] =
+    useState(() => getInitialPositions(pathToNextPos));
+
   const playerPos = useSharedValue({
-    x: pathToNextPos.move.x,
-    y: pathToNextPos.move.y,
+    x: initPlayerX,
+    y: initPlayerY,
   });
-  const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
-    playerPos.value.x,
-    playerPos.value.y,
-    pathToNextPos
-  );
-  const posEnd = useSharedValue({ x: initEndX, y: initEndY });
   const posMid = useSharedValue({ x: initMidX, y: initMidY });
-
-  // () => {
-  //   afterAnimateCallback();
-  //   const { initEndX, initEndY, initMidX, initMidY } = getInitialPositions(
-  //     playerPos.value.x,
-  //     playerPos.value.y
-  //   );
-
-  //   posEnd.value = { x: initEndX, y: initEndY };
-  //   posMid.value = { x: initMidX, y: initMidY };
-  //   afterMoveCallback(
-  //     getPath(
-  //       playerPos.value,
-  //       { x: initMidX, y: initMidY },
-  //       { x: initEndX, y: initEndY }
-  //     )
-  //   );
-  // }
+  const posEnd = useSharedValue({ x: initEndX, y: initEndY });
 
   usePlayerAnimation(
     playerPos,
+    posMid,
+    posEnd,
     pathToNextPos,
-    animationProgress,
-    shouldAnimate
+    animationProgress
   );
 
   const {
@@ -68,13 +45,7 @@ const PlayerIcon = ({
     gestureHandlerMid,
     animatedStyleMid,
     animatedPropsArrow,
-  } = useArrowPoints(
-    playerPos,
-    posEnd,
-    posMid,
-    !shouldAnimate && isEditMode,
-    afterMoveCallback
-  );
+  } = useArrowPoints(playerPos, posEnd, posMid, isEditMode, afterMoveCallback);
 
   return (
     <>

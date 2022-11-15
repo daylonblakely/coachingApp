@@ -36,11 +36,11 @@ export const getPath = (playerPos, posMid, posEnd) => {
 };
 
 // get (x,y) of mid and endpoints from a start position and a path object
-export const getInitialPositions = (
-  initPlayerX,
-  initPlayerY,
-  pathToNextPos
-) => {
+export const getInitialPositions = (pathToNextPos) => {
+  // init start
+  const initPlayerX = pathToNextPos?.move.x;
+  const initPlayerY = pathToNextPos?.move.y;
+
   // get last curve of an existing path
   const lastCurve = pathToNextPos?.curves[pathToNextPos.curves.length - 1];
 
@@ -64,5 +64,5 @@ export const getInitialPositions = (
       ? (lastCurve.c2.y - initEndY) / (9 / 16) + initEndY
       : (initPlayerY + initEndY) / 2;
 
-  return { initEndX, initEndY, initMidX, initMidY };
+  return { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY };
 };

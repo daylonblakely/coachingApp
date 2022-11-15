@@ -5,7 +5,7 @@ const playReducer = (state, action) => {
     case 'start_animating':
       return { ...state, shouldAnimate: true };
     case 'stop_animating':
-      return { ...state, shouldAnimate: false };
+      return { ...state, shouldAnimate: false, runStep: state.runStep + 1 };
     case 'fetch_play':
       return { ...state, currentPlay: action.payload };
     case 'update_path':
@@ -93,6 +93,21 @@ const fetchPlayById = (dispatch) => async (playId) => {
                 },
               },
             },
+            {
+              playerId: 2,
+              hasBall: false,
+              pathToNextPos: {
+                move: { y: 97.04205894470215, x: 241.95908892154694 },
+                curves: [
+                  {
+                    c1: { y: 97.04205894470215, x: 241.95908892154694 }, //for a strait line this is the same as move
+                    c2: { y: 340, x: 200 }, // this is the same as to
+                    to: { y: 340, x: 200 },
+                  },
+                ],
+                close: false,
+              },
+            },
           ],
         },
         {
@@ -108,6 +123,21 @@ const fetchPlayById = (dispatch) => async (playId) => {
                     c1: { y: 300, x: 100 },
                     c2: { y: 240, x: 300 },
                     to: { y: 240, x: 300 },
+                  },
+                ],
+                close: false,
+              },
+            },
+            {
+              playerId: 2,
+              hasBall: false,
+              pathToNextPos: {
+                move: { y: 240, x: 300 },
+                curves: [
+                  {
+                    c1: { y: 240, x: 300 }, //for a strait line this is the same as move
+                    c2: { y: 340, x: 200 }, // this is the same as to
+                    to: { y: 340, x: 200 },
                   },
                 ],
                 close: false,
@@ -129,6 +159,21 @@ const fetchPlayById = (dispatch) => async (playId) => {
                     c1: { y: 200, x: 300 }, //for a strait line this is the same as move
                     c2: { y: 340, x: 200 }, // this is the same as to
                     to: { y: 340, x: 200 },
+                  },
+                ],
+                close: false,
+              },
+            },
+            {
+              playerId: 3,
+              hasBall: false,
+              pathToNextPos: {
+                move: { y: 340, x: 200 },
+                curves: [
+                  {
+                    c1: { y: 340, x: 200 }, //for a strait line this is the same as move
+                    c2: { y: 440, x: 200 }, // this is the same as to
+                    to: { y: 440, x: 200 },
                   },
                 ],
                 close: false,

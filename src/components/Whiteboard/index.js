@@ -25,12 +25,12 @@ const Whiteboard = ({}) => {
     console.log('START ANIMATION');
 
     animationProgress.value = withTiming(
-      100,
+      1,
       { duration: ANIMATION_DURATION },
       (finished) => {
         if (finished) {
           console.log('ANIMATION ENDED');
-          animationProgress.value = 0;
+          // TODO - set next path when done animating
           runOnJS(stopAnimating)();
         } else {
           console.log('ANIMATION CANCELLED');
@@ -42,6 +42,8 @@ const Whiteboard = ({}) => {
   useEffect(() => {
     if (shouldAnimate) {
       runAnimation();
+    } else {
+      animationProgress.value = 0;
     }
   }, [shouldAnimate]);
 
@@ -51,10 +53,9 @@ const Whiteboard = ({}) => {
         label={player.label}
         pathToNextPos={player.steps[runStep].pathToNextPos}
         arrowColor={lineColor}
-        isEditMode={isEditMode}
-        shouldAnimate={shouldAnimate}
         afterMoveCallback={updateCurrentPlayerPath(player.id)}
         animationProgress={animationProgress}
+        isEditMode={!shouldAnimate && isEditMode}
         key={player.id}
       />
     ));

@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { useContext, useMemo, useEffect } from 'react';
 import { useAnimatedReaction, interpolate } from 'react-native-reanimated';
 import * as path from 'svg-path-properties';
 import { serialize } from 'react-native-redash';
+import { getInitialPositions } from '../utils/pathUtils';
+import { Context as PlayContext } from '../context/PlayContext';
 
 const getPointsAtLength = (pathToNextPos) => {
   const properties =
@@ -16,7 +18,17 @@ const getPointsAtLength = (pathToNextPos) => {
   ];
 };
 
-export default (playerPos, pathToNextPos, animationProgress, shouldAnimate) => {
+export default (
+  playerPos,
+  posMid,
+  posEnd,
+  pathToNextPos,
+  animationProgress
+) => {
+  const {
+    state: { runStep, shouldAnimate },
+  } = useContext(PlayContext);
+
   const [pointsAtLength, totalLength] = useMemo(
     () => getPointsAtLength(pathToNextPos),
     [pathToNextPos]
@@ -25,7 +37,7 @@ export default (playerPos, pathToNextPos, animationProgress, shouldAnimate) => {
   useAnimatedReaction(
     () => {
       return Math.floor(
-        interpolate(animationProgress.value, [0, 100], [0, totalLength])
+        interpolate(animationProgress.value, [0, 1], [0, totalLength])
       );
     },
     (result) => {
@@ -39,4 +51,12 @@ export default (playerPos, pathToNextPos, animationProgress, shouldAnimate) => {
     },
     [pointsAtLength, shouldAnimate]
   );
+
+  useEffect(() => {
+    console.log('step changed...');
+    const { initEndX, initEndY, initMidX, initMidY } =
+      getInitialPositions(pathToNextPos);
+    posEnd.value = { x: initEndX, y: initEndY };
+    posMid.value = { x: initMidX, y: initMidY };
+  }, [runStep]);
 };
