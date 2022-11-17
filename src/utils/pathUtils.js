@@ -66,3 +66,20 @@ export const getInitialPositions = (pathToNextPos) => {
 
   return { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY };
 };
+
+// takes a path object and returns the default "next path"
+export const setNextPath = (path) => {
+  const { x, y } = path.curves[path.curves.length - 1].to;
+
+  return {
+    move: { x, y },
+    curves: [
+      {
+        c1: { x, y }, //for a strait line this is the same as move
+        c2: { x, y: y - DEFAULT_LENGTH }, // this is the same as to
+        to: { x, y: y - DEFAULT_LENGTH },
+      },
+    ],
+    close: false,
+  };
+};

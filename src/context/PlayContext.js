@@ -1,11 +1,17 @@
 import createDataContext from './createDataContext';
+import { setNextPath } from '../utils/pathUtils';
 
 const playReducer = (state, action) => {
   switch (action.type) {
     case 'start_animating':
       return { ...state, shouldAnimate: true };
     case 'stop_animating':
-      return { ...state, shouldAnimate: false, runStep: state.runStep + 1 };
+      return {
+        ...state,
+        shouldAnimate: false,
+        runStep: state.runStep + 1,
+        currentPlay: { ...state.currentPlay, players: action.payload },
+      };
     case 'fetch_play':
       return { ...state, currentPlay: action.payload };
     case 'update_path':
@@ -49,8 +55,27 @@ const startAnimating = (dispatch) => () => {
   dispatch({ type: 'start_animating' });
 };
 
-const stopAnimating = (dispatch) => () => {
-  dispatch({ type: 'stop_animating' });
+const stopAnimating = (dispatch) => (runStep, players) => {
+  // if there is no path at the next run step, create a default one for each player
+  const updatedPlayers = players.map((player) => {
+    if (player.steps[runStep + 1]) {
+      return player;
+    } else {
+      return {
+        ...player,
+        steps: [
+          ...player.steps.slice(0, runStep + 1),
+          {
+            ...player.steps[runStep],
+            pathToNextPos: setNextPath(player.steps[runStep].pathToNextPos),
+          },
+          ...player.steps.slice(runStep + 2),
+        ],
+      };
+    }
+  });
+
+  dispatch({ type: 'stop_animating', payload: updatedPlayers });
 };
 
 const updateCurrentPlayerPath = (dispatch) => (playerId) => (path) => {
@@ -93,21 +118,6 @@ const fetchPlayById = (dispatch) => async (playId) => {
                 },
               },
             },
-            {
-              playerId: 2,
-              hasBall: false,
-              pathToNextPos: {
-                move: { y: 97.04205894470215, x: 241.95908892154694 },
-                curves: [
-                  {
-                    c1: { y: 97.04205894470215, x: 241.95908892154694 }, //for a strait line this is the same as move
-                    c2: { y: 340, x: 200 }, // this is the same as to
-                    to: { y: 340, x: 200 },
-                  },
-                ],
-                close: false,
-              },
-            },
           ],
         },
         {
@@ -128,21 +138,6 @@ const fetchPlayById = (dispatch) => async (playId) => {
                 close: false,
               },
             },
-            {
-              playerId: 2,
-              hasBall: false,
-              pathToNextPos: {
-                move: { y: 240, x: 300 },
-                curves: [
-                  {
-                    c1: { y: 240, x: 300 }, //for a strait line this is the same as move
-                    c2: { y: 340, x: 200 }, // this is the same as to
-                    to: { y: 340, x: 200 },
-                  },
-                ],
-                close: false,
-              },
-            },
           ],
         },
         {
@@ -150,7 +145,6 @@ const fetchPlayById = (dispatch) => async (playId) => {
           label: '3',
           steps: [
             {
-              playerId: 3,
               hasBall: false,
               pathToNextPos: {
                 move: { y: 200, x: 300 },
@@ -159,21 +153,6 @@ const fetchPlayById = (dispatch) => async (playId) => {
                     c1: { y: 200, x: 300 }, //for a strait line this is the same as move
                     c2: { y: 340, x: 200 }, // this is the same as to
                     to: { y: 340, x: 200 },
-                  },
-                ],
-                close: false,
-              },
-            },
-            {
-              playerId: 3,
-              hasBall: false,
-              pathToNextPos: {
-                move: { y: 340, x: 200 },
-                curves: [
-                  {
-                    c1: { y: 340, x: 200 }, //for a strait line this is the same as move
-                    c2: { y: 440, x: 200 }, // this is the same as to
-                    to: { y: 440, x: 200 },
                   },
                 ],
                 close: false,

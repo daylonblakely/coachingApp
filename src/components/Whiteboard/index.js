@@ -30,8 +30,9 @@ const Whiteboard = ({}) => {
       (finished) => {
         if (finished) {
           console.log('ANIMATION ENDED');
-          // TODO - set next path when done animating
-          runOnJS(stopAnimating)();
+
+          // set next path and run step when done animating
+          runOnJS(stopAnimating)(runStep, currentPlay.players);
         } else {
           console.log('ANIMATION CANCELLED');
         }

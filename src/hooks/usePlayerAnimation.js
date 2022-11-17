@@ -5,6 +5,7 @@ import { serialize } from 'react-native-redash';
 import { getInitialPositions } from '../utils/pathUtils';
 import { Context as PlayContext } from '../context/PlayContext';
 
+// map path to an array of coordinates and the total length of the path
 const getPointsAtLength = (pathToNextPos) => {
   const properties =
     pathToNextPos.move && path.svgPathProperties(serialize(pathToNextPos));
@@ -34,6 +35,8 @@ export default (
     [pathToNextPos]
   );
 
+  // as the animation progress changes, interpolate that value to the total length of the current path
+  // and update the player position to the coords at that length
   useAnimatedReaction(
     () => {
       return Math.floor(
@@ -52,6 +55,8 @@ export default (
     [pointsAtLength, shouldAnimate]
   );
 
+  // updates the player/arrow positions when the run step changes
+  // this happens when the animation ends at the current step
   useEffect(() => {
     console.log('step changed...');
     const { initEndX, initEndY, initMidX, initMidY } =
