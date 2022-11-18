@@ -1,4 +1,7 @@
-9/17/22
+9/17/22 - DONE
 moving arrow points is rerendering the player components and resetting the mid point position.
 consider saving the player/arrow positions in state instead of the path. Or possibly along with the path
 
+11/16/22
+- add the previous play step logic
+- add the run play logic
