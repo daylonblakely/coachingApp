@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useContext, useMemo, useEffect, useState } from 'react';
 import {
   runOnJS,
   useSharedValue,
@@ -7,20 +7,35 @@ import {
 } from 'react-native-reanimated';
 import { serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
-import { getPath, isStraight } from '../utils/pathUtils';
+import { getInitialPositions, getPath, isStraight } from '../utils/pathUtils';
+import { Context as PlayContext } from '../context/PlayContext';
 
-export default (playerPos, posEnd, posMid, shouldEdit, afterMoveCallback) => {
-  const shouldEditShared = useSharedValue(shouldEdit);
-  useEffect(() => {
-    shouldEditShared.value = shouldEdit;
-  }, [shouldEdit]);
+export default (playerId) => {
+  const {
+    state: { runStep, shouldAnimate, isEditMode, currentPlay },
+    updateCurrentPlayerPath,
+  } = useContext(PlayContext);
+
+  const { pathToNextPos } = currentPlay.players.find(
+    ({ id }) => playerId === id
+  ).steps[runStep];
+
+  const [{ initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY }] =
+    useState(() => getInitialPositions(pathToNextPos));
+
+  const playerPos = useSharedValue({
+    x: initPlayerX,
+    y: initPlayerY,
+  });
+  const posMid = useSharedValue({ x: initMidX, y: initMidY });
+  const posEnd = useSharedValue({ x: initEndX, y: initEndY });
 
   // setCurrentPath is a helper to update the state with current paths onEnd drag for player/position
   // https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
-  const updatePathWrapper = (path) => afterMoveCallback(path);
+  const updatePathWrapper = (path) => updateCurrentPlayerPath(playerId, path);
   const setCurrentPath = () => {
     'worklet';
-    if (shouldEdit) {
+    if (isEditMode && !shouldAnimate) {
       runOnJS(updatePathWrapper)(
         getPath(playerPos.value, posMid.value, posEnd.value)
       );
@@ -30,25 +45,20 @@ export default (playerPos, posEnd, posMid, shouldEdit, afterMoveCallback) => {
   // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
-    shouldEdit,
-    setCurrentPath
-  );
-
-  const [gestureHandlerEnd, animatedStyleEnd] = useDraggable(
-    posEnd,
-    shouldEdit,
+    isEditMode && !shouldAnimate,
     setCurrentPath
   );
 
   const [gestureHandlerMid, animatedStyleMid] = useDraggable(
     posMid,
-    shouldEdit,
+    isEditMode && !shouldAnimate,
     (pos) => {
       'worklet';
       // snap position to middle if line is almost straight
       if (
         isStraight(playerPos.value, posEnd.value, pos.value) &&
-        shouldEditShared.value
+        isEditMode &&
+        !shouldAnimate
       ) {
         pos.value = {
           ...pos.value,
@@ -61,13 +71,15 @@ export default (playerPos, posEnd, posMid, shouldEdit, afterMoveCallback) => {
     }
   );
 
-  // don't move midpoint on first render in useAnimatedReaction
-  const shouldMoveMid = useSharedValue();
-  useEffect(() => {
-    shouldMoveMid.value = false;
-  }, []);
+  const [gestureHandlerEnd, animatedStyleEnd] = useDraggable(
+    posEnd,
+    isEditMode && !shouldAnimate,
+    setCurrentPath
+  );
 
   // moves midpoint when end or player are dragged
+  // don't move midpoint on first render in useAnimatedReaction
+  const shouldMoveMid = useSharedValue(false);
   useAnimatedReaction(
     () => {
       return {
@@ -76,28 +88,34 @@ export default (playerPos, posEnd, posMid, shouldEdit, afterMoveCallback) => {
       };
     },
     (result) => {
-      if (shouldMoveMid.value && shouldEditShared.value) {
+      if (shouldMoveMid.value && isEditMode && !shouldAnimate) {
         posMid.value = result;
       }
       shouldMoveMid.value = true;
     },
-    []
+    [isEditMode, shouldAnimate]
   );
 
   // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {
-    if (!shouldEditShared.value) return {};
+    if (!isEditMode || shouldAnimate) return {};
     const p = getPath(playerPos.value, posMid.value, posEnd.value);
     return { d: serialize(p) };
-  });
+  }, [isEditMode, shouldAnimate]);
 
   return {
+    // position shared values
+    playerPos,
+    posMid,
+    posEnd,
+    // gesture handlers
     gestureHandlerPlayer,
-    animatedStylePlayer,
     gestureHandlerEnd,
-    animatedStyleEnd,
     gestureHandlerMid,
+    // animated styles/props
+    animatedStylePlayer,
     animatedStyleMid,
+    animatedStyleEnd,
     animatedPropsArrow,
   };
 };

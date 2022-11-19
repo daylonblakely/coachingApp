@@ -80,7 +80,7 @@ const stopAnimating = (dispatch) => (runStep, players) => {
   dispatch({ type: 'stop_animating', payload: updatedPlayers });
 };
 
-const updateCurrentPlayerPath = (dispatch) => (playerId) => (path) => {
+const updateCurrentPlayerPath = (dispatch) => (playerId, path) => {
   console.log('updating path ', playerId);
   dispatch({ type: 'update_path', payload: { playerId, path } });
 };

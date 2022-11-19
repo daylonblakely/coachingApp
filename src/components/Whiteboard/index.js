@@ -14,8 +14,7 @@ const Whiteboard = ({}) => {
   const lineColor = useColorModeValue('black', 'white');
 
   const {
-    state: { currentPlay, runStep, isEditMode, shouldAnimate },
-    updateCurrentPlayerPath,
+    state: { currentPlay, runStep, shouldAnimate },
     stopAnimating,
   } = useContext(PlayContext);
 
@@ -54,9 +53,8 @@ const Whiteboard = ({}) => {
         label={player.label}
         pathToNextPos={player.steps[runStep].pathToNextPos}
         arrowColor={lineColor}
-        afterMoveCallback={updateCurrentPlayerPath(player.id)}
         animationProgress={animationProgress}
-        isEditMode={!shouldAnimate && isEditMode}
+        playerId={player.id}
         key={player.id}
       />
     ));

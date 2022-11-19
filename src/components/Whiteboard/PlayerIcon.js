@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Circle, Text } from 'native-base';
-import Animated, { useSharedValue } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import useArrowPoints from '../../hooks/useArrowPoints';
+import usePlayerPosition from '../../hooks/usePlayerPosition';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
-import { getInitialPositions } from '../../utils/pathUtils';
 import Arrow from './Arrow';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -12,22 +11,27 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const PlayerIcon = ({
   pathToNextPos,
   arrowColor,
-  afterMoveCallback,
   label,
   animationProgress,
-  isEditMode,
+  playerId,
 }) => {
   console.log('---------RENDERING PLAYER: ', label);
 
-  const [{ initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY }] =
-    useState(() => getInitialPositions(pathToNextPos));
-
-  const playerPos = useSharedValue({
-    x: initPlayerX,
-    y: initPlayerY,
-  });
-  const posMid = useSharedValue({ x: initMidX, y: initMidY });
-  const posEnd = useSharedValue({ x: initEndX, y: initEndY });
+  const {
+    // position shared values
+    playerPos,
+    posMid,
+    posEnd,
+    // gesture handlers
+    gestureHandlerPlayer,
+    gestureHandlerEnd,
+    gestureHandlerMid,
+    // animated styles/props
+    animatedStylePlayer,
+    animatedStyleMid,
+    animatedStyleEnd,
+    animatedPropsArrow,
+  } = usePlayerPosition(playerId);
 
   usePlayerAnimation(
     playerPos,
@@ -36,16 +40,6 @@ const PlayerIcon = ({
     pathToNextPos,
     animationProgress
   );
-
-  const {
-    gestureHandlerPlayer,
-    animatedStylePlayer,
-    gestureHandlerEnd,
-    animatedStyleEnd,
-    gestureHandlerMid,
-    animatedStyleMid,
-    animatedPropsArrow,
-  } = useArrowPoints(playerPos, posEnd, posMid, isEditMode, afterMoveCallback);
 
   return (
     <>
