@@ -5,13 +5,23 @@ import MenuIcon from './MenuIcon';
 import { Context as PlayContext } from '../../context/PlayContext';
 
 const PlayFooter = () => {
-  const { startAnimating } = useContext(PlayContext);
+  const {
+    state: { runStep },
+    startAnimating,
+    setRunStep,
+  } = useContext(PlayContext);
 
   const { isOpen, onToggle } = useDisclose();
 
   const footerIcons = [
     { icon: 'save', text: 'Save' },
-    { icon: 'play-skip-back', text: 'Last Step' },
+    {
+      icon: 'play-skip-back',
+      text: 'Last Step',
+      onPress: () => {
+        if (runStep > 0) setRunStep(runStep - 1);
+      },
+    },
     { icon: 'play', text: 'Run Play' },
     { icon: 'play-skip-forward', text: 'Next Step', onPress: startAnimating },
   ];

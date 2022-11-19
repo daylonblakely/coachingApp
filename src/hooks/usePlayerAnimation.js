@@ -59,8 +59,9 @@ export default (
   // this happens when the animation ends at the current step
   useEffect(() => {
     console.log('step changed...');
-    const { initEndX, initEndY, initMidX, initMidY } =
+    const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
       getInitialPositions(pathToNextPos);
+    playerPos.value = { x: initPlayerX, y: initPlayerY };
     posEnd.value = { x: initEndX, y: initEndY };
     posMid.value = { x: initMidX, y: initMidY };
   }, [runStep]);
