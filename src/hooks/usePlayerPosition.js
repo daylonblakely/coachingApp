@@ -1,4 +1,4 @@
-import { useContext, useMemo, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   runOnJS,
   useSharedValue,
@@ -20,6 +20,7 @@ export default (playerId) => {
     ({ id }) => playerId === id
   ).steps[runStep];
 
+  //   initial values for position shared values
   const [{ initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY }] =
     useState(() => getInitialPositions(pathToNextPos));
 
@@ -96,6 +97,19 @@ export default (playerId) => {
     [isEditMode, shouldAnimate]
   );
 
+  // updates the player/arrow positions when the run step changes
+  // this happens when the animation ends at the current step
+  useEffect(() => {
+    console.log('step changed...');
+    const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
+      getInitialPositions(pathToNextPos);
+
+    shouldMoveMid.value = false; //prevent useAnimatedReaction from updating midpoint
+    playerPos.value = { x: initPlayerX, y: initPlayerY };
+    posEnd.value = { x: initEndX, y: initEndY };
+    posMid.value = { x: initMidX, y: initMidY };
+  }, [runStep]);
+
   // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {
     if (!isEditMode || shouldAnimate) return {};
@@ -106,8 +120,6 @@ export default (playerId) => {
   return {
     // position shared values
     playerPos,
-    posMid,
-    posEnd,
     // gesture handlers
     gestureHandlerPlayer,
     gestureHandlerEnd,

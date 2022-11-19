@@ -8,20 +8,12 @@ import Arrow from './Arrow';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const PlayerIcon = ({
-  pathToNextPos,
-  arrowColor,
-  label,
-  animationProgress,
-  playerId,
-}) => {
+const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
 
   const {
     // position shared values
     playerPos,
-    posMid,
-    posEnd,
     // gesture handlers
     gestureHandlerPlayer,
     gestureHandlerEnd,
@@ -33,13 +25,7 @@ const PlayerIcon = ({
     animatedPropsArrow,
   } = usePlayerPosition(playerId);
 
-  usePlayerAnimation(
-    playerPos,
-    posMid,
-    posEnd,
-    pathToNextPos,
-    animationProgress
-  );
+  usePlayerAnimation(playerPos, playerId, animationProgress);
 
   return (
     <>

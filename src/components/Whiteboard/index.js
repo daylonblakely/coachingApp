@@ -50,11 +50,10 @@ const Whiteboard = ({}) => {
   const renderPlayers = () => {
     return currentPlay?.players.map((player, i) => (
       <PlayerIcon
-        label={player.label}
-        pathToNextPos={player.steps[runStep].pathToNextPos}
-        arrowColor={lineColor}
-        animationProgress={animationProgress}
         playerId={player.id}
+        animationProgress={animationProgress}
+        label={player.label}
+        arrowColor={lineColor}
         key={player.id}
       />
     ));

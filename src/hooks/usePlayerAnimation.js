@@ -1,8 +1,7 @@
-import { useContext, useMemo, useEffect } from 'react';
+import { useContext, useMemo } from 'react';
 import { useAnimatedReaction, interpolate } from 'react-native-reanimated';
 import * as path from 'svg-path-properties';
 import { serialize } from 'react-native-redash';
-import { getInitialPositions } from '../utils/pathUtils';
 import { Context as PlayContext } from '../context/PlayContext';
 
 // map path to an array of coordinates and the total length of the path
@@ -19,16 +18,14 @@ const getPointsAtLength = (pathToNextPos) => {
   ];
 };
 
-export default (
-  playerPos,
-  posMid,
-  posEnd,
-  pathToNextPos,
-  animationProgress
-) => {
+export default (playerPos, playerId, animationProgress) => {
   const {
-    state: { runStep, shouldAnimate },
+    state: { runStep, shouldAnimate, currentPlay },
   } = useContext(PlayContext);
+
+  const { pathToNextPos } = currentPlay.players.find(
+    ({ id }) => playerId === id
+  ).steps[runStep];
 
   const [pointsAtLength, totalLength] = useMemo(
     () => getPointsAtLength(pathToNextPos),
@@ -54,15 +51,4 @@ export default (
     },
     [pointsAtLength, shouldAnimate]
   );
-
-  // updates the player/arrow positions when the run step changes
-  // this happens when the animation ends at the current step
-  useEffect(() => {
-    console.log('step changed...');
-    const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
-      getInitialPositions(pathToNextPos);
-    playerPos.value = { x: initPlayerX, y: initPlayerY };
-    posEnd.value = { x: initEndX, y: initEndY };
-    posMid.value = { x: initMidX, y: initMidY };
-  }, [runStep]);
 };
