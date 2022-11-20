@@ -20,7 +20,7 @@ const getPointsAtLength = (pathToNextPos) => {
 
 export default (playerPos, playerId, animationProgress) => {
   const {
-    state: { runStep, shouldAnimate, currentPlay },
+    state: { runStep, currentPlay },
   } = useContext(PlayContext);
 
   const { pathToNextPos } = currentPlay.players.find(
@@ -41,7 +41,7 @@ export default (playerPos, playerId, animationProgress) => {
       );
     },
     (result) => {
-      if (shouldAnimate) {
+      if (result > 0) {
         const { x, y } = pointsAtLength[result];
         playerPos.value = {
           x,
@@ -49,6 +49,6 @@ export default (playerPos, playerId, animationProgress) => {
         };
       }
     },
-    [pointsAtLength, shouldAnimate]
+    [pointsAtLength]
   );
 };

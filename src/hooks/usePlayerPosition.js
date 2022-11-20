@@ -12,9 +12,17 @@ import { Context as PlayContext } from '../context/PlayContext';
 
 export default (playerId) => {
   const {
-    state: { runStep, shouldAnimate, isEditMode, currentPlay },
+    state: {
+      runStep,
+      isEditMode,
+      currentPlay,
+      shouldAnimatePlay,
+      shouldAnimateStep,
+    },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
+
+  const shouldEdit = isEditMode && !shouldAnimatePlay && !shouldAnimateStep;
 
   const { pathToNextPos } = currentPlay.players.find(
     ({ id }) => playerId === id
@@ -36,7 +44,7 @@ export default (playerId) => {
   const updatePathWrapper = (path) => updateCurrentPlayerPath(playerId, path);
   const setCurrentPath = () => {
     'worklet';
-    if (isEditMode && !shouldAnimate) {
+    if (shouldEdit) {
       runOnJS(updatePathWrapper)(
         getPath(playerPos.value, posMid.value, posEnd.value)
       );
@@ -46,21 +54,17 @@ export default (playerId) => {
   // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
-    isEditMode && !shouldAnimate,
+    shouldEdit,
     setCurrentPath
   );
 
   const [gestureHandlerMid, animatedStyleMid] = useDraggable(
     posMid,
-    isEditMode && !shouldAnimate,
+    shouldEdit,
     (pos) => {
       'worklet';
       // snap position to middle if line is almost straight
-      if (
-        isStraight(playerPos.value, posEnd.value, pos.value) &&
-        isEditMode &&
-        !shouldAnimate
-      ) {
+      if (isStraight(playerPos.value, posEnd.value, pos.value) && shouldEdit) {
         pos.value = {
           ...pos.value,
           x: (playerPos.value.x + posEnd.value.x) / 2,
@@ -74,7 +78,7 @@ export default (playerId) => {
 
   const [gestureHandlerEnd, animatedStyleEnd] = useDraggable(
     posEnd,
-    isEditMode && !shouldAnimate,
+    shouldEdit,
     setCurrentPath
   );
 
@@ -89,12 +93,12 @@ export default (playerId) => {
       };
     },
     (result) => {
-      if (shouldMoveMid.value && isEditMode && !shouldAnimate) {
+      if (shouldMoveMid.value && shouldEdit) {
         posMid.value = result;
       }
       shouldMoveMid.value = true;
     },
-    [isEditMode, shouldAnimate]
+    [isEditMode, shouldEdit]
   );
 
   // updates the player/arrow positions when the run step changes
@@ -112,10 +116,10 @@ export default (playerId) => {
 
   // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {
-    if (!isEditMode || shouldAnimate) return {};
+    if (!shouldEdit) return {};
     const p = getPath(playerPos.value, posMid.value, posEnd.value);
     return { d: serialize(p) };
-  }, [isEditMode, shouldAnimate]);
+  }, [shouldEdit]);
 
   return {
     // position shared values

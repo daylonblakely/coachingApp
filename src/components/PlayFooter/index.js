@@ -7,7 +7,8 @@ import { Context as PlayContext } from '../../context/PlayContext';
 const PlayFooter = () => {
   const {
     state: { runStep },
-    startAnimating,
+    runPlayAnimation,
+    runStepAnimation,
     setRunStep,
   } = useContext(PlayContext);
 
@@ -22,8 +23,8 @@ const PlayFooter = () => {
         if (runStep > 0) setRunStep(runStep - 1);
       },
     },
-    { icon: 'play', text: 'Run Play' },
-    { icon: 'play-skip-forward', text: 'Next Step', onPress: startAnimating },
+    { icon: 'play', text: 'Run Play', onPress: runPlayAnimation },
+    { icon: 'play-skip-forward', text: 'Next Step', onPress: runStepAnimation },
   ];
 
   const menuIcons = [

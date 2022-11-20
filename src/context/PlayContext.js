@@ -3,14 +3,21 @@ import { setNextPath } from '../utils/pathUtils';
 
 const playReducer = (state, action) => {
   switch (action.type) {
-    case 'start_animating':
-      return { ...state, shouldAnimate: true };
-    case 'stop_animating':
+    case 'start_play_animation':
+      return { ...state, shouldAnimatePlay: true };
+    case 'start_step_animation':
+      return { ...state, shouldAnimateStep: true };
+    case 'stop_play_animation':
+      return { ...state, ...action.payload };
+    case 'stop_step_animation':
       return {
         ...state,
-        shouldAnimate: false,
+        shouldAnimateStep: false,
         runStep: state.runStep + 1,
-        currentPlay: { ...state.currentPlay, players: action.payload },
+        currentPlay: {
+          ...state.currentPlay,
+          players: action.payload,
+        },
       };
     case 'set_run_step':
       return { ...state, runStep: action.payload };
@@ -53,11 +60,25 @@ const playReducer = (state, action) => {
   }
 };
 
-const startAnimating = (dispatch) => () => {
-  dispatch({ type: 'start_animating' });
+const runPlayAnimation = (dispatch) => () => {
+  dispatch({ type: 'start_play_animation' });
 };
 
-const stopAnimating = (dispatch) => (runStep, players) => {
+const runStepAnimation = (dispatch) => () => {
+  dispatch({ type: 'start_step_animation' });
+};
+
+const stopPlayAnimation = (dispatch) => (runStep, players) => {
+  const nextStepExists = !!players[0]?.steps[runStep + 1];
+
+  const payload = nextStepExists
+    ? { runStep: runStep + 1, shouldAnimatePlay: true }
+    : { runStep: runStep, shouldAnimatePlay: false };
+
+  dispatch({ type: 'stop_play_animation', payload });
+};
+
+const stopStepAnimation = (dispatch) => (runStep, players) => {
   // if there is no path at the next run step, create a default one for each player
   const updatedPlayers = players.map((player) => {
     if (player.steps[runStep + 1]) {
@@ -77,7 +98,10 @@ const stopAnimating = (dispatch) => (runStep, players) => {
     }
   });
 
-  dispatch({ type: 'stop_animating', payload: updatedPlayers });
+  dispatch({
+    type: 'stop_step_animation',
+    payload: updatedPlayers,
+  });
 };
 
 const updateCurrentPlayerPath = (dispatch) => (playerId, path) => {
@@ -178,15 +202,18 @@ const setRunStep = (dispatch) => (runStep) => {
 export const { Provider, Context } = createDataContext(
   playReducer,
   {
-    startAnimating,
-    stopAnimating,
+    runPlayAnimation,
+    runStepAnimation,
+    stopPlayAnimation,
+    stopStepAnimation,
     updateCurrentPlayerPath,
     fetchPlayById,
     setRunStep,
   },
   {
     isEditMode: true,
-    shouldAnimate: false,
+    shouldAnimatePlay: false,
+    shouldAnimateStep: false,
     runStep: 0,
     plays: [
       { id: '1', name: 'test play 1' },

@@ -14,13 +14,14 @@ const Whiteboard = ({}) => {
   const lineColor = useColorModeValue('black', 'white');
 
   const {
-    state: { currentPlay, runStep, shouldAnimate },
-    stopAnimating,
+    state: { currentPlay, runStep, shouldAnimatePlay, shouldAnimateStep },
+    stopStepAnimation,
+    stopPlayAnimation,
   } = useContext(PlayContext);
 
   const animationProgress = useSharedValue(0);
 
-  const runAnimation = () => {
+  const runAnimation = (isStep) => {
     console.log('START ANIMATION');
 
     animationProgress.value = withTiming(
@@ -29,9 +30,14 @@ const Whiteboard = ({}) => {
       (finished) => {
         if (finished) {
           console.log('ANIMATION ENDED');
+          animationProgress.value = 0;
 
-          // set next path and run step when done animating
-          runOnJS(stopAnimating)(runStep, currentPlay.players);
+          if (isStep) {
+            // set next path and run step when done animating
+            runOnJS(stopStepAnimation)(runStep, currentPlay.players);
+          } else {
+            runOnJS(stopPlayAnimation)(runStep, currentPlay.players);
+          }
         } else {
           console.log('ANIMATION CANCELLED');
         }
@@ -40,12 +46,10 @@ const Whiteboard = ({}) => {
   };
 
   useEffect(() => {
-    if (shouldAnimate) {
-      runAnimation();
-    } else {
-      animationProgress.value = 0;
+    if (shouldAnimatePlay || shouldAnimateStep) {
+      runAnimation(shouldAnimateStep);
     }
-  }, [shouldAnimate]);
+  });
 
   const renderPlayers = () => {
     return currentPlay?.players.map((player, i) => (
