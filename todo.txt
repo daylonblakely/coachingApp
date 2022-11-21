@@ -8,3 +8,14 @@ consider saving the player/arrow positions in state instead of the path. Or poss
 
 11/20/22 - DONE
 - update the arrow svg inbetween steps when running a play
+
+11/20/22
+- clear all subsequent play steps after updating current
+- player position shouldn't be allowed to teleport on step changed
+- display current step and total count
+- remove arrow after entire play completes? maybe give the option to reset
+- make play speed updatable
+- staggered line for passes
+- curvy line for dribbling
+- press and hold menu on player
+- show the ball somehow
