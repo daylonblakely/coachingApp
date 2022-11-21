@@ -101,6 +101,15 @@ export default (playerId) => {
     [isEditMode, shouldEdit]
   );
 
+  // moves arrow svg
+  const shouldMoveArrow = useSharedValue(false);
+  const animatedPropsArrow = useAnimatedProps(() => {
+    if (!shouldEdit && !shouldMoveArrow.value) return {};
+    shouldMoveArrow.value = false; //set to false to prevent moving arrow while animating
+    const p = getPath(playerPos.value, posMid.value, posEnd.value);
+    return { d: serialize(p) };
+  }, [shouldEdit]);
+
   // updates the player/arrow positions when the run step changes
   // this happens when the animation ends at the current step
   useEffect(() => {
@@ -109,17 +118,11 @@ export default (playerId) => {
       getInitialPositions(pathToNextPos);
 
     shouldMoveMid.value = false; //prevent useAnimatedReaction from updating midpoint
+    shouldMoveArrow.value = true; //allows the arrow svg to move inbetween steps when running a play
     playerPos.value = { x: initPlayerX, y: initPlayerY };
     posEnd.value = { x: initEndX, y: initEndY };
     posMid.value = { x: initMidX, y: initMidY };
   }, [runStep]);
-
-  // moves arrow svg
-  const animatedPropsArrow = useAnimatedProps(() => {
-    if (!shouldEdit) return {};
-    const p = getPath(playerPos.value, posMid.value, posEnd.value);
-    return { d: serialize(p) };
-  }, [shouldEdit]);
 
   return {
     // position shared values
