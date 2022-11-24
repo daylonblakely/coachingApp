@@ -2,7 +2,7 @@ import React from 'react';
 import { Svg, Defs, Marker, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
 import Animated from 'react-native-reanimated';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import { GestureDetector } from 'react-native-gesture-handler';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -43,22 +43,22 @@ const Arrow = ({
           markerEnd="url(#Triangle)"
         />
       </Svg>
-      <PanGestureHandler onGestureEvent={gestureHandlerMid}>
+      <GestureDetector gesture={gestureHandlerMid}>
         <AnimatedCircle
           style={animatedStyleMid}
           position="absolute"
           size="10"
           bg="green.600"
         />
-      </PanGestureHandler>
-      <PanGestureHandler onGestureEvent={gestureHandlerEnd}>
+      </GestureDetector>
+      <GestureDetector gesture={gestureHandlerEnd}>
         <AnimatedCircle
           style={animatedStyleEnd}
           position="absolute"
           size="10"
           bg="primary.600"
         />
-      </PanGestureHandler>
+      </GestureDetector>
     </>
   );
 };

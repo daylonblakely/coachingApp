@@ -1,29 +1,25 @@
-import {
-  useAnimatedStyle,
-  useAnimatedGestureHandler,
-} from 'react-native-reanimated';
+import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { Gesture } from 'react-native-gesture-handler';
 
 export default (pos, isDraggable, onEnd) => {
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart: (_, ctx) => {
-      ctx.startX = pos.value.x;
-      ctx.startY = pos.value.y;
-    },
-    onActive: (event, ctx) => {
+  const context = useSharedValue({ x: pos.value.x, y: pos.value.y });
+  const gestureHandler = Gesture.Pan()
+    .onStart(() => {
+      context.value = { x: pos.value.x, y: pos.value.y };
+    })
+    .onUpdate((e) => {
       if (isDraggable) {
         pos.value = {
-          ...pos.value,
-          x: ctx.startX + event.translationX,
-          y: ctx.startY + event.translationY,
+          x: e.translationX + context.value.x,
+          y: e.translationY + context.value.y,
         };
       }
-    },
-    onEnd: (_) => {
+    })
+    .onEnd((_) => {
       if (onEnd && isDraggable) {
         onEnd(pos);
       }
-    },
-  });
+    });
 
   const animatedStyle = useAnimatedStyle(() => {
     return {

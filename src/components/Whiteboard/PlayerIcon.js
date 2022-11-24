@@ -1,7 +1,7 @@
 import React from 'react';
 import { Circle, Text } from 'native-base';
 import Animated from 'react-native-reanimated';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import usePlayerPosition from '../../hooks/usePlayerPosition';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import Arrow from './Arrow';
@@ -27,6 +27,14 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
 
   usePlayerAnimation(playerPos, playerId, animationProgress);
 
+  const longPressGesture = Gesture.LongPress().onStart((_event) => {
+    // popupPosition.value = { x: offset.value.x, y: offset.value.y };
+    // popupAlpha.value = withTiming(1);
+    console.log('long press');
+  });
+
+  const composed = Gesture.Race(gestureHandlerPlayer, longPressGesture);
+
   return (
     <>
       <Arrow
@@ -38,7 +46,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         color={arrowColor}
       />
 
-      <PanGestureHandler onGestureEvent={gestureHandlerPlayer}>
+      <GestureDetector gesture={composed}>
         <AnimatedCircle
           style={animatedStylePlayer}
           position="absolute"
@@ -49,7 +57,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
             {label}
           </Text>
         </AnimatedCircle>
-      </PanGestureHandler>
+      </GestureDetector>
     </>
   );
 };

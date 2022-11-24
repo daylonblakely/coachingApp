@@ -21,7 +21,6 @@ export default (playerId) => {
     },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
-  console.log(runStep);
 
   const shouldEdit = isEditMode && !shouldAnimatePlay && !shouldAnimateStep;
 
