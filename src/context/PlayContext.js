@@ -46,9 +46,6 @@ const playReducer = (state, action) => {
                   ...state.currentPlay.players[playerIndex].steps[runStep],
                   pathToNextPos: action.payload.path,
                 },
-                ...state.currentPlay.players[playerIndex].steps.slice(
-                  runStep + 1
-                ),
               ],
             },
             ...state.currentPlay.players.slice(playerIndex + 1),
