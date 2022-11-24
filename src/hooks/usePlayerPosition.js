@@ -21,6 +21,7 @@ export default (playerId) => {
     },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
+  console.log(runStep);
 
   const shouldEdit = isEditMode && !shouldAnimatePlay && !shouldAnimateStep;
 
@@ -54,7 +55,7 @@ export default (playerId) => {
   // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
-    shouldEdit,
+    shouldEdit && runStep === 0,
     setCurrentPath
   );
 
