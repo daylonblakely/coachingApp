@@ -1,57 +1,31 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Circle, Text } from 'native-base';
-import Animated, { useSharedValue } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
-import useArrowPoints from '../../hooks/useArrowPoints';
+import usePlayerPosition from '../../hooks/usePlayerPosition';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
-import { Context as PlayContext } from '../../context/PlayContext';
-import { Context as PlayerContext } from '../../context/PlayerContext';
-
 import Arrow from './Arrow';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const PlayerIcon = ({ player, arrowColor }) => {
-  const {
-    state: { isEditMode, isAnimating },
-    stopAnimating,
-  } = useContext(PlayContext);
-  // TODO - figure out where to handle state/context for players and plays
-  // do I need two separate contexts???
-  // how to transition from one path to another when running plays
-  const { updatePath } = useContext(PlayerContext);
+const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
+  console.log('---------RENDERING PLAYER: ', label);
 
   const {
-    initialPathToNextPos,
-    currentPathToNextPos,
-    initialPos: { x, y },
-    label,
-  } = player;
-  const playerPos = useSharedValue({ x, y });
-
-  usePlayerAnimation(
+    // position shared values
     playerPos,
-    currentPathToNextPos,
-    isAnimating,
-    stopAnimating
-  );
-
-  // const step = player.steps[state.runStep];
-
-  const {
+    // gesture handlers
     gestureHandlerPlayer,
-    animatedStylePlayer,
     gestureHandlerEnd,
-    animatedStyleEnd,
     gestureHandlerMid,
+    // animated styles/props
+    animatedStylePlayer,
     animatedStyleMid,
+    animatedStyleEnd,
     animatedPropsArrow,
-  } = useArrowPoints(
-    playerPos,
-    initialPathToNextPos,
-    !isAnimating && isEditMode,
-    updatePath(player.id)
-  );
+  } = usePlayerPosition(playerId);
+
+  usePlayerAnimation(playerPos, playerId, animationProgress);
 
   return (
     <>

@@ -1,32 +1,47 @@
-import { useEffect } from 'react';
-import {
-  useSharedValue,
-  useAnimatedReaction,
-  withTiming,
-  runOnJS,
-} from 'react-native-reanimated';
+import { useContext, useMemo } from 'react';
+import { useAnimatedReaction, interpolate } from 'react-native-reanimated';
 import * as path from 'svg-path-properties';
 import { serialize } from 'react-native-redash';
+import { Context as PlayContext } from '../context/PlayContext';
 
-const ANIMATION_DURATION = 2000;
-
-export default (playerPos, pathToNextPos, shouldAnimate, callback) => {
-  const shouldAnimateShared = useSharedValue(false);
-  const progress = useSharedValue(0);
-
+// map path to an array of coordinates and the total length of the path
+const getPointsAtLength = (pathToNextPos) => {
   const properties =
     pathToNextPos.move && path.svgPathProperties(serialize(pathToNextPos));
   const totalLength = properties?.getTotalLength();
-  const pointsAtLength = Array(Math.floor(totalLength + 1 || 0)) // + 1 to avoid destructuring undefined in animation hook
-    .fill()
-    .map((_, i) => properties.getPointAtLength(i));
 
+  return [
+    Array(Math.floor(totalLength + 1 || 0)) // + 1 to avoid destructuring undefined in animation hook
+      .fill()
+      .map((_, i) => properties.getPointAtLength(i)),
+    totalLength,
+  ];
+};
+
+export default (playerPos, playerId, animationProgress) => {
+  const {
+    state: { runStep, currentPlay },
+  } = useContext(PlayContext);
+
+  const { pathToNextPos } = currentPlay.players.find(
+    ({ id }) => playerId === id
+  ).steps[runStep];
+
+  const [pointsAtLength, totalLength] = useMemo(
+    () => getPointsAtLength(pathToNextPos),
+    [pathToNextPos]
+  );
+
+  // as the animation progress changes, interpolate that value to the total length of the current path
+  // and update the player position to the coords at that length
   useAnimatedReaction(
     () => {
-      return Math.floor(progress.value);
+      return Math.floor(
+        interpolate(animationProgress.value, [0, 1], [0, totalLength])
+      );
     },
     (result) => {
-      if (shouldAnimateShared.value) {
+      if (result > 0) {
         const { x, y } = pointsAtLength[result];
         playerPos.value = {
           x,
@@ -36,26 +51,4 @@ export default (playerPos, pathToNextPos, shouldAnimate, callback) => {
     },
     [pointsAtLength]
   );
-
-  useEffect(() => {
-    shouldAnimateShared.value = shouldAnimate;
-    if (shouldAnimate) {
-      console.log('START ANIMATION');
-
-      progress.value = withTiming(
-        totalLength,
-        { duration: ANIMATION_DURATION },
-        (finished) => {
-          if (finished) {
-            console.log('ANIMATION ENDED');
-            shouldAnimateShared.value = false;
-            progress.value = 0;
-            runOnJS(callback)();
-          } else {
-            console.log('ANIMATION CANCELLED');
-          }
-        }
-      );
-    }
-  }, [shouldAnimate]);
 };
