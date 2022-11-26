@@ -1,15 +1,23 @@
 import React from 'react';
-import { Circle, Text } from 'native-base';
+import { Circle, Text, useDisclose, Stagger, Modal } from 'native-base';
 import Animated from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import usePlayerPosition from '../../hooks/usePlayerPosition';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import Arrow from './Arrow';
+import MenuIcon from '../MenuIcon';
+import StaggerModal from '../StaggerModal';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
+  const { isOpen, onToggle } = useDisclose();
+  const menuIcons = [
+    { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Arrow' },
+    { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Dribble' },
+    { bg: 'red.400', icon: 'arrow-undo', text: 'Reset' },
+  ];
 
   const {
     // position shared values
@@ -27,13 +35,14 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
 
   usePlayerAnimation(playerPos, playerId, animationProgress);
 
-  const longPressGesture = Gesture.LongPress().onStart((_event) => {
-    // popupPosition.value = { x: offset.value.x, y: offset.value.y };
-    // popupAlpha.value = withTiming(1);
-    console.log('long press');
-  });
+  const doubleTapGesture = Gesture.Tap()
+    .numberOfTaps(2)
+    .onStart(() => {
+      console.log('double tap');
+      // onToggle();
+    });
 
-  const composed = Gesture.Race(gestureHandlerPlayer, longPressGesture);
+  const composed = Gesture.Race(gestureHandlerPlayer, doubleTapGesture);
 
   return (
     <>
@@ -58,6 +67,11 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
           </Text>
         </AnimatedCircle>
       </GestureDetector>
+      <StaggerModal isOpen={isOpen} onToggle={onToggle}>
+        {menuIcons.map(({ bg, icon, text, onPress }, i) => (
+          <MenuIcon bg={bg} icon={icon} text={text} onPress={onPress} key={i} />
+        ))}
+      </StaggerModal>
     </>
   );
 };

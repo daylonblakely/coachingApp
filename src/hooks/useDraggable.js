@@ -15,7 +15,7 @@ export default (pos, isDraggable, onEnd) => {
         };
       }
     })
-    .onEnd((_) => {
+    .onEnd(() => {
       if (onEnd && isDraggable) {
         onEnd(pos);
       }

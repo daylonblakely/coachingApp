@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Box, HStack, useDisclose, Stagger, Modal } from 'native-base';
 import FooterIcon from './FooterIcon';
-import MenuIcon from './MenuIcon';
+import MenuIcon from '../MenuIcon';
 import { Context as PlayContext } from '../../context/PlayContext';
 
 const PlayFooter = () => {
