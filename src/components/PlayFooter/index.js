@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { Box, HStack, useDisclose, Stagger, Modal } from 'native-base';
+import { Box, HStack, useDisclose } from 'native-base';
 import FooterIcon from './FooterIcon';
+import StaggerModal from '../StaggerModal';
 import MenuIcon from '../MenuIcon';
 import { Context as PlayContext } from '../../context/PlayContext';
 
@@ -48,37 +49,11 @@ const PlayFooter = () => {
           onPress={onToggle}
         />
       </Box>
-      <Modal isOpen={isOpen} onClose={onToggle}>
-        <Stagger
-          visible={isOpen}
-          initial={{
-            opacity: 0,
-            scale: 0,
-          }}
-          animate={{
-            scale: 1,
-            opacity: 1,
-            transition: {
-              type: 'spring',
-              mass: 1,
-              stagger: {
-                offset: 30,
-                reverse: true,
-              },
-            },
-          }}
-        >
-          {menuIcons.map(({ bg, icon, text, onPress }, i) => (
-            <MenuIcon
-              bg={bg}
-              icon={icon}
-              text={text}
-              onPress={onPress}
-              key={i}
-            />
-          ))}
-        </Stagger>
-      </Modal>
+      <StaggerModal isOpen={isOpen} onToggle={onToggle}>
+        {menuIcons.map(({ bg, icon, text, onPress }, i) => (
+          <MenuIcon bg={bg} icon={icon} text={text} onPress={onPress} key={i} />
+        ))}
+      </StaggerModal>
     </Box>
   );
 };

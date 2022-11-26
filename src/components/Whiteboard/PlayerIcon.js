@@ -1,5 +1,5 @@
 import React from 'react';
-import { Circle, Text, useDisclose, Stagger, Modal } from 'native-base';
+import { Circle, Text, useDisclose } from 'native-base';
 import Animated from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import usePlayerPosition from '../../hooks/usePlayerPosition';
@@ -37,10 +37,8 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
 
   const doubleTapGesture = Gesture.Tap()
     .numberOfTaps(2)
-    .onStart(() => {
-      console.log('double tap');
-      // onToggle();
-    });
+    .runOnJS(true)
+    .onStart(onToggle);
 
   const composed = Gesture.Race(gestureHandlerPlayer, doubleTapGesture);
 
