@@ -84,6 +84,13 @@ const stopStepAnimation = (dispatch) => (runStep, players) => {
       return {
         ...player,
         steps: [
+          ...player.steps,
+          { ...player.steps[runStep], pathToNextPos: null },
+        ],
+      };
+      return {
+        ...player,
+        steps: [
           ...player.steps.slice(0, runStep + 1),
           {
             ...player.steps[runStep],

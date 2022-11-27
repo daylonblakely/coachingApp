@@ -114,6 +114,7 @@ export default (playerId) => {
   // this happens when the animation ends at the current step
   useEffect(() => {
     console.log('step changed...');
+    if (!pathToNextPos) return;
     const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
       getInitialPositions(pathToNextPos);
 

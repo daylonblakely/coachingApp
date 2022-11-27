@@ -1,4 +1,4 @@
-import React from 'react';
+import { useContext } from 'react';
 import { Circle, Text, useDisclose } from 'native-base';
 import Animated from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -7,11 +7,20 @@ import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import Arrow from './Arrow';
 import MenuIcon from '../MenuIcon';
 import StaggerModal from '../StaggerModal';
+import { Context as PlayContext } from '../../context/PlayContext';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
+  const {
+    state: { currentPlay, runStep },
+  } = useContext(PlayContext);
+
+  const { pathToNextPos } = currentPlay.players.find(
+    ({ id }) => playerId === id
+  ).steps[runStep];
+
   const { isOpen, onToggle } = useDisclose();
   const menuIcons = [
     { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Arrow' },
@@ -44,14 +53,16 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
 
   return (
     <>
-      <Arrow
-        gestureHandlerEnd={gestureHandlerEnd}
-        animatedStyleEnd={animatedStyleEnd}
-        gestureHandlerMid={gestureHandlerMid}
-        animatedStyleMid={animatedStyleMid}
-        animatedPropsArrow={animatedPropsArrow}
-        color={arrowColor}
-      />
+      {pathToNextPos && (
+        <Arrow
+          gestureHandlerEnd={gestureHandlerEnd}
+          animatedStyleEnd={animatedStyleEnd}
+          gestureHandlerMid={gestureHandlerMid}
+          animatedStyleMid={animatedStyleMid}
+          animatedPropsArrow={animatedPropsArrow}
+          color={arrowColor}
+        />
+      )}
 
       <GestureDetector gesture={composed}>
         <AnimatedCircle

@@ -6,6 +6,8 @@ import { Context as PlayContext } from '../context/PlayContext';
 
 // map path to an array of coordinates and the total length of the path
 const getPointsAtLength = (pathToNextPos) => {
+  if (!pathToNextPos) return [[], 0];
+
   const properties =
     pathToNextPos.move && path.svgPathProperties(serialize(pathToNextPos));
   const totalLength = properties?.getTotalLength();
