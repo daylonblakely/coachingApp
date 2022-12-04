@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from 'react';
 import {
   runOnJS,
   useSharedValue,
-  useAnimatedReaction,
   useAnimatedProps,
 } from 'react-native-reanimated';
 import { serialize } from 'react-native-redash';
@@ -58,6 +57,15 @@ export default (playerId) => {
     setCurrentPath
   );
 
+  // move midpoint on player drag
+  gestureHandlerPlayer.onChange(() => {
+    'worklet';
+    posMid.value = {
+      x: (playerPos.value.x + posEnd.value.x) / 2,
+      y: (playerPos.value.y + posEnd.value.y) / 2,
+    };
+  });
+
   const [gestureHandlerMid, animatedStyleMid] = useDraggable(
     posMid,
     shouldEdit,
@@ -82,24 +90,14 @@ export default (playerId) => {
     setCurrentPath
   );
 
-  // moves midpoint when end or player are dragged
-  // don't move midpoint on first render in useAnimatedReaction
-  const shouldMoveMid = useSharedValue(false);
-  useAnimatedReaction(
-    () => {
-      return {
-        x: (playerPos.value.x + posEnd.value.x) / 2,
-        y: (playerPos.value.y + posEnd.value.y) / 2,
-      };
-    },
-    (result) => {
-      if (shouldMoveMid.value && shouldEdit) {
-        posMid.value = result;
-      }
-      // shouldMoveMid.value = true;
-    },
-    [shouldEdit]
-  );
+  // move midpoint on end drag
+  gestureHandlerEnd.onChange(() => {
+    'worklet';
+    posMid.value = {
+      x: (playerPos.value.x + posEnd.value.x) / 2,
+      y: (playerPos.value.y + posEnd.value.y) / 2,
+    };
+  });
 
   // updates the player/arrow positions when the run step changes
   // this happens when the animation ends at the current step
@@ -109,11 +107,9 @@ export default (playerId) => {
     const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
       getInitialPositions(pathToNextPos);
 
-    // shouldMoveMid.value = false; //prevent useAnimatedReaction from updating midpoint
     playerPos.value = { x: initPlayerX, y: initPlayerY };
     posEnd.value = { x: initEndX, y: initEndY };
     posMid.value = { x: initMidX, y: initMidY };
-    // shouldMoveMid.value = true;
   }, [runStep]);
 
   // moves arrow svg
