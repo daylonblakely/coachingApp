@@ -1,5 +1,5 @@
 import createDataContext from './createDataContext';
-import { setNextPath } from '../utils/pathUtils';
+// import { setNextPath } from '../utils/pathUtils';
 
 const playReducer = (state, action) => {
   switch (action.type) {
@@ -88,17 +88,17 @@ const stopStepAnimation = (dispatch) => (runStep, players) => {
           { ...player.steps[runStep], pathToNextPos: null },
         ],
       };
-      return {
-        ...player,
-        steps: [
-          ...player.steps.slice(0, runStep + 1),
-          {
-            ...player.steps[runStep],
-            pathToNextPos: setNextPath(player.steps[runStep].pathToNextPos),
-          },
-          ...player.steps.slice(runStep + 2),
-        ],
-      };
+      // return {
+      //   ...player,
+      //   steps: [
+      //     ...player.steps.slice(0, runStep + 1),
+      //     {
+      //       ...player.steps[runStep],
+      //       pathToNextPos: setNextPath(player.steps[runStep].pathToNextPos),
+      //     },
+      //     ...player.steps.slice(runStep + 2),
+      //   ],
+      // };
     }
   });
 

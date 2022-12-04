@@ -68,9 +68,10 @@ export const getInitialPositions = (pathToNextPos) => {
 };
 
 // takes a path object and returns the default "next path"
-export const setNextPath = (path) => {
-  const { x, y } = path.curves[path.curves.length - 1].to;
-
+// TODO - fix this
+export const setNextPath = (playerPos) => {
+  // const { x, y } = path.curves[path.curves.length - 1].to;
+  const path = createPath(playerPos);
   return {
     move: { x, y },
     curves: [

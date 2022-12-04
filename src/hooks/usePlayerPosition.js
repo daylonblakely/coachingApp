@@ -96,19 +96,10 @@ export default (playerId) => {
       if (shouldMoveMid.value && shouldEdit) {
         posMid.value = result;
       }
-      shouldMoveMid.value = true;
+      // shouldMoveMid.value = true;
     },
-    [isEditMode, shouldEdit]
+    [shouldEdit]
   );
-
-  // moves arrow svg
-  const shouldMoveArrow = useSharedValue(false);
-  const animatedPropsArrow = useAnimatedProps(() => {
-    if (!shouldEdit && !shouldMoveArrow.value) return {};
-    shouldMoveArrow.value = false; //set to false to prevent moving arrow while animating
-    const p = getPath(playerPos.value, posMid.value, posEnd.value);
-    return { d: serialize(p) };
-  }, [shouldEdit]);
 
   // updates the player/arrow positions when the run step changes
   // this happens when the animation ends at the current step
@@ -118,12 +109,25 @@ export default (playerId) => {
     const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
       getInitialPositions(pathToNextPos);
 
-    shouldMoveMid.value = false; //prevent useAnimatedReaction from updating midpoint
-    shouldMoveArrow.value = true; //allows the arrow svg to move inbetween steps when running a play
+    // shouldMoveMid.value = false; //prevent useAnimatedReaction from updating midpoint
     playerPos.value = { x: initPlayerX, y: initPlayerY };
     posEnd.value = { x: initEndX, y: initEndY };
     posMid.value = { x: initMidX, y: initMidY };
+    // shouldMoveMid.value = true;
   }, [runStep]);
+
+  // moves arrow svg
+  const animatedPropsArrow = useAnimatedProps(() => {
+    if (!shouldEdit) return {};
+    if (!pathToNextPos) return { d: undefined }; //hides SVG
+
+    const p = getPath(playerPos.value, posMid.value, posEnd.value);
+    return { d: serialize(p) };
+  }, [shouldEdit, pathToNextPos]);
+
+  const animatedPropsArrowHead = useAnimatedProps(() => {
+    return { d: pathToNextPos ? 'M 0 0 L 10 5 L 0 10 z' : undefined };
+  }, [pathToNextPos]);
 
   return {
     // position shared values
@@ -136,6 +140,8 @@ export default (playerId) => {
     animatedStylePlayer,
     animatedStyleMid,
     animatedStyleEnd,
+    // arrow props
     animatedPropsArrow,
+    animatedPropsArrowHead,
   };
 };
