@@ -6,7 +6,12 @@ import {
 } from 'react-native-reanimated';
 import { serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
-import { getInitialPositions, getPath, isStraight } from '../utils/pathUtils';
+import {
+  getInitialPositions,
+  getPath,
+  isStraight,
+  setPlayerArrowPositions,
+} from '../utils/pathUtils';
 import { Context as PlayContext } from '../context/PlayContext';
 
 export default (playerId) => {
@@ -103,13 +108,8 @@ export default (playerId) => {
   // this happens when the animation ends at the current step
   useEffect(() => {
     console.log('step changed...');
-    if (!pathToNextPos) return;
-    const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
-      getInitialPositions(pathToNextPos);
-
-    playerPos.value = { x: initPlayerX, y: initPlayerY };
-    posEnd.value = { x: initEndX, y: initEndY };
-    posMid.value = { x: initMidX, y: initMidY };
+    if (pathToNextPos)
+      setPlayerArrowPositions(playerPos, posMid, posEnd, pathToNextPos);
   }, [runStep]);
 
   // moves arrow svg
@@ -128,6 +128,8 @@ export default (playerId) => {
   return {
     // position shared values
     playerPos,
+    posMid,
+    posEnd,
     // gesture handlers
     gestureHandlerPlayer,
     gestureHandlerEnd,

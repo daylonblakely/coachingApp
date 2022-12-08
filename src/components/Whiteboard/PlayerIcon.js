@@ -28,6 +28,8 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   const {
     // position shared values
     playerPos,
+    posMid,
+    posEnd,
     // gesture handlers
     gestureHandlerPlayer,
     gestureHandlerEnd,
@@ -50,7 +52,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
       onPress: () =>
         updateCurrentPlayerPath(
           playerId,
-          setNextPath(playerPos.value.x, playerPos.value.y)
+          setNextPath(playerPos, posMid, posEnd)
         ),
     },
     { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Dribble' },

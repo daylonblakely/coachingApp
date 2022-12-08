@@ -67,20 +67,23 @@ export const getInitialPositions = (pathToNextPos) => {
   return { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY };
 };
 
-// takes a path object and returns the default "next path"
-// TODO - fix this
-export const setNextPath = (playerPos) => {
-  // const { x, y } = path.curves[path.curves.length - 1].to;
-  const path = createPath(playerPos);
-  return {
-    move: { x, y },
-    curves: [
-      {
-        c1: { x, y }, //for a strait line this is the same as move
-        c2: { x, y: y - DEFAULT_LENGTH }, // this is the same as to
-        to: { x, y: y - DEFAULT_LENGTH },
-      },
-    ],
-    close: false,
-  };
+export const setPlayerArrowPositions = (playerPos, posMid, posEnd, path) => {
+  const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
+    getInitialPositions(path);
+
+  playerPos.value = { x: initPlayerX, y: initPlayerY };
+  posEnd.value = { x: initEndX, y: initEndY };
+  posMid.value = { x: initMidX, y: initMidY };
+};
+
+// create the default "next path"
+export const setNextPath = (playerPos, posMid, posEnd) => {
+  const { x, y } = playerPos.value;
+
+  const p = createPath({ x, y });
+  addArc(p, { x, y: y - DEFAULT_LENGTH / 2 }, { x, y: y - DEFAULT_LENGTH });
+
+  setPlayerArrowPositions(playerPos, posMid, posEnd, p);
+
+  return p;
 };
