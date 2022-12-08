@@ -20,15 +20,7 @@ const getPointsAtLength = (pathToNextPos) => {
   ];
 };
 
-export default (playerPos, playerId, animationProgress) => {
-  const {
-    state: { runStep, currentPlay },
-  } = useContext(PlayContext);
-
-  const { pathToNextPos } = currentPlay.players.find(
-    ({ id }) => playerId === id
-  ).steps[runStep];
-
+export default (playerPos, pathToNextPos, animationProgress) => {
   const [pointsAtLength, totalLength] = useMemo(
     () => getPointsAtLength(pathToNextPos),
     [pathToNextPos]

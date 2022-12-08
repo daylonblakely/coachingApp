@@ -66,11 +66,11 @@ const runStepAnimation = (dispatch) => () => {
 };
 
 const stopPlayAnimation = (dispatch) => (runStep, players) => {
-  const nextStepExists = !!players[0]?.steps[runStep + 1];
+  const nextStepExists = runStep !== players[0].steps.length - 1;
 
   const payload = nextStepExists
     ? { runStep: runStep + 1, shouldAnimatePlay: true }
-    : { runStep: runStep, shouldAnimatePlay: false };
+    : { runStep: runStep + 1, shouldAnimatePlay: false };
 
   dispatch({ type: 'stop_play_animation', payload });
 };

@@ -14,23 +14,13 @@ import {
 } from '../utils/pathUtils';
 import { Context as PlayContext } from '../context/PlayContext';
 
-export default (playerId) => {
+export default (playerId, pathToNextPos) => {
   const {
-    state: {
-      runStep,
-      isEditMode,
-      currentPlay,
-      shouldAnimatePlay,
-      shouldAnimateStep,
-    },
+    state: { runStep, isEditMode, shouldAnimatePlay, shouldAnimateStep },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
 
   const shouldEdit = isEditMode && !shouldAnimatePlay && !shouldAnimateStep;
-
-  const { pathToNextPos } = currentPlay.players.find(
-    ({ id }) => playerId === id
-  ).steps[runStep];
 
   //   initial values for position shared values
   const [{ initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY }] =
@@ -114,11 +104,14 @@ export default (playerId) => {
 
   // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {
-    if (!shouldEdit) return {};
     if (!pathToNextPos) return { d: undefined }; //hides SVG
-
-    const p = getPath(playerPos.value, posMid.value, posEnd.value);
-    return { d: serialize(p) };
+    else if (shouldAnimatePlay) {
+      return { d: serialize(pathToNextPos) };
+    } else if (!shouldEdit) return {};
+    else {
+      const p = getPath(playerPos.value, posMid.value, posEnd.value);
+      return { d: serialize(p) };
+    }
   }, [shouldEdit, pathToNextPos]);
 
   const animatedPropsArrowHead = useAnimatedProps(() => {

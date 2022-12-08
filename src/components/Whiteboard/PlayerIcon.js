@@ -19,9 +19,8 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
 
-  const { pathToNextPos } = currentPlay.players.find(
-    ({ id }) => playerId === id
-  ).steps[runStep];
+  const { pathToNextPos } =
+    currentPlay.players.find(({ id }) => playerId === id).steps[runStep] || {};
 
   const { isOpen, onToggle } = useDisclose();
 
@@ -40,9 +39,9 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     animatedStyleEnd,
     animatedPropsArrow,
     animatedPropsArrowHead,
-  } = usePlayerPosition(playerId);
+  } = usePlayerPosition(playerId, pathToNextPos);
 
-  usePlayerAnimation(playerPos, playerId, animationProgress);
+  usePlayerAnimation(playerPos, pathToNextPos, animationProgress);
 
   const menuIcons = [
     {
