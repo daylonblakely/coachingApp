@@ -31,7 +31,12 @@ const PlayFooter = () => {
   const menuIcons = [
     { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Offense' },
     { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Defense' },
-    { bg: 'red.400', icon: 'arrow-undo', text: 'Reset' },
+    {
+      bg: 'red.400',
+      icon: 'arrow-undo',
+      text: 'Reset',
+      onPress: () => setRunStep(0),
+    },
   ];
 
   //   putting a bg on the parent Box prevents clicks to Fab for some reason

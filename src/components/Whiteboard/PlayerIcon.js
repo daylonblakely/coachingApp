@@ -55,7 +55,12 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         ),
     },
     { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Dribble' },
-    { bg: 'red.400', icon: 'arrow-undo', text: 'Reset' },
+    {
+      bg: 'red.400',
+      icon: 'arrow-undo',
+      text: 'Reset',
+      onPress: () => updateCurrentPlayerPath(playerId, null),
+    },
   ];
 
   const doubleTapGesture = Gesture.Tap()
