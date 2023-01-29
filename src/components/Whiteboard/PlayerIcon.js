@@ -1,19 +1,34 @@
-import React from 'react';
-import { Circle, Text } from 'native-base';
+import { useContext } from 'react';
+import { Circle, Text, useDisclose } from 'native-base';
 import Animated from 'react-native-reanimated';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import usePlayerPosition from '../../hooks/usePlayerPosition';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import Arrow from './Arrow';
+import MenuIcon from '../MenuIcon';
+import StaggerModal from '../StaggerModal';
+import { setNextPath } from '../../utils/pathUtils';
+import { Context as PlayContext } from '../../context/PlayContext';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
+  const {
+    state: { currentPlay, runStep },
+    updateCurrentPlayerPath,
+  } = useContext(PlayContext);
+
+  const { pathToNextPos } =
+    currentPlay.players.find(({ id }) => playerId === id).steps[runStep] || {};
+
+  const { isOpen, onToggle } = useDisclose();
 
   const {
     // position shared values
     playerPos,
+    posMid,
+    posEnd,
     // gesture handlers
     gestureHandlerPlayer,
     gestureHandlerEnd,
@@ -23,9 +38,37 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     animatedStyleMid,
     animatedStyleEnd,
     animatedPropsArrow,
-  } = usePlayerPosition(playerId);
+    animatedPropsArrowHead,
+  } = usePlayerPosition(playerId, pathToNextPos);
 
-  usePlayerAnimation(playerPos, playerId, animationProgress);
+  usePlayerAnimation(playerPos, pathToNextPos, animationProgress);
+
+  const menuIcons = [
+    {
+      bg: 'yellow.400',
+      icon: 'add-sharp',
+      text: 'Add Arrow',
+      onPress: () =>
+        updateCurrentPlayerPath(
+          playerId,
+          setNextPath(playerPos, posMid, posEnd)
+        ),
+    },
+    { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Dribble' },
+    {
+      bg: 'red.400',
+      icon: 'arrow-undo',
+      text: 'Reset',
+      onPress: () => updateCurrentPlayerPath(playerId, null),
+    },
+  ];
+
+  const doubleTapGesture = Gesture.Tap()
+    .numberOfTaps(2)
+    .runOnJS(true)
+    .onStart(onToggle);
+
+  const composed = Gesture.Race(gestureHandlerPlayer, doubleTapGesture);
 
   return (
     <>
@@ -35,10 +78,14 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         gestureHandlerMid={gestureHandlerMid}
         animatedStyleMid={animatedStyleMid}
         animatedPropsArrow={animatedPropsArrow}
+        animatedPropsArrowHead={animatedPropsArrowHead}
         color={arrowColor}
+        // pass in isVisible to conditionally render arrow mid and end points
+        // conditionally rendering the entire Arrow component caused a bug with the animated props of the SVG
+        isVisible={!!pathToNextPos}
       />
 
-      <PanGestureHandler onGestureEvent={gestureHandlerPlayer}>
+      <GestureDetector gesture={composed}>
         <AnimatedCircle
           style={animatedStylePlayer}
           position="absolute"
@@ -49,7 +96,12 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
             {label}
           </Text>
         </AnimatedCircle>
-      </PanGestureHandler>
+      </GestureDetector>
+      <StaggerModal isOpen={isOpen} onToggle={onToggle}>
+        {menuIcons.map(({ bg, icon, text, onPress }, i) => (
+          <MenuIcon bg={bg} icon={icon} text={text} onPress={onPress} key={i} />
+        ))}
+      </StaggerModal>
     </>
   );
 };

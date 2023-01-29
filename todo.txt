@@ -13,9 +13,15 @@ consider saving the player/arrow positions in state instead of the path. Or poss
 - clear all subsequent play steps after updating current - DONE
 - player position shouldn't be allowed to teleport on step changed - DONE
 - display current step and total count
-- remove arrow after entire play completes? maybe give the option to reset
+- remove arrow after entire play completes? maybe give the option to reset - DONE
 - make play speed updatable
 - staggered line for passes
 - curvy line for dribbling
-- press and hold menu on player
+- press and hold menu on player - DONE (double tap)
 - show the ball somehow
+
+12/19/22
+- dont add new step if nothing changed. "empty steps"
+- figure out why mid and endpoint dont always move on play step change (might have to do with "empty steps")
+- only clear subsequent steps if end of arrow changes
+- run play adds step to end

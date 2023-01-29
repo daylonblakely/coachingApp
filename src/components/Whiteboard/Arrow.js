@@ -2,7 +2,7 @@ import React from 'react';
 import { Svg, Defs, Marker, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
 import Animated from 'react-native-reanimated';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import { GestureDetector } from 'react-native-gesture-handler';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -13,7 +13,9 @@ const Arrow = ({
   gestureHandlerMid,
   animatedStyleMid,
   animatedPropsArrow,
+  animatedPropsArrowHead,
   color,
+  isVisible,
 }) => {
   return (
     <>
@@ -29,8 +31,8 @@ const Arrow = ({
             markerHeight="4"
             orient="auto"
           >
-            <Path
-              d="M 0 0 L 10 5 L 0 10 z"
+            <AnimatedPath
+              animatedProps={animatedPropsArrowHead}
               stroke={color || 'black'}
               fill={color || 'black'}
             />
@@ -43,22 +45,26 @@ const Arrow = ({
           markerEnd="url(#Triangle)"
         />
       </Svg>
-      <PanGestureHandler onGestureEvent={gestureHandlerMid}>
-        <AnimatedCircle
-          style={animatedStyleMid}
-          position="absolute"
-          size="10"
-          bg="green.600"
-        />
-      </PanGestureHandler>
-      <PanGestureHandler onGestureEvent={gestureHandlerEnd}>
-        <AnimatedCircle
-          style={animatedStyleEnd}
-          position="absolute"
-          size="10"
-          bg="primary.600"
-        />
-      </PanGestureHandler>
+      {isVisible && (
+        <>
+          <GestureDetector gesture={gestureHandlerMid}>
+            <AnimatedCircle
+              style={animatedStyleMid}
+              position="absolute"
+              size="10"
+              bg="green.600"
+            />
+          </GestureDetector>
+          <GestureDetector gesture={gestureHandlerEnd}>
+            <AnimatedCircle
+              style={animatedStyleEnd}
+              position="absolute"
+              size="10"
+              bg="primary.600"
+            />
+          </GestureDetector>
+        </>
+      )}
     </>
   );
 };

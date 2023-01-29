@@ -1,5 +1,5 @@
 import createDataContext from './createDataContext';
-import { setNextPath } from '../utils/pathUtils';
+// import { setNextPath } from '../utils/pathUtils';
 
 const playReducer = (state, action) => {
   switch (action.type) {
@@ -66,11 +66,11 @@ const runStepAnimation = (dispatch) => () => {
 };
 
 const stopPlayAnimation = (dispatch) => (runStep, players) => {
-  const nextStepExists = !!players[0]?.steps[runStep + 1];
+  const nextStepExists = runStep !== players[0].steps.length - 1;
 
   const payload = nextStepExists
     ? { runStep: runStep + 1, shouldAnimatePlay: true }
-    : { runStep: runStep, shouldAnimatePlay: false };
+    : { runStep: runStep + 1, shouldAnimatePlay: false };
 
   dispatch({ type: 'stop_play_animation', payload });
 };
@@ -84,14 +84,21 @@ const stopStepAnimation = (dispatch) => (runStep, players) => {
       return {
         ...player,
         steps: [
-          ...player.steps.slice(0, runStep + 1),
-          {
-            ...player.steps[runStep],
-            pathToNextPos: setNextPath(player.steps[runStep].pathToNextPos),
-          },
-          ...player.steps.slice(runStep + 2),
+          ...player.steps,
+          { ...player.steps[runStep], pathToNextPos: null },
         ],
       };
+      // return {
+      //   ...player,
+      //   steps: [
+      //     ...player.steps.slice(0, runStep + 1),
+      //     {
+      //       ...player.steps[runStep],
+      //       pathToNextPos: setNextPath(player.steps[runStep].pathToNextPos),
+      //     },
+      //     ...player.steps.slice(runStep + 2),
+      //   ],
+      // };
     }
   });
 

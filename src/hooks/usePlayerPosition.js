@@ -2,32 +2,25 @@ import { useContext, useEffect, useState } from 'react';
 import {
   runOnJS,
   useSharedValue,
-  useAnimatedReaction,
   useAnimatedProps,
 } from 'react-native-reanimated';
 import { serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
-import { getInitialPositions, getPath, isStraight } from '../utils/pathUtils';
+import {
+  getInitialPositions,
+  getPath,
+  isStraight,
+  setPlayerArrowPositions,
+} from '../utils/pathUtils';
 import { Context as PlayContext } from '../context/PlayContext';
 
-export default (playerId) => {
+export default (playerId, pathToNextPos) => {
   const {
-    state: {
-      runStep,
-      isEditMode,
-      currentPlay,
-      shouldAnimatePlay,
-      shouldAnimateStep,
-    },
+    state: { runStep, isEditMode, shouldAnimatePlay, shouldAnimateStep },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
-  console.log(runStep);
 
   const shouldEdit = isEditMode && !shouldAnimatePlay && !shouldAnimateStep;
-
-  const { pathToNextPos } = currentPlay.players.find(
-    ({ id }) => playerId === id
-  ).steps[runStep];
 
   //   initial values for position shared values
   const [{ initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY }] =
@@ -59,6 +52,15 @@ export default (playerId) => {
     setCurrentPath
   );
 
+  // move midpoint on player drag
+  gestureHandlerPlayer.onChange(() => {
+    'worklet';
+    posMid.value = {
+      x: (playerPos.value.x + posEnd.value.x) / 2,
+      y: (playerPos.value.y + posEnd.value.y) / 2,
+    };
+  });
+
   const [gestureHandlerMid, animatedStyleMid] = useDraggable(
     posMid,
     shouldEdit,
@@ -83,51 +85,44 @@ export default (playerId) => {
     setCurrentPath
   );
 
-  // moves midpoint when end or player are dragged
-  // don't move midpoint on first render in useAnimatedReaction
-  const shouldMoveMid = useSharedValue(false);
-  useAnimatedReaction(
-    () => {
-      return {
-        x: (playerPos.value.x + posEnd.value.x) / 2,
-        y: (playerPos.value.y + posEnd.value.y) / 2,
-      };
-    },
-    (result) => {
-      if (shouldMoveMid.value && shouldEdit) {
-        posMid.value = result;
-      }
-      shouldMoveMid.value = true;
-    },
-    [isEditMode, shouldEdit]
-  );
-
-  // moves arrow svg
-  const shouldMoveArrow = useSharedValue(false);
-  const animatedPropsArrow = useAnimatedProps(() => {
-    if (!shouldEdit && !shouldMoveArrow.value) return {};
-    shouldMoveArrow.value = false; //set to false to prevent moving arrow while animating
-    const p = getPath(playerPos.value, posMid.value, posEnd.value);
-    return { d: serialize(p) };
-  }, [shouldEdit]);
+  // move midpoint on end drag
+  gestureHandlerEnd.onChange(() => {
+    'worklet';
+    posMid.value = {
+      x: (playerPos.value.x + posEnd.value.x) / 2,
+      y: (playerPos.value.y + posEnd.value.y) / 2,
+    };
+  });
 
   // updates the player/arrow positions when the run step changes
   // this happens when the animation ends at the current step
   useEffect(() => {
     console.log('step changed...');
-    const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
-      getInitialPositions(pathToNextPos);
-
-    shouldMoveMid.value = false; //prevent useAnimatedReaction from updating midpoint
-    shouldMoveArrow.value = true; //allows the arrow svg to move inbetween steps when running a play
-    playerPos.value = { x: initPlayerX, y: initPlayerY };
-    posEnd.value = { x: initEndX, y: initEndY };
-    posMid.value = { x: initMidX, y: initMidY };
+    if (pathToNextPos)
+      setPlayerArrowPositions(playerPos, posMid, posEnd, pathToNextPos);
   }, [runStep]);
+
+  // moves arrow svg
+  const animatedPropsArrow = useAnimatedProps(() => {
+    if (!pathToNextPos) return { d: undefined }; //hides SVG
+    else if (shouldAnimatePlay) {
+      return { d: serialize(pathToNextPos) };
+    } else if (!shouldEdit) return {};
+    else {
+      const p = getPath(playerPos.value, posMid.value, posEnd.value);
+      return { d: serialize(p) };
+    }
+  }, [shouldEdit, pathToNextPos]);
+
+  const animatedPropsArrowHead = useAnimatedProps(() => {
+    return { d: pathToNextPos ? 'M 0 0 L 10 5 L 0 10 z' : undefined };
+  }, [pathToNextPos]);
 
   return {
     // position shared values
     playerPos,
+    posMid,
+    posEnd,
     // gesture handlers
     gestureHandlerPlayer,
     gestureHandlerEnd,
@@ -136,6 +131,8 @@ export default (playerId) => {
     animatedStylePlayer,
     animatedStyleMid,
     animatedStyleEnd,
+    // arrow props
     animatedPropsArrow,
+    animatedPropsArrowHead,
   };
 };
