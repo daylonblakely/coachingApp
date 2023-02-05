@@ -1,6 +1,8 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import PlayHomeScreen from '../../screens/plays/PlayHomeScreen';
 import PlayCreateScreen from '../../screens/plays/PlayCreateScreen';
 
 const PlayNavigator = () => {
@@ -13,8 +15,17 @@ const PlayNavigator = () => {
     >
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
+          name="PlayHome"
+          options={{ title: 'Explore Plays', headerShown: false }}
+          component={PlayHomeScreen}
+        />
+        <Stack.Screen
           name="PlayCreate"
-          options={{ headerShown: false }}
+          options={({ route }) => ({
+            headerShown: true,
+            title: route.params.title,
+            headerRight: () => <Text>Step: 1</Text>,
+          })}
           component={PlayCreateScreen}
         />
       </Stack.Group>

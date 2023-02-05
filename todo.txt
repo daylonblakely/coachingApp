@@ -25,3 +25,6 @@ consider saving the player/arrow positions in state instead of the path. Or poss
 - figure out why mid and endpoint dont always move on play step change (might have to do with "empty steps")
 - only clear subsequent steps if end of arrow changes
 - run play adds step to end
+
+2/4/23
+- make play and drill home screen more reusable

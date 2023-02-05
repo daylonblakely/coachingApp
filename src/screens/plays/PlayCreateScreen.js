@@ -5,7 +5,7 @@ import Whiteboard from '../../components/Whiteboard';
 import PlayFooter from '../../components/PlayFooter';
 import { Context as PlayContext } from '../../context/PlayContext';
 
-const PlayCreateScreen = ({ navigation }) => {
+const PlayCreateScreen = () => {
   const { fetchPlayById } = useContext(PlayContext);
 
   const playId = '1';
