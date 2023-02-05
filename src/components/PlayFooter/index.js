@@ -10,6 +10,8 @@ const PlayFooter = () => {
     state: { runStep },
     runPlayAnimation,
     runStepAnimation,
+    shouldAnimatePlay,
+    shouldAnimateStep,
     setRunStep,
   } = useContext(PlayContext);
 
@@ -21,7 +23,8 @@ const PlayFooter = () => {
       icon: 'play-skip-back',
       text: 'Last Step',
       onPress: () => {
-        if (runStep > 0) setRunStep(runStep - 1);
+        if (runStep > 0 && !shouldAnimatePlay && !shouldAnimateStep)
+          setRunStep(runStep - 1);
       },
     },
     { icon: 'play', text: 'Run Play', onPress: runPlayAnimation },

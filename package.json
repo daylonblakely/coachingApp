@@ -31,7 +31,9 @@
     "svg-path-properties": "^1.0.13"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3"
+    "@babel/core": "^7.19.3",
+    "eslint": "^8.33.0",
+    "eslint-plugin-react": "^7.32.2"
   },
   "private": true
 }

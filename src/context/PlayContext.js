@@ -2,6 +2,12 @@ import createDataContext from './createDataContext';
 // import { setNextPath } from '../utils/pathUtils';
 
 const playReducer = (state, action) => {
+  const playerIndex = action.payload?.playerId
+    ? state.currentPlay.players.findIndex(
+        ({ id }) => id === action.payload.playerId
+      )
+    : null;
+
   switch (action.type) {
     case 'start_play_animation':
       return { ...state, shouldAnimatePlay: true };
@@ -24,11 +30,6 @@ const playReducer = (state, action) => {
     case 'fetch_play':
       return { ...state, currentPlay: action.payload };
     case 'update_path':
-      const runStep = state.runStep;
-      const playerIndex = state.currentPlay.players.findIndex(
-        ({ id }) => id === action.payload.playerId
-      );
-
       return {
         ...state,
         currentPlay: {
@@ -40,10 +41,12 @@ const playReducer = (state, action) => {
               steps: [
                 ...state.currentPlay.players[playerIndex].steps.slice(
                   0,
-                  runStep
+                  state.runStep
                 ),
                 {
-                  ...state.currentPlay.players[playerIndex].steps[runStep],
+                  ...state.currentPlay.players[playerIndex].steps[
+                    state.runStep
+                  ],
                   pathToNextPos: action.payload.path,
                 },
               ],
@@ -115,7 +118,7 @@ const updateCurrentPlayerPath = (dispatch) => (playerId, path) => {
 
 const fetchPlayById = (dispatch) => async (playId) => {
   try {
-    console.log('fetching play');
+    console.log('fetching play ', playId);
     const data = {
       players: [
         {
