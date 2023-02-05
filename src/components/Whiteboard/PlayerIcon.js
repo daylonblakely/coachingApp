@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { Circle, Text, useDisclose } from 'native-base';
 import Animated from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -104,6 +105,13 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
       </StaggerModal>
     </>
   );
+};
+
+PlayerIcon.propTypes = {
+  playerId: PropTypes.number.isRequired,
+  arrowColor: PropTypes.string,
+  label: PropTypes.string,
+  animationProgress: PropTypes.object,
 };
 
 export default PlayerIcon;
