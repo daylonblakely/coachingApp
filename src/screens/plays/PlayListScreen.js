@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Box, FlatList } from 'native-base';
 import { Context as PlayContext } from '../../context/PlayContext';
-import DrillListItem from '../../components/drills/DrillListItem';
+import VerticalScrollListItem from '../../components/VerticalScrollListItem';
 
 const PlaylListScreen = ({ navigation }) => {
   const {
@@ -23,7 +23,7 @@ const PlaylListScreen = ({ navigation }) => {
               })
             }
           >
-            <DrillListItem drill={item} />
+            <VerticalScrollListItem title={item.title} />
           </TouchableOpacity>
         )}
       />

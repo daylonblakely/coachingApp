@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Box, FlatList } from 'native-base';
 import { Context as DrillContext } from '../../context/DrillContext';
-import DrillListItem from '../../components/drills/DrillListItem';
+import VerticalScrollListItem from '../../components/VerticalScrollListItem';
 
 const DrillListScreen = ({ navigation }) => {
   const { state, fetchDrills } = useContext(DrillContext);
@@ -21,7 +21,10 @@ const DrillListScreen = ({ navigation }) => {
               })
             }
           >
-            <DrillListItem drill={item} />
+            <VerticalScrollListItem
+              title={item.title}
+              subtitle={item.category}
+            />
           </TouchableOpacity>
         )}
       />

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Stack,
@@ -9,15 +10,14 @@ import {
   HStack,
 } from 'native-base';
 
-const DrillListItem = ({ drill }) => {
-  const { title, category } = drill;
+const VerticalScrollListItem = ({ title, subtitle }) => {
   return (
     <Box variant="card" borderBottomWidth="1" rounded="lg" overflow="hidden">
       <Stack p="4" space={3}>
         <HStack alignItems="center">
           <VStack>
             <Text bold>{title}</Text>
-            <Text fontSize="md">{category}</Text>
+            <Text fontSize="md">{subtitle}</Text>
           </VStack>
           <Spacer />
           <ChevronRightIcon size="6" />
@@ -29,4 +29,9 @@ const DrillListItem = ({ drill }) => {
   );
 };
 
-export default DrillListItem;
+VerticalScrollListItem.propTypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+};
+
+export default VerticalScrollListItem;
