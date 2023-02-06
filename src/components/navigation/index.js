@@ -10,7 +10,7 @@ import displayParentHeader from './displayParentHeader';
 import HomeScreen from '../../screens/HomeScreen';
 import CustomDrawerContent from './CustomDrawerContent';
 
-export default () => {
+const Navigator = () => {
   const Drawer = createDrawerNavigator();
   const [lightBg, darkBg] = useToken(
     'colors',
@@ -61,3 +61,5 @@ export default () => {
     <AuthNavigator />
   );
 };
+
+export default Navigator;

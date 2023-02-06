@@ -1,19 +1,21 @@
 import React, { useContext } from 'react';
 import { Box, HStack, useDisclose } from 'native-base';
 import FooterIcon from './FooterIcon';
-import StaggerModal from '../StaggerModal';
-import MenuIcon from '../MenuIcon';
-import { Context as PlayContext } from '../../context/PlayContext';
+import StaggerModal from '../../StaggerModal';
+import MenuIcon from '../../MenuIcon';
+import { Context as PlayContext } from '../../../context/PlayContext';
 
 const PlayFooter = () => {
   const {
-    state: { runStep },
+    state: { runStep, shouldAnimatePlay, shouldAnimateStep },
     runPlayAnimation,
     runStepAnimation,
     setRunStep,
   } = useContext(PlayContext);
 
   const { isOpen, onToggle } = useDisclose();
+
+  const isAnimating = shouldAnimatePlay || shouldAnimateStep;
 
   const footerIcons = [
     { icon: 'save', text: 'Save' },
@@ -24,7 +26,11 @@ const PlayFooter = () => {
         if (runStep > 0) setRunStep(runStep - 1);
       },
     },
-    { icon: 'play', text: 'Run Play', onPress: runPlayAnimation },
+    {
+      icon: 'play',
+      text: 'Run Play',
+      onPress: runPlayAnimation,
+    },
     { icon: 'play-skip-forward', text: 'Next Step', onPress: runStepAnimation },
   ];
 
@@ -44,7 +50,13 @@ const PlayFooter = () => {
     <Box>
       <HStack justifyContent="flex-start" variant="card" borderTopWidth="1">
         {footerIcons.map(({ icon, text, onPress }, i) => (
-          <FooterIcon icon={icon} text={text} onPress={onPress} key={i} />
+          <FooterIcon
+            disabled={isAnimating}
+            icon={icon}
+            text={text}
+            onPress={onPress}
+            key={i}
+          />
         ))}
       </HStack>
       <Box position="absolute" top="-50%" right="5">
@@ -56,7 +68,14 @@ const PlayFooter = () => {
       </Box>
       <StaggerModal isOpen={isOpen} onToggle={onToggle}>
         {menuIcons.map(({ bg, icon, text, onPress }, i) => (
-          <MenuIcon bg={bg} icon={icon} text={text} onPress={onPress} key={i} />
+          <MenuIcon
+            disabled={isAnimating}
+            bg={bg}
+            icon={icon}
+            text={text}
+            onPress={onPress}
+            key={i}
+          />
         ))}
       </StaggerModal>
     </Box>

@@ -1,14 +1,14 @@
 import React, { useContext, useCallback } from 'react';
 import { Box } from 'native-base';
 import { useFocusEffect } from '@react-navigation/native';
-import Whiteboard from '../../components/Whiteboard';
-import PlayFooter from '../../components/PlayFooter';
+import Whiteboard from '../../components/plays/Whiteboard';
+import PlayFooter from '../../components/plays/PlayFooter';
 import { Context as PlayContext } from '../../context/PlayContext';
 
-const PlayCreateScreen = ({ navigation }) => {
+const PlayCreateScreen = ({ route }) => {
   const { fetchPlayById } = useContext(PlayContext);
 
-  const playId = '1';
+  const { id: playId } = route.params;
 
   useFocusEffect(
     useCallback(() => {

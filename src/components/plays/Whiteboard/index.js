@@ -5,11 +5,11 @@ import { useSharedValue, withTiming, runOnJS } from 'react-native-reanimated';
 import PlayerIcon from './PlayerIcon';
 import FullCourt from './FullCourt';
 
-import { Context as PlayContext } from '../../context/PlayContext';
+import { Context as PlayContext } from '../../../context/PlayContext';
 
 const ANIMATION_DURATION = 2000;
 
-const Whiteboard = ({}) => {
+const Whiteboard = () => {
   console.log('--------------RENDER WHITEBOARD');
   const lineColor = useColorModeValue('black', 'white');
 
@@ -52,7 +52,7 @@ const Whiteboard = ({}) => {
   });
 
   const renderPlayers = () => {
-    return currentPlay?.players.map((player, i) => (
+    return currentPlay?.players.map((player) => (
       <PlayerIcon
         playerId={player.id}
         animationProgress={animationProgress}

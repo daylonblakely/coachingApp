@@ -15,6 +15,10 @@ export default function displayParentHeader(route) {
       return false;
     case 'PracticeDetail':
       return false;
+    case 'PlayList':
+      return false;
+    case 'PlayCreate':
+      return false;
 
     default:
       true;

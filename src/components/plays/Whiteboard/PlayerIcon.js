@@ -1,14 +1,15 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { Circle, Text, useDisclose } from 'native-base';
 import Animated from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import usePlayerPosition from '../../hooks/usePlayerPosition';
-import usePlayerAnimation from '../../hooks/usePlayerAnimation';
+import usePlayerPosition from '../../../hooks/usePlayerPosition';
+import usePlayerAnimation from '../../../hooks/usePlayerAnimation';
 import Arrow from './Arrow';
-import MenuIcon from '../MenuIcon';
-import StaggerModal from '../StaggerModal';
-import { setNextPath } from '../../utils/pathUtils';
-import { Context as PlayContext } from '../../context/PlayContext';
+import MenuIcon from '../../MenuIcon';
+import StaggerModal from '../../StaggerModal';
+import { setNextPath } from '../../../utils/pathUtils';
+import { Context as PlayContext } from '../../../context/PlayContext';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -104,6 +105,13 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
       </StaggerModal>
     </>
   );
+};
+
+PlayerIcon.propTypes = {
+  playerId: PropTypes.number.isRequired,
+  arrowColor: PropTypes.string,
+  label: PropTypes.string,
+  animationProgress: PropTypes.object,
 };
 
 export default PlayerIcon;

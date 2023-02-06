@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { Box, Stack, Text, FlatList, ScrollView } from 'native-base';
+import { Box, Text, FlatList, ScrollView } from 'native-base';
 import { Context as DrillContext } from '../../context/DrillContext';
 import DrillDetailCategoryHeader from '../../components/drills/DrillDetailCategoryHeader';
 import DrillDetailTitle from '../../components/drills/DrillDetailTitle';
 import ItemTag from '../../components/ItemTag';
 
-const DrillDetailScreen = ({ route, navigation }) => {
+const DrillDetailScreen = ({ route }) => {
   const { state } = useContext(DrillContext);
 
   const { id } = route.params;

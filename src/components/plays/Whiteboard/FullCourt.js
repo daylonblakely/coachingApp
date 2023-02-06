@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { SvgXml } from 'react-native-svg';
 import { Box } from 'native-base';
 
@@ -17,6 +18,10 @@ const FullCourt = ({ color }) => {
       <SvgXml xml={xml} width="100%" height="100%" />
     </Box>
   );
+};
+
+FullCourt.propTypes = {
+  color: PropTypes.string,
 };
 
 export default FullCourt;

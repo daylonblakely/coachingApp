@@ -98,8 +98,9 @@ export default (playerId, pathToNextPos) => {
   // this happens when the animation ends at the current step
   useEffect(() => {
     console.log('step changed...');
-    if (pathToNextPos)
+    if (pathToNextPos) {
       setPlayerArrowPositions(playerPos, posMid, posEnd, pathToNextPos);
+    }
   }, [runStep]);
 
   // moves arrow svg

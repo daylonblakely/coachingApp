@@ -6,7 +6,7 @@ import { Provider as DrillProvider } from './src/context/DrillContext';
 import { Provider as PlayProvider } from './src/context/PlayContext';
 import RootComponent from './src/components/RootComponent';
 
-export default () => {
+const App = () => {
   return (
     <NativeBaseProvider theme={theme} colorModeManager={colorModeManager}>
       <PlayProvider>
@@ -22,3 +22,5 @@ export default () => {
     </NativeBaseProvider>
   );
 };
+
+export default App;
