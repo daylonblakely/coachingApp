@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { Box, FlatList } from 'native-base';
 import { Context as PlayContext } from '../../context/PlayContext';
-import VerticalScrollListItem from '../../components/VerticalScrollListItem';
+import VerticalScrollList from '../../components/VerticalScrollList';
 
 const PlaylListScreen = ({ navigation }) => {
   const {
@@ -11,23 +9,15 @@ const PlaylListScreen = ({ navigation }) => {
   // TODO: fetch play ids on render
 
   return (
-    <Box>
-      <FlatList
-        data={plays}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('PlayCreate', {
-                id: item.id,
-                title: item.title,
-              })
-            }
-          >
-            <VerticalScrollListItem title={item.title} />
-          </TouchableOpacity>
-        )}
-      />
-    </Box>
+    <VerticalScrollList
+      data={plays}
+      onPress={(item) =>
+        navigation.navigate('PlayCreate', {
+          id: item.id,
+          title: item.title,
+        })
+      }
+    />
   );
 };
 
