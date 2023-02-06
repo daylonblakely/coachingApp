@@ -12,7 +12,7 @@ consider saving the player/arrow positions in state instead of the path. Or poss
 11/20/22
 - clear all subsequent play steps after updating current - DONE
 - player position shouldn't be allowed to teleport on step changed - DONE
-- display current step and total count
+- display current step and total count - DONE
 - remove arrow after entire play completes? maybe give the option to reset - DONE
 - make play speed updatable
 - staggered line for passes
