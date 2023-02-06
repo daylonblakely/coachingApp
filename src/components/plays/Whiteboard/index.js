@@ -9,7 +9,7 @@ import { Context as PlayContext } from '../../context/PlayContext';
 
 const ANIMATION_DURATION = 2000;
 
-const Whiteboard = ({}) => {
+const Whiteboard = () => {
   console.log('--------------RENDER WHITEBOARD');
   const lineColor = useColorModeValue('black', 'white');
 
@@ -52,7 +52,7 @@ const Whiteboard = ({}) => {
   });
 
   const renderPlayers = () => {
-    return currentPlay?.players.map((player, i) => (
+    return currentPlay?.players.map((player) => (
       <PlayerIcon
         playerId={player.id}
         animationProgress={animationProgress}
