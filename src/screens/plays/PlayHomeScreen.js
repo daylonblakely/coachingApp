@@ -4,7 +4,7 @@ import HorizontalListDisplay from '../../components/HorizontalListDisplay';
 import ListBoxOption from '../../components/ListBoxOption';
 
 const PlayHomeScreen = ({ navigation }) => {
-  const quickAccess = ['Play #1'];
+  const quickAccess = ['Recent'];
 
   return (
     <ScrollView>
@@ -18,7 +18,7 @@ const PlayHomeScreen = ({ navigation }) => {
             <ListBoxOption
               color="red.200"
               text={item}
-              onPress={() => navigation.navigate('PlayCreate', { title: item })}
+              onPress={() => navigation.navigate('PlayList', { title: item })}
             />
           )}
         />

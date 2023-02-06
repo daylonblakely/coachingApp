@@ -3,6 +3,7 @@ import { Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import PlayHomeScreen from '../../screens/plays/PlayHomeScreen';
+import PlayListScreen from '../../screens/plays/PlayListScreen';
 import PlayCreateScreen from '../../screens/plays/PlayCreateScreen';
 
 const PlayNavigator = () => {
@@ -18,6 +19,11 @@ const PlayNavigator = () => {
           name="PlayHome"
           options={{ title: 'Explore Plays', headerShown: false }}
           component={PlayHomeScreen}
+        />
+        <Stack.Screen
+          name="PlayList"
+          options={({ route }) => ({ title: route.params.title })}
+          component={PlayListScreen}
         />
         <Stack.Screen
           name="PlayCreate"

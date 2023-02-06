@@ -5,10 +5,10 @@ import Whiteboard from '../../components/Whiteboard';
 import PlayFooter from '../../components/PlayFooter';
 import { Context as PlayContext } from '../../context/PlayContext';
 
-const PlayCreateScreen = () => {
+const PlayCreateScreen = ({ route }) => {
   const { fetchPlayById } = useContext(PlayContext);
 
-  const playId = '1';
+  const { id: playId } = route.params;
 
   useFocusEffect(
     useCallback(() => {

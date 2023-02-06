@@ -223,8 +223,8 @@ export const { Provider, Context } = createDataContext(
     shouldAnimateStep: false,
     runStep: 0,
     plays: [
-      { id: '1', name: 'test play 1' },
-      { id: '2', name: 'test play 2' },
+      { id: '1', title: 'test play 1' },
+      { id: '2', title: 'test play 2' },
     ],
     currentPlay: null,
   }
