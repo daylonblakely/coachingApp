@@ -1,10 +1,10 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import PlayHomeScreen from '../../screens/plays/PlayHomeScreen';
 import PlayListScreen from '../../screens/plays/PlayListScreen';
 import PlayCreateScreen from '../../screens/plays/PlayCreateScreen';
+import PlayStepCountHeader from '../plays/PlayStepCountHeader';
 
 const PlayNavigator = () => {
   const Stack = createStackNavigator();
@@ -30,7 +30,7 @@ const PlayNavigator = () => {
           options={({ route }) => ({
             headerShown: true,
             title: route.params.title,
-            headerRight: () => <Text>Step: 1</Text>,
+            headerRight: () => <PlayStepCountHeader />,
           })}
           component={PlayCreateScreen}
         />

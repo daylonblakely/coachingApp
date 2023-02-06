@@ -1,7 +1,7 @@
 import React, { useContext, useCallback } from 'react';
 import { Box } from 'native-base';
 import { useFocusEffect } from '@react-navigation/native';
-import Whiteboard from '../../components/Whiteboard';
+import Whiteboard from '../../components/plays/Whiteboard';
 import PlayFooter from '../../components/plays/PlayFooter';
 import { Context as PlayContext } from '../../context/PlayContext';
 
