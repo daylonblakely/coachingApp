@@ -7,11 +7,12 @@ const PlayStepCountHeader = () => {
     state: { currentPlay, runStep },
   } = useContext(PlayContext);
 
+  const stepLengths = currentPlay?.players.map((p) => p.steps.length);
+  const stepCount = stepLengths ? Math.max(...stepLengths) : 1;
+
   return (
     <Box mx={5}>
-      <Text>{`Step ${runStep + 1}/${
-        currentPlay.players[0].steps.length
-      }`}</Text>
+      <Text>{`Step ${runStep + 1}/${stepCount}`}</Text>
     </Box>
   );
 };
