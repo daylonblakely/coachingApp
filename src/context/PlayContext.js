@@ -49,6 +49,11 @@ const playReducer = (state, action) => {
                   ],
                   pathToNextPos: action.payload.path,
                 },
+                ...(action.payload.shouldPreserveSubsequent
+                  ? state.currentPlay.players[playerIndex].steps.slice(
+                      state.runStep + 1
+                    )
+                  : []),
               ],
             },
             ...state.currentPlay.players.slice(playerIndex + 1),
@@ -111,10 +116,16 @@ const stopStepAnimation = (dispatch) => (runStep, players) => {
   });
 };
 
-const updateCurrentPlayerPath = (dispatch) => (playerId, path) => {
-  console.log('updating path ', playerId);
-  dispatch({ type: 'update_path', payload: { playerId, path } });
-};
+const updateCurrentPlayerPath =
+  (dispatch) =>
+  (playerId, path, shouldPreserveSubsequent = false) => {
+    console.log('updating path ', playerId);
+    console.log('preserve subsequent steps ', shouldPreserveSubsequent);
+    dispatch({
+      type: 'update_path',
+      payload: { playerId, path, shouldPreserveSubsequent },
+    });
+  };
 
 const fetchPlayById = (dispatch) => async (playId) => {
   try {

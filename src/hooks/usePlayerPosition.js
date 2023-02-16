@@ -35,16 +35,27 @@ export default (playerId, pathToNextPos) => {
 
   // setCurrentPath is a helper to update the state with current paths onEnd drag for player/position
   // https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
-  const updatePathWrapper = (path) => updateCurrentPlayerPath(playerId, path);
+  const updatePathWrapper = (path, shouldPreserveSubsequent) =>
+    updateCurrentPlayerPath(playerId, path, shouldPreserveSubsequent);
   const setCurrentPath = () => {
     'worklet';
     if (shouldEdit) {
       runOnJS(updatePathWrapper)(
-        getPath(playerPos.value, posMid.value, posEnd.value)
+        getPath(playerPos.value, posMid.value, posEnd.value),
+        false
       );
     }
   };
 
+  const setCurrentPathMid = () => {
+    'worklet';
+    if (shouldEdit) {
+      runOnJS(updatePathWrapper)(
+        getPath(playerPos.value, posMid.value, posEnd.value),
+        true
+      );
+    }
+  };
   // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
@@ -75,7 +86,7 @@ export default (playerId, pathToNextPos) => {
         };
       }
 
-      setCurrentPath();
+      setCurrentPathMid();
     }
   );
 
