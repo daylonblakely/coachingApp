@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, HStack, useDisclose } from 'native-base';
+import { Box, HStack, useDisclose, useToast } from 'native-base';
 import FooterIcon from './FooterIcon';
 import StaggerModal from '../../StaggerModal';
 import MenuIcon from '../../MenuIcon';
@@ -7,15 +7,22 @@ import { Context as PlayContext } from '../../../context/PlayContext';
 
 const PlayFooter = () => {
   const {
-    state: { runStep, shouldAnimatePlay, shouldAnimateStep },
+    state: { runStep, shouldAnimatePlay, shouldAnimateStep, currentPlay },
     runPlayAnimation,
     runStepAnimation,
     setRunStep,
   } = useContext(PlayContext);
 
   const { isOpen, onToggle } = useDisclose();
+  const toast = useToast();
+  const stepToastId = 'step_toast';
 
   const isAnimating = shouldAnimatePlay || shouldAnimateStep;
+
+  // check if any players move during the current step
+  const stepHasArrows =
+    currentPlay &&
+    currentPlay.players.some((p) => p.steps[runStep].pathToNextPos !== null);
 
   const footerIcons = [
     { icon: 'save', text: 'Save' },
@@ -31,7 +38,21 @@ const PlayFooter = () => {
       text: 'Run Play',
       onPress: runPlayAnimation,
     },
-    { icon: 'play-skip-forward', text: 'Next Step', onPress: runStepAnimation },
+    {
+      icon: 'play-skip-forward',
+      text: 'Next Step',
+      onPress: () => {
+        stepHasArrows
+          ? runStepAnimation()
+          : !toast.isActive(stepToastId) &&
+            toast.show({
+              id: stepToastId,
+              title: 'Nothing to animate!',
+              variant: 'solid',
+              status: 'info',
+            });
+      },
+    },
   ];
 
   const menuIcons = [
