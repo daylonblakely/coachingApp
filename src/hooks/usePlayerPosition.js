@@ -108,7 +108,7 @@ export default (playerId, pathToNextPos) => {
   // updates the player/arrow positions when the run step changes
   // this happens when the animation ends at the current step
   useEffect(() => {
-    console.log('step changed...');
+    console.log('step changed... ', currentStep);
     if (pathToNextPos) {
       setPlayerArrowPositions(playerPos, posMid, posEnd, pathToNextPos);
     }
@@ -126,10 +126,6 @@ export default (playerId, pathToNextPos) => {
     }
   }, [shouldEdit, pathToNextPos]);
 
-  const animatedPropsArrowHead = useAnimatedProps(() => {
-    return { d: pathToNextPos ? 'M 0 0 L 10 5 L 0 10 z' : undefined };
-  }, [pathToNextPos]);
-
   return {
     // position shared values
     playerPos,
@@ -145,6 +141,5 @@ export default (playerId, pathToNextPos) => {
     animatedStyleEnd,
     // arrow props
     animatedPropsArrow,
-    animatedPropsArrowHead,
   };
 };

@@ -13,7 +13,6 @@ const Arrow = ({
   gestureHandlerMid,
   animatedStyleMid,
   animatedPropsArrow,
-  animatedPropsArrowHead,
   color,
   isVisible,
 }) => {
@@ -31,19 +30,27 @@ const Arrow = ({
             markerHeight="4"
             orient="auto"
           >
-            <AnimatedPath
-              animatedProps={animatedPropsArrowHead}
-              stroke={color || 'black'}
-              fill={color || 'black'}
-            />
+            {isVisible ? (
+              <AnimatedPath
+                d="M 0 0 L 10 5 L 0 10 z"
+                stroke={color || 'black'}
+                fill={color || 'black'}
+              />
+            ) : (
+              <AnimatedPath />
+            )}
           </Marker>
         </Defs>
-        <AnimatedPath
-          animatedProps={animatedPropsArrow}
-          stroke={color || 'black'}
-          strokeWidth="6"
-          markerEnd="url(#Triangle)"
-        />
+        {isVisible ? (
+          <AnimatedPath
+            animatedProps={animatedPropsArrow}
+            stroke={color || 'black'}
+            strokeWidth="6"
+            markerEnd="url(#Triangle)"
+          />
+        ) : (
+          <AnimatedPath />
+        )}
       </Svg>
       {isVisible && (
         <>

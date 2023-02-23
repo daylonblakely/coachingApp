@@ -10,9 +10,17 @@ const playReducer = (state, action) => {
 
   switch (action.type) {
     case 'start_play_animation':
-      return { ...state, shouldAnimatePlay: true };
+      return {
+        ...state,
+        shouldAnimatePlay: true,
+        isEditMode: false,
+      };
     case 'start_step_animation':
-      return { ...state, shouldAnimateStep: true };
+      return {
+        ...state,
+        shouldAnimateStep: true,
+        isEditMode: false,
+      };
     case 'stop_play_animation':
       return { ...state, ...action.payload };
     case 'stop_step_animation':
@@ -20,13 +28,17 @@ const playReducer = (state, action) => {
         ...state,
         shouldAnimateStep: false,
         currentStep: state.currentStep + 1,
+        isEditMode: true,
         currentPlay: {
           ...state.currentPlay,
           players: action.payload,
         },
       };
     case 'set_current_step':
-      return { ...state, currentStep: action.payload };
+      return {
+        ...state,
+        currentStep: action.payload,
+      };
     case 'fetch_play':
       return { ...state, currentPlay: action.payload };
     case 'update_path':
@@ -77,8 +89,11 @@ const stopPlayAnimation = (dispatch) => (currentStep, players) => {
   const nextStepExists = currentStep !== players[0].steps.length - 1;
 
   const payload = nextStepExists
-    ? { currentStep: currentStep + 1, shouldAnimatePlay: true }
-    : { shouldAnimatePlay: false, playAnimationHasEnded: true };
+    ? {
+        currentStep: currentStep + 1,
+        shouldAnimatePlay: true,
+      }
+    : { shouldAnimatePlay: false, isEditMode: true };
 
   dispatch({ type: 'stop_play_animation', payload });
 };

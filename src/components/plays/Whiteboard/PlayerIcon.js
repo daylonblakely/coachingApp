@@ -40,7 +40,6 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     animatedStyleMid,
     animatedStyleEnd,
     animatedPropsArrow,
-    animatedPropsArrowHead,
   } = usePlayerPosition(playerId, pathToNextPos);
 
   usePlayerAnimation(playerPos, pathToNextPos, animationProgress);
@@ -80,7 +79,6 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         gestureHandlerMid={gestureHandlerMid}
         animatedStyleMid={animatedStyleMid}
         animatedPropsArrow={animatedPropsArrow}
-        animatedPropsArrowHead={animatedPropsArrowHead}
         color={arrowColor}
         // pass in isVisible to conditionally render arrow mid and end points
         // conditionally rendering the entire Arrow component caused a bug with the animated props of the SVG
