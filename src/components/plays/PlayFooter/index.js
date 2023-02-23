@@ -7,10 +7,10 @@ import { Context as PlayContext } from '../../../context/PlayContext';
 
 const PlayFooter = () => {
   const {
-    state: { runStep, shouldAnimatePlay, shouldAnimateStep, currentPlay },
+    state: { currentStep, shouldAnimatePlay, shouldAnimateStep, currentPlay },
     runPlayAnimation,
-    runStepAnimation,
-    setRunStep,
+    currentStepAnimation,
+    setcurrentStep,
   } = useContext(PlayContext);
 
   const { isOpen, onToggle } = useDisclose();
@@ -22,7 +22,9 @@ const PlayFooter = () => {
   // check if any players move during the current step
   const stepHasArrows =
     currentPlay &&
-    currentPlay.players.some((p) => p.steps[runStep].pathToNextPos !== null);
+    currentPlay.players.some(
+      (p) => p.steps[currentStep].pathToNextPos !== null
+    );
 
   const footerIcons = [
     { icon: 'save', text: 'Save' },
@@ -30,7 +32,7 @@ const PlayFooter = () => {
       icon: 'play-skip-back',
       text: 'Last Step',
       onPress: () => {
-        if (runStep > 0) setRunStep(runStep - 1);
+        if (currentStep > 0) setcurrentStep(currentStep - 1);
       },
     },
     {
@@ -43,7 +45,7 @@ const PlayFooter = () => {
       text: 'Next Step',
       onPress: () => {
         stepHasArrows
-          ? runStepAnimation()
+          ? currentStepAnimation()
           : !toast.isActive(stepToastId) &&
             toast.show({
               id: stepToastId,
@@ -62,7 +64,7 @@ const PlayFooter = () => {
       bg: 'red.400',
       icon: 'arrow-undo',
       text: 'Reset',
-      onPress: () => setRunStep(0),
+      onPress: () => setcurrentStep(0),
     },
   ];
 

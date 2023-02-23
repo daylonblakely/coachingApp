@@ -4,7 +4,7 @@ import { Context as PlayContext } from '../../context/PlayContext';
 
 const PlayStepCountHeader = () => {
   const {
-    state: { currentPlay, runStep },
+    state: { currentPlay, currentStep },
   } = useContext(PlayContext);
 
   const stepLengths = currentPlay?.players.map((p) => p.steps.length);
@@ -12,7 +12,7 @@ const PlayStepCountHeader = () => {
 
   return (
     <Box mx={5}>
-      <Text>{`Step ${runStep + 1}/${stepCount}`}</Text>
+      <Text>{`Step ${currentStep + 1}/${stepCount}`}</Text>
     </Box>
   );
 };

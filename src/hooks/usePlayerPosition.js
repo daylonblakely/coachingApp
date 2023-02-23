@@ -16,7 +16,7 @@ import { Context as PlayContext } from '../context/PlayContext';
 
 export default (playerId, pathToNextPos) => {
   const {
-    state: { runStep, isEditMode, shouldAnimatePlay, shouldAnimateStep },
+    state: { currentStep, isEditMode, shouldAnimatePlay, shouldAnimateStep },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
 
@@ -59,7 +59,7 @@ export default (playerId, pathToNextPos) => {
   // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
-    shouldEdit && runStep === 0,
+    shouldEdit && currentStep === 0,
     setCurrentPath
   );
 
@@ -112,7 +112,7 @@ export default (playerId, pathToNextPos) => {
     if (pathToNextPos) {
       setPlayerArrowPositions(playerPos, posMid, posEnd, pathToNextPos);
     }
-  }, [runStep]);
+  }, [currentStep]);
 
   // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {

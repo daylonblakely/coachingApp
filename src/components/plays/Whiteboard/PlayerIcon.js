@@ -16,12 +16,13 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
   const {
-    state: { currentPlay, runStep },
+    state: { currentPlay, currentStep },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
 
   const { pathToNextPos } =
-    currentPlay.players.find(({ id }) => playerId === id).steps[runStep] || {};
+    currentPlay.players.find(({ id }) => playerId === id).steps[currentStep] ||
+    {};
 
   const { isOpen, onToggle } = useDisclose();
 

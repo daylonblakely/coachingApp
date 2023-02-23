@@ -19,14 +19,14 @@ const playReducer = (state, action) => {
       return {
         ...state,
         shouldAnimateStep: false,
-        runStep: state.runStep + 1,
+        currentStep: state.currentStep + 1,
         currentPlay: {
           ...state.currentPlay,
           players: action.payload,
         },
       };
     case 'set_run_step':
-      return { ...state, runStep: action.payload };
+      return { ...state, currentStep: action.payload };
     case 'fetch_play':
       return { ...state, currentPlay: action.payload };
     case 'update_path':
@@ -41,17 +41,17 @@ const playReducer = (state, action) => {
               steps: [
                 ...state.currentPlay.players[playerIndex].steps.slice(
                   0,
-                  state.runStep
+                  state.currentStep
                 ),
                 {
                   ...state.currentPlay.players[playerIndex].steps[
-                    state.runStep
+                    state.currentStep
                   ],
                   pathToNextPos: action.payload.path,
                 },
                 ...(action.payload.shouldPreserveSubsequent
                   ? state.currentPlay.players[playerIndex].steps.slice(
-                      state.runStep + 1
+                      state.currentStep + 1
                     )
                   : []),
               ],
@@ -69,42 +69,42 @@ const runPlayAnimation = (dispatch) => () => {
   dispatch({ type: 'start_play_animation' });
 };
 
-const runStepAnimation = (dispatch) => () => {
+const currentStepAnimation = (dispatch) => () => {
   dispatch({ type: 'start_step_animation' });
 };
 
-const stopPlayAnimation = (dispatch) => (runStep, players) => {
-  const nextStepExists = runStep !== players[0].steps.length - 1;
+const stopPlayAnimation = (dispatch) => (currentStep, players) => {
+  const nextStepExists = currentStep !== players[0].steps.length - 1;
 
   const payload = nextStepExists
-    ? { runStep: runStep + 1, shouldAnimatePlay: true }
-    : { runStep: runStep + 1, shouldAnimatePlay: false };
+    ? { currentStep: currentStep + 1, shouldAnimatePlay: true }
+    : { shouldAnimatePlay: false, playAnimationHasEnded: true };
 
   dispatch({ type: 'stop_play_animation', payload });
 };
 
-const stopStepAnimation = (dispatch) => (runStep, players) => {
+const stopStepAnimation = (dispatch) => (currentStep, players) => {
   // if there is no path at the next run step, create a default one for each player
   const updatedPlayers = players.map((player) => {
-    if (player.steps[runStep + 1]) {
+    if (player.steps[currentStep + 1]) {
       return player;
     } else {
       return {
         ...player,
         steps: [
           ...player.steps,
-          { ...player.steps[runStep], pathToNextPos: null },
+          { ...player.steps[currentStep], pathToNextPos: null },
         ],
       };
       // return {
       //   ...player,
       //   steps: [
-      //     ...player.steps.slice(0, runStep + 1),
+      //     ...player.steps.slice(0, currentStep + 1),
       //     {
-      //       ...player.steps[runStep],
-      //       pathToNextPos: setNextPath(player.steps[runStep].pathToNextPos),
+      //       ...player.steps[currentStep],
+      //       pathToNextPos: setNextPath(player.steps[currentStep].pathToNextPos),
       //     },
-      //     ...player.steps.slice(runStep + 2),
+      //     ...player.steps.slice(currentStep + 2),
       //   ],
       // };
     }
@@ -213,26 +213,26 @@ const fetchPlayById = (dispatch) => async (playId) => {
   }
 };
 
-const setRunStep = (dispatch) => (runStep) => {
-  dispatch({ type: 'set_run_step', payload: runStep });
+const setcurrentStep = (dispatch) => (currentStep) => {
+  dispatch({ type: 'set_run_step', payload: currentStep });
 };
 
 export const { Provider, Context } = createDataContext(
   playReducer,
   {
     runPlayAnimation,
-    runStepAnimation,
+    currentStepAnimation,
     stopPlayAnimation,
     stopStepAnimation,
     updateCurrentPlayerPath,
     fetchPlayById,
-    setRunStep,
+    setcurrentStep,
   },
   {
     isEditMode: true,
     shouldAnimatePlay: false,
     shouldAnimateStep: false,
-    runStep: 0,
+    currentStep: 0,
     plays: [
       { id: '1', title: 'test play 1' },
       { id: '2', title: 'test play 2' },
