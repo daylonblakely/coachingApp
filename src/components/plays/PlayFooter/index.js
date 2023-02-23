@@ -10,7 +10,7 @@ const PlayFooter = () => {
     state: { currentStep, shouldAnimatePlay, shouldAnimateStep, currentPlay },
     runPlayAnimation,
     currentStepAnimation,
-    setcurrentStep,
+    setCurrentStep,
   } = useContext(PlayContext);
 
   const { isOpen, onToggle } = useDisclose();
@@ -32,7 +32,7 @@ const PlayFooter = () => {
       icon: 'play-skip-back',
       text: 'Last Step',
       onPress: () => {
-        if (currentStep > 0) setcurrentStep(currentStep - 1);
+        if (currentStep > 0) setCurrentStep(currentStep - 1);
       },
     },
     {
@@ -64,7 +64,7 @@ const PlayFooter = () => {
       bg: 'red.400',
       icon: 'arrow-undo',
       text: 'Reset',
-      onPress: () => setcurrentStep(0),
+      onPress: () => setCurrentStep(0),
     },
   ];
 

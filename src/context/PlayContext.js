@@ -25,7 +25,7 @@ const playReducer = (state, action) => {
           players: action.payload,
         },
       };
-    case 'set_run_step':
+    case 'set_current_step':
       return { ...state, currentStep: action.payload };
     case 'fetch_play':
       return { ...state, currentPlay: action.payload };
@@ -213,8 +213,8 @@ const fetchPlayById = (dispatch) => async (playId) => {
   }
 };
 
-const setcurrentStep = (dispatch) => (currentStep) => {
-  dispatch({ type: 'set_run_step', payload: currentStep });
+const setCurrentStep = (dispatch) => (currentStep) => {
+  dispatch({ type: 'set_current_step', payload: currentStep });
 };
 
 export const { Provider, Context } = createDataContext(
@@ -226,7 +226,7 @@ export const { Provider, Context } = createDataContext(
     stopStepAnimation,
     updateCurrentPlayerPath,
     fetchPlayById,
-    setcurrentStep,
+    setCurrentStep,
   },
   {
     isEditMode: true,
