@@ -13,8 +13,8 @@ const Arrow = ({
   gestureHandlerMid,
   animatedStyleMid,
   animatedPropsArrow,
+  animatedPropsArrowHead,
   color,
-  isVisible,
 }) => {
   return (
     <>
@@ -30,48 +30,38 @@ const Arrow = ({
             markerHeight="4"
             orient="auto"
           >
-            {isVisible ? (
-              <AnimatedPath
-                d="M 0 0 L 10 5 L 0 10 z"
-                stroke={color || 'black'}
-                fill={color || 'black'}
-              />
-            ) : (
-              <AnimatedPath />
-            )}
+            <AnimatedPath
+              animatedProps={animatedPropsArrowHead}
+              stroke={color || 'black'}
+              fill={color || 'black'}
+            />
           </Marker>
         </Defs>
-        {isVisible ? (
-          <AnimatedPath
-            animatedProps={animatedPropsArrow}
-            stroke={color || 'black'}
-            strokeWidth="6"
-            markerEnd="url(#Triangle)"
-          />
-        ) : (
-          <AnimatedPath />
-        )}
+        <AnimatedPath
+          animatedProps={animatedPropsArrow}
+          stroke={color || 'black'}
+          strokeWidth="6"
+          markerEnd="url(#Triangle)"
+        />
       </Svg>
-      {isVisible && (
-        <>
-          <GestureDetector gesture={gestureHandlerMid}>
-            <AnimatedCircle
-              style={animatedStyleMid}
-              position="absolute"
-              size="10"
-              bg="green.600"
-            />
-          </GestureDetector>
-          <GestureDetector gesture={gestureHandlerEnd}>
-            <AnimatedCircle
-              style={animatedStyleEnd}
-              position="absolute"
-              size="10"
-              bg="primary.600"
-            />
-          </GestureDetector>
-        </>
-      )}
+      <>
+        <GestureDetector gesture={gestureHandlerMid}>
+          <AnimatedCircle
+            style={animatedStyleMid}
+            position="absolute"
+            size="10"
+            bg="green.600"
+          />
+        </GestureDetector>
+        <GestureDetector gesture={gestureHandlerEnd}>
+          <AnimatedCircle
+            style={animatedStyleEnd}
+            position="absolute"
+            size="10"
+            bg="primary.600"
+          />
+        </GestureDetector>
+      </>
     </>
   );
 };

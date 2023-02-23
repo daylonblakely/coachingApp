@@ -24,7 +24,7 @@ consider saving the player/arrow positions in state instead of the path. Or poss
 - dont add new step if nothing changed. "empty steps" - DONE
 - figure out why mid and endpoint dont always move on play step change (might have to do with "empty steps")
 - only clear subsequent steps if end of arrow changes - DONE
-- run play adds step to end
+- run play adds step to end - DONE
 
 2/4/23
 - make play and drill home screen more reusable
@@ -34,6 +34,7 @@ consider saving the player/arrow positions in state instead of the path. Or poss
 
 2/22/23
 - after play runs:
-    1. "next step" should not re animate the current step. It should create a new blank one
+    1. "next step" should not re animate the current step - DONE
     2. run play should not be pressable
-    3. last step should display the correct arrows and markers
+    3. last step should display the correct arrows and markers - DONE
+    4. set the end and mid marker to the player position to get rid of the arrow
