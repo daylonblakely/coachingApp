@@ -38,7 +38,17 @@ const PlayFooter = () => {
     {
       icon: 'play',
       text: 'Run Play',
-      onPress: runPlayAnimation,
+      onPress: () => {
+        stepHasArrows
+          ? runPlayAnimation()
+          : !toast.isActive(stepToastId) &&
+            toast.show({
+              id: stepToastId,
+              title: 'Nothing to animate!',
+              variant: 'solid',
+              status: 'info',
+            });
+      },
     },
     {
       icon: 'play-skip-forward',
