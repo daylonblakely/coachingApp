@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   runOnJS,
   useSharedValue,
@@ -7,7 +7,6 @@ import {
 import { serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
 import {
-  getInitialPositions,
   getPath,
   isStraight,
   setPlayerArrowPositions,
@@ -16,22 +15,26 @@ import { Context as PlayContext } from '../context/PlayContext';
 
 export default (playerId, pathToNextPos) => {
   const {
-    state: { runStep, isEditMode, shouldAnimatePlay, shouldAnimateStep },
+    state: { currentStep, isEditMode },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
+  const playerPos = useSharedValue({ x: 0, y: 0 });
+  const posMid = useSharedValue({ x: 0, y: 0 });
+  const posEnd = useSharedValue({ x: 0, y: 0 });
 
-  const shouldEdit = isEditMode && !shouldAnimatePlay && !shouldAnimateStep;
-
-  //   initial values for position shared values
-  const [{ initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY }] =
-    useState(() => getInitialPositions(pathToNextPos));
-
-  const playerPos = useSharedValue({
-    x: initPlayerX,
-    y: initPlayerY,
-  });
-  const posMid = useSharedValue({ x: initMidX, y: initMidY });
-  const posEnd = useSharedValue({ x: initEndX, y: initEndY });
+  // updates the player/arrow positions when the run step changes
+  // this happens when the animation ends at the current step
+  useEffect(() => {
+    console.log('step changed... ', currentStep);
+    const { x, y } = playerPos.value;
+    if (pathToNextPos) {
+      setPlayerArrowPositions(playerPos, posMid, posEnd, pathToNextPos);
+    } else {
+      // TODO - do this after animation!
+      posMid.value = { x, y };
+      posEnd.value = { x, y };
+    }
+  }, [currentStep]);
 
   // setCurrentPath is a helper to update the state with current paths onEnd drag for player/position
   // https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
@@ -39,7 +42,7 @@ export default (playerId, pathToNextPos) => {
     updateCurrentPlayerPath(playerId, path, shouldPreserveSubsequent);
   const setCurrentPath = () => {
     'worklet';
-    if (shouldEdit) {
+    if (isEditMode) {
       runOnJS(updatePathWrapper)(
         getPath(playerPos.value, posMid.value, posEnd.value),
         false
@@ -49,7 +52,7 @@ export default (playerId, pathToNextPos) => {
 
   const setCurrentPathMid = () => {
     'worklet';
-    if (shouldEdit) {
+    if (isEditMode) {
       runOnJS(updatePathWrapper)(
         getPath(playerPos.value, posMid.value, posEnd.value),
         true
@@ -59,7 +62,7 @@ export default (playerId, pathToNextPos) => {
   // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
-    shouldEdit && runStep === 0,
+    isEditMode && currentStep === 0,
     setCurrentPath
   );
 
@@ -74,11 +77,11 @@ export default (playerId, pathToNextPos) => {
 
   const [gestureHandlerMid, animatedStyleMid] = useDraggable(
     posMid,
-    shouldEdit,
+    isEditMode,
     (pos) => {
       'worklet';
       // snap position to middle if line is almost straight
-      if (isStraight(playerPos.value, posEnd.value, pos.value) && shouldEdit) {
+      if (isStraight(playerPos.value, posEnd.value, pos.value) && isEditMode) {
         pos.value = {
           ...pos.value,
           x: (playerPos.value.x + posEnd.value.x) / 2,
@@ -92,7 +95,7 @@ export default (playerId, pathToNextPos) => {
 
   const [gestureHandlerEnd, animatedStyleEnd] = useDraggable(
     posEnd,
-    shouldEdit,
+    isEditMode,
     setCurrentPath
   );
 
@@ -105,29 +108,28 @@ export default (playerId, pathToNextPos) => {
     };
   });
 
-  // updates the player/arrow positions when the run step changes
-  // this happens when the animation ends at the current step
-  useEffect(() => {
-    console.log('step changed...');
-    if (pathToNextPos) {
-      setPlayerArrowPositions(playerPos, posMid, posEnd, pathToNextPos);
-    }
-  }, [runStep]);
-
   // moves arrow svg
   const animatedPropsArrow = useAnimatedProps(() => {
-    if (!pathToNextPos) return { d: undefined }; //hides SVG
-    else if (shouldAnimatePlay) {
-      return { d: serialize(pathToNextPos) };
-    } else if (!shouldEdit) return {};
-    else {
-      const p = getPath(playerPos.value, posMid.value, posEnd.value);
-      return { d: serialize(p) };
-    }
-  }, [shouldEdit, pathToNextPos]);
+    const p = isEditMode
+      ? getPath(playerPos.value, posMid.value, posEnd.value)
+      : pathToNextPos;
+
+    return !p ||
+      (playerPos.value.x === posEnd.value.x &&
+        playerPos.value.y === posEnd.value.y)
+      ? { d: undefined }
+      : { d: serialize(p) };
+  }, [isEditMode, pathToNextPos]);
 
   const animatedPropsArrowHead = useAnimatedProps(() => {
-    return { d: pathToNextPos ? 'M 0 0 L 10 5 L 0 10 z' : undefined };
+    return {
+      d: !(
+        playerPos.value.x === posEnd.value.x &&
+        playerPos.value.y === posEnd.value.y
+      )
+        ? 'M 0 0 L 10 5 L 0 10 z'
+        : undefined,
+    };
   }, [pathToNextPos]);
 
   return {

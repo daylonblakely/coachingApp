@@ -15,7 +15,6 @@ const Arrow = ({
   animatedPropsArrow,
   animatedPropsArrowHead,
   color,
-  isVisible,
 }) => {
   return (
     <>
@@ -45,26 +44,24 @@ const Arrow = ({
           markerEnd="url(#Triangle)"
         />
       </Svg>
-      {isVisible && (
-        <>
-          <GestureDetector gesture={gestureHandlerMid}>
-            <AnimatedCircle
-              style={animatedStyleMid}
-              position="absolute"
-              size="10"
-              bg="green.600"
-            />
-          </GestureDetector>
-          <GestureDetector gesture={gestureHandlerEnd}>
-            <AnimatedCircle
-              style={animatedStyleEnd}
-              position="absolute"
-              size="10"
-              bg="primary.600"
-            />
-          </GestureDetector>
-        </>
-      )}
+      <>
+        <GestureDetector gesture={gestureHandlerMid}>
+          <AnimatedCircle
+            style={animatedStyleMid}
+            position="absolute"
+            size="10"
+            bg="green.600"
+          />
+        </GestureDetector>
+        <GestureDetector gesture={gestureHandlerEnd}>
+          <AnimatedCircle
+            style={animatedStyleEnd}
+            position="absolute"
+            size="10"
+            bg="primary.600"
+          />
+        </GestureDetector>
+      </>
     </>
   );
 };

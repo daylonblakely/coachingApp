@@ -16,12 +16,13 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
   const {
-    state: { currentPlay, runStep },
+    state: { currentPlay, currentStep },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
 
   const { pathToNextPos } =
-    currentPlay.players.find(({ id }) => playerId === id).steps[runStep] || {};
+    currentPlay.players.find(({ id }) => playerId === id).steps[currentStep] ||
+    {};
 
   const { isOpen, onToggle } = useDisclose();
 
@@ -81,9 +82,6 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         animatedPropsArrow={animatedPropsArrow}
         animatedPropsArrowHead={animatedPropsArrowHead}
         color={arrowColor}
-        // pass in isVisible to conditionally render arrow mid and end points
-        // conditionally rendering the entire Arrow component caused a bug with the animated props of the SVG
-        isVisible={!!pathToNextPos}
       />
 
       <GestureDetector gesture={composed}>

@@ -14,7 +14,7 @@ const Whiteboard = () => {
   const lineColor = useColorModeValue('black', 'white');
 
   const {
-    state: { currentPlay, runStep, shouldAnimatePlay, shouldAnimateStep },
+    state: { currentPlay, currentStep, shouldAnimatePlay, shouldAnimateStep },
     stopStepAnimation,
     stopPlayAnimation,
   } = useContext(PlayContext);
@@ -34,9 +34,9 @@ const Whiteboard = () => {
 
           if (isStep) {
             // set next path and run step when done animating
-            runOnJS(stopStepAnimation)(runStep, currentPlay.players);
+            runOnJS(stopStepAnimation)(currentStep, currentPlay.players);
           } else {
-            runOnJS(stopPlayAnimation)(runStep, currentPlay.players);
+            runOnJS(stopPlayAnimation)(currentStep, currentPlay.players);
           }
         } else {
           console.log('ANIMATION CANCELLED');
