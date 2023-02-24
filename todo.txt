@@ -37,4 +37,4 @@ consider saving the player/arrow positions in state instead of the path. Or poss
     1. "next step" should not re animate the current step - DONE
     2. run play should not be pressable
     3. last step should display the correct arrows and markers - DONE
-    4. set the end and mid marker to the player position to get rid of the arrow
+    4. set the end and mid marker to the player position to get rid of the arrow -DONE

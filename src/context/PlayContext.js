@@ -1,5 +1,4 @@
 import createDataContext from './createDataContext';
-// import { setNextPath } from '../utils/pathUtils';
 
 const playReducer = (state, action) => {
   const playerIndex = action.payload?.playerId
@@ -22,13 +21,22 @@ const playReducer = (state, action) => {
         isEditMode: false,
       };
     case 'stop_play_animation':
-      return { ...state, ...action.payload };
+      return {
+        ...state,
+        shouldAnimatePlay: action.payload.shouldAnimatePlay,
+        isEditMode: action.payload.isEditMode,
+        currentStep: action.payload.currentStep,
+        currentPlay: {
+          ...state.currentPlay,
+          players: action.payload.players,
+        },
+      };
     case 'stop_step_animation':
       return {
         ...state,
         shouldAnimateStep: false,
-        currentStep: state.currentStep + 1,
         isEditMode: true,
+        currentStep: state.currentStep + 1,
         currentPlay: {
           ...state.currentPlay,
           players: action.payload,
@@ -77,6 +85,20 @@ const playReducer = (state, action) => {
   }
 };
 
+const addBlankStepToAllPlayers = (currentStep, players) => {
+  // add a new step to each player with no path
+  return players.map((player) => {
+    return {
+      ...player,
+      steps: [
+        ...player.steps,
+        { ...player.steps[currentStep], pathToNextPos: null },
+      ],
+    };
+  });
+};
+
+//////////// ACTIONS ///////////////
 const runPlayAnimation = (dispatch) => () => {
   dispatch({ type: 'start_play_animation' });
 };
@@ -86,44 +108,35 @@ const currentStepAnimation = (dispatch) => () => {
 };
 
 const stopPlayAnimation = (dispatch) => (currentStep, players) => {
-  const nextStepExists = currentStep !== players[0].steps.length - 1;
+  const isLastStep = currentStep === players[0].steps.length - 1;
+  const stepHasArrows = isLastStep
+    ? players.some((p) => p.steps[currentStep].pathToNextPos !== null)
+    : true;
 
-  const payload = nextStepExists
-    ? {
-        currentStep: currentStep + 1,
-        shouldAnimatePlay: true,
-      }
-    : { shouldAnimatePlay: false, isEditMode: true };
-
-  dispatch({ type: 'stop_play_animation', payload });
+  dispatch({
+    type: 'stop_play_animation',
+    payload: {
+      shouldAnimatePlay: !isLastStep,
+      isEditMode: isLastStep,
+      currentStep:
+        !isLastStep || (isLastStep && stepHasArrows)
+          ? currentStep + 1
+          : currentStep,
+      players:
+        isLastStep && stepHasArrows // end play on a blank step, add one if needed
+          ? addBlankStepToAllPlayers(currentStep, players)
+          : players,
+    },
+  });
 };
 
 const stopStepAnimation = (dispatch) => (currentStep, players) => {
   // if there is no path at the next run step, create a default one for each player
-  const updatedPlayers = players.map((player) => {
-    if (player.steps[currentStep + 1]) {
-      return player;
-    } else {
-      return {
-        ...player,
-        steps: [
-          ...player.steps,
-          { ...player.steps[currentStep], pathToNextPos: null },
-        ],
-      };
-      // return {
-      //   ...player,
-      //   steps: [
-      //     ...player.steps.slice(0, currentStep + 1),
-      //     {
-      //       ...player.steps[currentStep],
-      //       pathToNextPos: setNextPath(player.steps[currentStep].pathToNextPos),
-      //     },
-      //     ...player.steps.slice(currentStep + 2),
-      //   ],
-      // };
-    }
-  });
+  const isLastStep = currentStep === players[0].steps.length - 1;
+
+  const updatedPlayers = isLastStep
+    ? addBlankStepToAllPlayers(currentStep, players)
+    : players;
 
   dispatch({
     type: 'stop_step_animation',

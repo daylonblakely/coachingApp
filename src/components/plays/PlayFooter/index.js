@@ -23,7 +23,7 @@ const PlayFooter = () => {
   const stepHasArrows =
     currentPlay &&
     currentPlay.players.some(
-      (p) => p.steps[currentStep].pathToNextPos !== null
+      (p) => p.steps[currentStep]?.pathToNextPos !== null
     );
 
   const footerIcons = [
