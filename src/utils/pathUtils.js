@@ -70,7 +70,7 @@ export const getInitialPositions = (pathToNextPos) => {
 export const setPlayerArrowPositions = (playerPos, posMid, posEnd, path) => {
   const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
     getInitialPositions(path);
-
+  console.log('init x ', initPlayerX);
   playerPos.value = { x: initPlayerX, y: initPlayerY };
   posEnd.value = { x: initEndX, y: initEndY };
   posMid.value = { x: initMidX, y: initMidY };

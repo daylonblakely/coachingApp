@@ -47,8 +47,12 @@ const playReducer = (state, action) => {
         ...state,
         currentStep: action.payload,
       };
-    case 'fetch_play':
-      return { ...state, currentPlay: action.payload };
+    case 'set_current_play':
+      return {
+        ...state,
+        currentStep: 0,
+        currentPlay: action.payload,
+      };
     case 'update_path':
       return {
         ...state,
@@ -235,10 +239,14 @@ const fetchPlayById = (dispatch) => async (playId) => {
       ],
     };
 
-    dispatch({ type: 'fetch_play', payload: data });
+    dispatch({ type: 'set_current_play', payload: data });
   } catch (error) {
     console.log(error);
   }
+};
+
+const clearCurrentPlay = (dispatch) => () => {
+  dispatch({ type: 'set_current_play', payload: null });
 };
 
 const setCurrentStep = (dispatch) => (currentStep) => {
@@ -254,6 +262,7 @@ export const { Provider, Context } = createDataContext(
     stopStepAnimation,
     updateCurrentPlayerPath,
     fetchPlayById,
+    clearCurrentPlay,
     setCurrentStep,
   },
   {

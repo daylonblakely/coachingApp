@@ -26,11 +26,13 @@ export default (playerId, pathToNextPos) => {
   // this happens when the animation ends at the current step
   useEffect(() => {
     console.log('step changed... ', currentStep);
+    console.log(pathToNextPos);
     const { x, y } = playerPos.value;
     if (pathToNextPos) {
+      console.log('setting to path');
       setPlayerArrowPositions(playerPos, posMid, posEnd, pathToNextPos);
     } else {
-      // TODO - do this after animation!
+      console.log('setting to player');
       posMid.value = { x, y };
       posEnd.value = { x, y };
     }
