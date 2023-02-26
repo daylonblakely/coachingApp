@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { Svg, Defs, Marker, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
