@@ -15,7 +15,8 @@ const StaggerModal = ({ isOpen, onToggle, children }) => {
           opacity: 1,
           transition: {
             type: 'spring',
-            mass: 1,
+            mass: 0.8,
+            stiffness: 100,
             stagger: {
               offset: 30,
               reverse: true,

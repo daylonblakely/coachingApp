@@ -51,6 +51,8 @@ const playReducer = (state, action) => {
       return {
         ...state,
         currentStep: 0,
+        shouldAnimatePlay: false,
+        shouldAnimateStep: false,
         currentPlay: action.payload,
       };
     case 'update_path':

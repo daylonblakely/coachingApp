@@ -12,7 +12,7 @@ const PlayStepCountHeader = () => {
 
   return (
     <Box mx={5}>
-      <Text>{`Step ${currentStep + 1}/${stepCount}`}</Text>
+      <Text color="white">{`Step ${currentStep + 1}/${stepCount}`}</Text>
     </Box>
   );
 };

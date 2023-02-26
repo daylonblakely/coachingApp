@@ -38,3 +38,7 @@ consider saving the player/arrow positions in state instead of the path. Or poss
     2. run play should not be pressable - DONE
     3. last step should display the correct arrows and markers - DONE
     4. set the end and mid marker to the player position to get rid of the arrow -DONE
+
+2/25/23
+- add/remove players
+- reset to blank play
