@@ -1,16 +1,13 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import {
   runOnJS,
   useSharedValue,
   useAnimatedProps,
+  useAnimatedReaction,
 } from 'react-native-reanimated';
 import { serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
-import {
-  getPath,
-  isStraight,
-  setPlayerArrowPositions,
-} from '../utils/pathUtils';
+import { getPath, isStraight, getInitialPositions } from '../utils/pathUtils';
 import { Context as PlayContext } from '../context/PlayContext';
 
 export default (playerId, pathToNextPos) => {
@@ -18,25 +15,30 @@ export default (playerId, pathToNextPos) => {
     state: { currentStep, isEditMode },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
-  const playerPos = useSharedValue({ x: 0, y: 0 });
-  const posMid = useSharedValue({ x: 0, y: 0 });
-  const posEnd = useSharedValue({ x: 0, y: 0 });
+  const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
+    getInitialPositions(pathToNextPos);
+
+  const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
+  const posMid = useSharedValue({ x: initMidX, y: initMidY });
+  const posEnd = useSharedValue({ x: initEndX, y: initEndY });
 
   // updates the player/arrow positions when the run step changes
   // this happens when the animation ends at the current step
-  useEffect(() => {
-    console.log('step changed... ', currentStep);
-    console.log(pathToNextPos);
-    const { x, y } = playerPos.value;
-    if (pathToNextPos) {
-      console.log('setting to path');
-      setPlayerArrowPositions(playerPos, posMid, posEnd, pathToNextPos);
-    } else {
-      console.log('setting to player');
-      posMid.value = { x, y };
-      posEnd.value = { x, y };
-    }
-  }, [currentStep]);
+  useAnimatedReaction(
+    () => {},
+    () => {
+      if (pathToNextPos) {
+        playerPos.value = { x: initPlayerX, y: initPlayerY };
+        posMid.value = { x: initMidX, y: initMidY };
+        posEnd.value = { x: initEndX, y: initEndY };
+      } else {
+        const { x, y } = playerPos.value;
+        posMid.value = { x, y };
+        posEnd.value = { x, y };
+      }
+    },
+    [currentStep]
+  );
 
   // setCurrentPath is a helper to update the state with current paths onEnd drag for player/position
   // https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
