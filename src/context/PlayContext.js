@@ -183,84 +183,9 @@ const updateCurrentPlayerPath =
 const fetchPlayById = (dispatch) => async (playId) => {
   try {
     console.log('fetching play ', playId);
-    const data = {
-      players: [
-        {
-          id: 1,
-          label: '1',
-          steps: [
-            {
-              hasBall: false,
-              pathToNextPos: {
-                close: false,
-                curves: [
-                  {
-                    c1: {
-                      x: 45.52826250344515,
-                      y: 200.82778292894363,
-                    },
-                    c2: {
-                      x: 129.6306822374463,
-                      y: 97.47234910726547,
-                    },
-                    to: {
-                      x: 241.95908892154694,
-                      y: 97.04205894470215,
-                    },
-                  },
-                ],
-                move: {
-                  x: 49.72498667240143,
-                  y: 333.2830505371094,
-                },
-              },
-            },
-          ],
-        },
-        {
-          id: 2,
-          label: '2',
-          steps: [
-            {
-              hasBall: false,
-              pathToNextPos: {
-                move: { y: 300, x: 100 },
-                curves: [
-                  {
-                    c1: { y: 300, x: 100 },
-                    c2: { y: 240, x: 300 },
-                    to: { y: 240, x: 300 },
-                  },
-                ],
-                close: false,
-              },
-            },
-          ],
-        },
-        {
-          id: 3,
-          label: '3',
-          steps: [
-            {
-              hasBall: false,
-              pathToNextPos: {
-                move: { y: 200, x: 300 },
-                curves: [
-                  {
-                    c1: { y: 200, x: 300 }, //for a strait line this is the same as move
-                    c2: { y: 340, x: 200 }, // this is the same as to
-                    to: { y: 340, x: 200 },
-                  },
-                ],
-                close: false,
-              },
-            },
-          ],
-        },
-      ],
-    };
+    // TODO - get play from API
 
-    dispatch({ type: 'set_current_play', payload: data });
+    dispatch({ type: 'set_current_play', payload: { players: [] } });
   } catch (error) {
     console.log(error);
   }

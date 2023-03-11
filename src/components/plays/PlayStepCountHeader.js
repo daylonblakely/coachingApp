@@ -8,7 +8,7 @@ const PlayStepCountHeader = () => {
   } = useContext(PlayContext);
 
   const stepLengths = currentPlay?.players.map((p) => p.steps.length);
-  const stepCount = stepLengths ? Math.max(...stepLengths) : 1;
+  const stepCount = stepLengths?.length ? Math.max(...stepLengths) : 1;
 
   return (
     <Box mx={5}>
