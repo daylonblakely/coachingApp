@@ -75,7 +75,17 @@ const PlayFooter = () => {
       bg: 'yellow.400',
       icon: 'add-sharp',
       text: 'Add Player',
-      onPress: addPlayer,
+      onPress: () => {
+        currentStep === 0
+          ? addPlayer()
+          : !toast.isActive(stepToastId) &&
+            toast.show({
+              id: stepToastId,
+              title: 'Add new players at first step',
+              variant: 'solid',
+              status: 'info',
+            });
+      },
     },
     {
       bg: 'red.400',
