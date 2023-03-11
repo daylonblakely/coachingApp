@@ -11,6 +11,7 @@ const PlayFooter = () => {
     runPlayAnimation,
     currentStepAnimation,
     setCurrentStep,
+    addPlayer,
   } = useContext(PlayContext);
 
   const { isOpen, onToggle } = useDisclose();
@@ -70,6 +71,12 @@ const PlayFooter = () => {
   const menuIcons = [
     { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Offense' },
     { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Defense' },
+    {
+      bg: 'yellow.400',
+      icon: 'add-sharp',
+      text: 'Add Player',
+      onPress: addPlayer,
+    },
     {
       bg: 'red.400',
       icon: 'arrow-undo',

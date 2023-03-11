@@ -86,6 +86,25 @@ const playReducer = (state, action) => {
           ],
         },
       };
+    case 'add_player':
+      return {
+        ...state,
+        currentPlay: {
+          ...state.currentPlay,
+          players: [
+            ...state.currentPlay.players,
+            {
+              id: state.currentPlay.players.length + 1,
+              label: state.currentPlay.players.length + 1 + '',
+              steps: [
+                {
+                  hasBall: false,
+                },
+              ],
+            },
+          ],
+        },
+      };
     default:
       return state;
   }
@@ -255,6 +274,10 @@ const setCurrentStep = (dispatch) => (currentStep) => {
   dispatch({ type: 'set_current_step', payload: currentStep });
 };
 
+const addPlayer = (dispatch) => () => {
+  dispatch({ type: 'add_player' });
+};
+
 export const { Provider, Context } = createDataContext(
   playReducer,
   {
@@ -266,6 +289,7 @@ export const { Provider, Context } = createDataContext(
     fetchPlayById,
     clearCurrentPlay,
     setCurrentStep,
+    addPlayer,
   },
   {
     isEditMode: true,

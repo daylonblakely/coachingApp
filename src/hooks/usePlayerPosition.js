@@ -10,13 +10,24 @@ import useDraggable from './useDraggable';
 import { getPath, isStraight, getInitialPositions } from '../utils/pathUtils';
 import { Context as PlayContext } from '../context/PlayContext';
 
+const DEFAULT_PLAYER_COORDS = { x: 100, y: 100 };
+
 export default (playerId, pathToNextPos) => {
   const {
     state: { currentStep, isEditMode },
     updateCurrentPlayerPath,
   } = useContext(PlayContext);
   const { initPlayerX, initPlayerY, initEndX, initEndY, initMidX, initMidY } =
-    getInitialPositions(pathToNextPos);
+    pathToNextPos
+      ? getInitialPositions(pathToNextPos)
+      : {
+          initPlayerX: DEFAULT_PLAYER_COORDS.x,
+          initPlayerY: DEFAULT_PLAYER_COORDS.y,
+          initEndX: DEFAULT_PLAYER_COORDS.x,
+          initEndY: DEFAULT_PLAYER_COORDS.y,
+          initMidX: DEFAULT_PLAYER_COORDS.x,
+          initMidY: DEFAULT_PLAYER_COORDS.y,
+        };
 
   const playerPos = useSharedValue({ x: initPlayerX, y: initPlayerY });
   const posMid = useSharedValue({ x: initMidX, y: initMidY });
