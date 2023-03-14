@@ -52,22 +52,24 @@ const Whiteboard = () => {
   });
 
   const renderPlayers = () => {
-    return currentPlay?.players.map((player) => (
-      <PlayerIcon
-        playerId={player.id}
-        animationProgress={animationProgress}
-        label={player.label}
-        arrowColor={lineColor}
-        key={player.id}
-      />
-    ));
+    return currentPlay?.players.map((player) => {
+      return player ? (
+        <PlayerIcon
+          playerId={player.id}
+          animationProgress={animationProgress}
+          label={player.label}
+          arrowColor={lineColor}
+          key={player.id}
+        />
+      ) : null;
+    });
   };
 
   return (
     <Box flex={1} padding={3}>
       <FullCourt color={lineColor} />
       <Box position="absolute" w="100%" h="100%">
-        <Svg>{currentPlay && renderPlayers()}</Svg>
+        <Svg>{currentPlay.players.length && renderPlayers()}</Svg>
       </Box>
     </Box>
   );

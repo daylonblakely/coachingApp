@@ -18,10 +18,11 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   const {
     state: { currentPlay, currentStep },
     updateCurrentPlayerPath,
+    removePlayer,
   } = useContext(PlayContext);
 
   const { pathToNextPos } =
-    currentPlay.players.find(({ id }) => playerId === id).steps[currentStep] ||
+    currentPlay.players.find((p) => playerId === p?.id).steps[currentStep] ||
     {};
 
   const { isOpen, onToggle } = useDisclose();
@@ -63,6 +64,12 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
       text: 'Reset',
       onPress: () => updateCurrentPlayerPath(playerId, null),
     },
+    {
+      bg: 'red.400',
+      icon: 'remove-sharp',
+      text: 'Remove Player',
+      onPress: () => removePlayer(playerId),
+    },
   ];
 
   const doubleTapGesture = Gesture.Tap()
@@ -74,7 +81,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
 
   return (
     <>
-      <Arrow
+      {/* <Arrow
         gestureHandlerEnd={gestureHandlerEnd}
         animatedStyleEnd={animatedStyleEnd}
         gestureHandlerMid={gestureHandlerMid}
@@ -82,7 +89,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         animatedPropsArrow={animatedPropsArrow}
         animatedPropsArrowHead={animatedPropsArrowHead}
         color={arrowColor}
-      />
+      /> */}
 
       <GestureDetector gesture={composed}>
         <AnimatedCircle
