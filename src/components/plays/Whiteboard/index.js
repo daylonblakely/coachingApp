@@ -69,7 +69,7 @@ const Whiteboard = () => {
     <Box flex={1} padding={3}>
       <FullCourt color={lineColor} />
       <Box position="absolute" w="100%" h="100%">
-        <Svg>{currentPlay.players.length && renderPlayers()}</Svg>
+        <Svg>{renderPlayers()}</Svg>
       </Box>
     </Box>
   );

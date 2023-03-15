@@ -81,7 +81,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
 
   return (
     <>
-      {/* <Arrow
+      <Arrow
         gestureHandlerEnd={gestureHandlerEnd}
         animatedStyleEnd={animatedStyleEnd}
         gestureHandlerMid={gestureHandlerMid}
@@ -89,7 +89,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         animatedPropsArrow={animatedPropsArrow}
         animatedPropsArrowHead={animatedPropsArrowHead}
         color={arrowColor}
-      /> */}
+      />
 
       <GestureDetector gesture={composed}>
         <AnimatedCircle
