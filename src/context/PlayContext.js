@@ -1,12 +1,12 @@
 import createDataContext from './createDataContext';
 
-const playReducer = (state, action) => {
-  const playerIndex = action.payload?.playerId
-    ? state.currentPlay.players.findIndex(
-        ({ id }) => id === action.payload.playerId
-      )
-    : null;
+const INITIAL_PLAY = {
+  id: null,
+  title: null,
+  players: [null, null, null, null, null],
+};
 
+const playReducer = (state, action) => {
   switch (action.type) {
     case 'start_play_animation':
       return {
@@ -61,47 +61,40 @@ const playReducer = (state, action) => {
         currentPlay: {
           ...state.currentPlay,
           players: [
-            ...state.currentPlay.players.slice(0, playerIndex),
+            ...state.currentPlay.players.slice(0, action.payload.playerId),
             {
-              ...state.currentPlay.players[playerIndex],
+              ...state.currentPlay.players[action.payload.playerId],
               steps: [
-                ...state.currentPlay.players[playerIndex].steps.slice(
-                  0,
-                  state.currentStep
-                ),
+                ...state.currentPlay.players[
+                  action.payload.playerId
+                ].steps.slice(0, state.currentStep),
                 {
-                  ...state.currentPlay.players[playerIndex].steps[
+                  ...state.currentPlay.players[action.payload.playerId].steps[
                     state.currentStep
                   ],
                   pathToNextPos: action.payload.path,
                 },
                 ...(action.payload.shouldPreserveSubsequent
-                  ? state.currentPlay.players[playerIndex].steps.slice(
-                      state.currentStep + 1
-                    )
+                  ? state.currentPlay.players[
+                      action.payload.playerId
+                    ].steps.slice(state.currentStep + 1)
                   : []),
               ],
             },
-            ...state.currentPlay.players.slice(playerIndex + 1),
+            ...state.currentPlay.players.slice(action.payload.playerId + 1),
           ],
         },
       };
-    case 'add_player':
+    case 'update_player':
       return {
         ...state,
+        currentStep: 0,
         currentPlay: {
           ...state.currentPlay,
           players: [
-            ...state.currentPlay.players,
-            {
-              id: state.currentPlay.players.length + 1,
-              label: state.currentPlay.players.length + 1 + '',
-              steps: [
-                {
-                  hasBall: false,
-                },
-              ],
-            },
+            ...state.currentPlay.players.slice(0, action.payload.playerId),
+            action.payload.player,
+            ...state.currentPlay.players.slice(action.payload.playerId + 1),
           ],
         },
       };
@@ -113,13 +106,15 @@ const playReducer = (state, action) => {
 const addBlankStepToAllPlayers = (currentStep, players) => {
   // add a new step to each player with no path
   return players.map((player) => {
-    return {
-      ...player,
-      steps: [
-        ...player.steps,
-        { ...player.steps[currentStep], pathToNextPos: null },
-      ],
-    };
+    return player
+      ? {
+          ...player,
+          steps: [
+            ...player.steps,
+            { ...player.steps[currentStep], pathToNextPos: null },
+          ],
+        }
+      : null;
   });
 };
 
@@ -135,7 +130,7 @@ const currentStepAnimation = (dispatch) => () => {
 const stopPlayAnimation = (dispatch) => (currentStep, players) => {
   const isLastStep = currentStep === players[0].steps.length - 1;
   const stepHasArrows = isLastStep
-    ? players.some((p) => p.steps[currentStep]?.pathToNextPos !== null)
+    ? players.some((p) => p?.steps[currentStep]?.pathToNextPos !== null)
     : true;
 
   dispatch({
@@ -185,22 +180,40 @@ const fetchPlayById = (dispatch) => async (playId) => {
     console.log('fetching play ', playId);
     // TODO - get play from API
 
-    dispatch({ type: 'set_current_play', payload: { players: [] } });
+    dispatch({ type: 'set_current_play', payload: INITIAL_PLAY });
   } catch (error) {
     console.log(error);
   }
 };
 
 const clearCurrentPlay = (dispatch) => () => {
-  dispatch({ type: 'set_current_play', payload: null });
+  dispatch({ type: 'set_current_play', payload: INITIAL_PLAY });
 };
 
 const setCurrentStep = (dispatch) => (currentStep) => {
   dispatch({ type: 'set_current_step', payload: currentStep });
 };
 
-const addPlayer = (dispatch) => () => {
-  dispatch({ type: 'add_player' });
+const addPlayer = (dispatch) => (playerId) => {
+  dispatch({
+    type: 'update_player',
+    payload: {
+      playerId,
+      player: {
+        id: playerId,
+        label: playerId + 1 + '',
+        steps: [
+          {
+            hasBall: false,
+          },
+        ],
+      },
+    },
+  });
+};
+
+const removePlayer = (dispatch) => (playerId) => {
+  dispatch({ type: 'update_player', payload: { playerId, player: null } });
 };
 
 export const { Provider, Context } = createDataContext(
@@ -215,6 +228,7 @@ export const { Provider, Context } = createDataContext(
     clearCurrentPlay,
     setCurrentStep,
     addPlayer,
+    removePlayer,
   },
   {
     isEditMode: true,
@@ -225,6 +239,6 @@ export const { Provider, Context } = createDataContext(
       { id: '1', title: 'test play 1' },
       { id: '2', title: 'test play 2' },
     ],
-    currentPlay: null,
+    currentPlay: INITIAL_PLAY,
   }
 );

@@ -129,11 +129,7 @@ export default (playerId, pathToNextPos) => {
       ? getPath(playerPos.value, posMid.value, posEnd.value)
       : pathToNextPos;
 
-    return !p ||
-      (playerPos.value.x === posEnd.value.x &&
-        playerPos.value.y === posEnd.value.y)
-      ? { d: undefined }
-      : { d: serialize(p) };
+    return { d: p ? serialize(p) : '' };
   }, [isEditMode, pathToNextPos]);
 
   const animatedPropsArrowHead = useAnimatedProps(() => {
@@ -143,7 +139,7 @@ export default (playerId, pathToNextPos) => {
         playerPos.value.y === posEnd.value.y
       )
         ? 'M 0 0 L 10 5 L 0 10 z'
-        : undefined,
+        : '',
     };
   }, [pathToNextPos]);
 

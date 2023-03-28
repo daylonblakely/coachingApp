@@ -21,11 +21,11 @@ const PlayFooter = () => {
   const isAnimating = shouldAnimatePlay || shouldAnimateStep;
 
   // check if any players move during the current step
-  const stepHasArrows =
-    currentPlay &&
-    currentPlay.players.some(
-      (p) => p.steps[currentStep]?.pathToNextPos !== null
-    );
+  const stepHasArrows = currentPlay.players.some(
+    (p) => p?.steps[currentStep]?.pathToNextPos !== null
+  );
+
+  const firstEmptyPlayerSlot = currentPlay.players.indexOf(null);
 
   const footerIcons = [
     { icon: 'save', text: 'Save' },
@@ -76,12 +76,14 @@ const PlayFooter = () => {
       icon: 'add-sharp',
       text: 'Add Player',
       onPress: () => {
-        currentStep === 0
-          ? addPlayer()
+        currentStep === 0 &&
+        firstEmptyPlayerSlot < 5 &&
+        firstEmptyPlayerSlot >= 0
+          ? addPlayer(firstEmptyPlayerSlot)
           : !toast.isActive(stepToastId) &&
             toast.show({
               id: stepToastId,
-              title: 'Add new players at first step',
+              title: 'Add new players at first step (max 5)',
               variant: 'solid',
               status: 'info',
             });
