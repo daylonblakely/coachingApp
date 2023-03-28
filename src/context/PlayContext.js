@@ -88,6 +88,7 @@ const playReducer = (state, action) => {
     case 'update_player':
       return {
         ...state,
+        currentStep: 0,
         currentPlay: {
           ...state.currentPlay,
           players: [
@@ -129,7 +130,7 @@ const currentStepAnimation = (dispatch) => () => {
 const stopPlayAnimation = (dispatch) => (currentStep, players) => {
   const isLastStep = currentStep === players[0].steps.length - 1;
   const stepHasArrows = isLastStep
-    ? players.some((p) => p.steps[currentStep]?.pathToNextPos !== null)
+    ? players.some((p) => p?.steps[currentStep]?.pathToNextPos !== null)
     : true;
 
   dispatch({

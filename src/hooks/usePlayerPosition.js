@@ -129,7 +129,7 @@ export default (playerId, pathToNextPos) => {
       ? getPath(playerPos.value, posMid.value, posEnd.value)
       : pathToNextPos;
 
-    return { d: serialize(p) };
+    return { d: p ? serialize(p) : '' };
   }, [isEditMode, pathToNextPos]);
 
   const animatedPropsArrowHead = useAnimatedProps(() => {
