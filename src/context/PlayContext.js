@@ -105,13 +105,15 @@ const playReducer = (state, action) => {
 const addBlankStepToAllPlayers = (currentStep, players) => {
   // add a new step to each player with no path
   return players.map((player) => {
-    return {
-      ...player,
-      steps: [
-        ...player.steps,
-        { ...player.steps[currentStep], pathToNextPos: null },
-      ],
-    };
+    return player
+      ? {
+          ...player,
+          steps: [
+            ...player.steps,
+            { ...player.steps[currentStep], pathToNextPos: null },
+          ],
+        }
+      : null;
   });
 };
 

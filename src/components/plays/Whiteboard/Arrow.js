@@ -21,7 +21,7 @@ const Arrow = ({
     <>
       <Svg width="100%" height="100%">
         <Defs>
-          {/* <Marker
+          <Marker
             id="Triangle"
             viewBox="0 0 10 10"
             refX="0"
@@ -30,14 +30,13 @@ const Arrow = ({
             markerWidth="6"
             markerHeight="4"
             orient="auto"
-          > */}
-          {/* <AnimatedPath
-              // animatedProps={animatedPropsArrowHead}
-              d="M 0 0 L 10 5 L 0 10 z"
+          >
+            <AnimatedPath
+              animatedProps={animatedPropsArrowHead}
               stroke={color || 'black'}
               fill={color || 'black'}
-            /> */}
-          {/* </Marker> */}
+            />
+          </Marker>
         </Defs>
         <AnimatedPath
           animatedProps={animatedPropsArrow}
