@@ -8,6 +8,7 @@ import {
 import { serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
 import { getPath, isStraight, getInitialPositions } from '../utils/pathUtils';
+import squiggleLine from '../utils/squiggleLine';
 import { Context as PlayContext } from '../context/PlayContext';
 
 const DEFAULT_PLAYER_COORDS = { x: 100, y: 100 };
