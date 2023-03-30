@@ -4,6 +4,7 @@ import { Circle, Text, useDisclose } from 'native-base';
 import Animated from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import usePlayerPosition from '../../../hooks/usePlayerPosition';
+import useArrowPoints from '../../../hooks/useArrowPoints';
 import usePlayerAnimation from '../../../hooks/usePlayerAnimation';
 import Arrow from './Arrow';
 import MenuIcon from '../../MenuIcon';
@@ -40,9 +41,14 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     animatedStylePlayer,
     animatedStyleMid,
     animatedStyleEnd,
-    animatedPropsArrow,
-    animatedPropsArrowHead,
   } = usePlayerPosition(playerId, pathToNextPos);
+
+  const { animatedPropsArrow, animatedPropsArrowHead } = useArrowPoints(
+    playerPos,
+    posMid,
+    posEnd,
+    pathToNextPos
+  );
 
   usePlayerAnimation(playerPos, pathToNextPos, animationProgress);
 

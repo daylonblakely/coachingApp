@@ -2,13 +2,10 @@ import { useContext } from 'react';
 import {
   runOnJS,
   useSharedValue,
-  useAnimatedProps,
   useAnimatedReaction,
 } from 'react-native-reanimated';
-import { serialize } from 'react-native-redash';
 import useDraggable from './useDraggable';
 import { getPath, isStraight, getInitialPositions } from '../utils/pathUtils';
-import squiggleLine from '../utils/squiggleLine';
 import { Context as PlayContext } from '../context/PlayContext';
 
 const DEFAULT_PLAYER_COORDS = { x: 100, y: 100 };
@@ -124,26 +121,6 @@ export default (playerId, pathToNextPos) => {
     };
   });
 
-  // moves arrow svg
-  const animatedPropsArrow = useAnimatedProps(() => {
-    const p = isEditMode
-      ? getPath(playerPos.value, posMid.value, posEnd.value)
-      : pathToNextPos;
-
-    return { d: p ? serialize(p) : '' };
-  }, [isEditMode, pathToNextPos]);
-
-  const animatedPropsArrowHead = useAnimatedProps(() => {
-    return {
-      d: !(
-        playerPos.value.x === posEnd.value.x &&
-        playerPos.value.y === posEnd.value.y
-      )
-        ? 'M 0 0 L 10 5 L 0 10 z'
-        : '',
-    };
-  }, [pathToNextPos]);
-
   return {
     // position shared values
     playerPos,
@@ -157,8 +134,5 @@ export default (playerId, pathToNextPos) => {
     animatedStylePlayer,
     animatedStyleMid,
     animatedStyleEnd,
-    // arrow props
-    animatedPropsArrow,
-    animatedPropsArrowHead,
   };
 };

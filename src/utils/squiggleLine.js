@@ -9,6 +9,8 @@ export default (
   const followPath = path.svgPathProperties(followPathString);
   const pathLen = followPath.getTotalLength();
 
+  if (pathLen === 0) return '';
+
   // Adjust step so that there are a whole number of steps along the path
   const numSteps = Math.round(pathLen / squiggleStep);
 
