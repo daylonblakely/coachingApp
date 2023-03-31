@@ -10,7 +10,7 @@ import { Context as PlayContext } from '../context/PlayContext';
 
 const DEFAULT_PLAYER_COORDS = { x: 100, y: 100 };
 
-export default (playerId, pathToNextPos) => {
+export default (playerId, pathToNextPos, pathType) => {
   const {
     state: { currentStep, isEditMode },
     updateCurrentPlayerPath,
@@ -46,13 +46,13 @@ export default (playerId, pathToNextPos) => {
         posEnd.value = { x, y };
       }
     },
-    [currentStep]
+    [currentStep, pathType]
   );
 
   // setCurrentPath is a helper to update the state with current paths onEnd drag for player/position
   // https://docs.swmansion.com/react-native-reanimated/docs/api/miscellaneous/runOnJS/
   const updatePathWrapper = (path, shouldPreserveSubsequent) =>
-    updateCurrentPlayerPath(playerId, path, shouldPreserveSubsequent);
+    updateCurrentPlayerPath(playerId, path, shouldPreserveSubsequent, pathType);
   const setCurrentPath = () => {
     'worklet';
     if (isEditMode) {
@@ -72,6 +72,7 @@ export default (playerId, pathToNextPos) => {
       );
     }
   };
+
   // useDraggable returns gesture handlers for dragging positions
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
@@ -82,6 +83,14 @@ export default (playerId, pathToNextPos) => {
   // move midpoint on player drag
   gestureHandlerPlayer.onChange(() => {
     'worklet';
+
+    if (!pathType) {
+      posEnd.value = {
+        x: playerPos.value.x,
+        y: playerPos.value.y,
+      };
+    }
+
     posMid.value = {
       x: (playerPos.value.x + posEnd.value.x) / 2,
       y: (playerPos.value.y + posEnd.value.y) / 2,

@@ -6,6 +6,8 @@ const INITIAL_PLAY = {
   players: [null, null, null, null, null],
 };
 
+export const ARROW_PATH_TYPE = 'ARROW_PATH_TYPE';
+
 const playReducer = (state, action) => {
   switch (action.type) {
     case 'start_play_animation':
@@ -73,6 +75,7 @@ const playReducer = (state, action) => {
                     state.currentStep
                   ],
                   pathToNextPos: action.payload.path,
+                  pathType: action.payload.pathType,
                 },
                 ...(action.payload.shouldPreserveSubsequent
                   ? state.currentPlay.players[
@@ -111,7 +114,11 @@ const addBlankStepToAllPlayers = (currentStep, players) => {
           ...player,
           steps: [
             ...player.steps,
-            { ...player.steps[currentStep], pathToNextPos: null },
+            {
+              ...player.steps[currentStep],
+              pathToNextPos: null,
+              pathType: null,
+            },
           ],
         }
       : null;
@@ -166,14 +173,18 @@ const stopStepAnimation = (dispatch) => (currentStep, players) => {
 
 const updateCurrentPlayerPath =
   (dispatch) =>
-  (playerId, path, shouldPreserveSubsequent = false) => {
+  (playerId, path, shouldPreserveSubsequent = false, pathType = null) => {
     console.log('updating path ', playerId);
     console.log('preserve subsequent steps ', shouldPreserveSubsequent);
     dispatch({
       type: 'update_path',
-      payload: { playerId, path, shouldPreserveSubsequent },
+      payload: { playerId, path, shouldPreserveSubsequent, pathType },
     });
   };
+
+const addArrow = (dispatch) => (playerId, path) => {
+  updateCurrentPlayerPath(dispatch)(playerId, path, false, ARROW_PATH_TYPE);
+};
 
 const fetchPlayById = (dispatch) => async (playId) => {
   try {
@@ -205,6 +216,7 @@ const addPlayer = (dispatch) => (playerId) => {
         steps: [
           {
             hasBall: false,
+            pathType: null,
           },
         ],
       },
@@ -229,6 +241,7 @@ export const { Provider, Context } = createDataContext(
     setCurrentStep,
     addPlayer,
     removePlayer,
+    addArrow,
   },
   {
     isEditMode: true,

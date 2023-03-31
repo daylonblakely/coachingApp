@@ -8,9 +8,12 @@ import {
 import { serialize } from 'react-native-redash';
 import { getPath } from '../utils/pathUtils';
 import squiggleLine from '../utils/squiggleLine';
-import { Context as PlayContext } from '../context/PlayContext';
+import {
+  Context as PlayContext,
+  ARROW_PATH_TYPE,
+} from '../context/PlayContext';
 
-export default (playerPos, posMid, posEnd, pathToNextPos) => {
+export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
   const {
     state: { isEditMode },
   } = useContext(PlayContext);
@@ -33,9 +36,9 @@ export default (playerPos, posMid, posEnd, pathToNextPos) => {
     const p = isEditMode
       ? getPath(playerPos.value, posMid.value, posEnd.value)
       : pathToNextPos;
-    return { d: dribblePath.value };
-    return { d: p ? serialize(p) : '' };
-  }, [isEditMode, pathToNextPos]);
+    // return { d: dribblePath.value };
+    return { d: p ? (pathType === ARROW_PATH_TYPE ? serialize(p) : '') : '' };
+  }, [isEditMode, pathToNextPos, pathType]);
 
   const animatedPropsArrowHead = useAnimatedProps(() => {
     return {

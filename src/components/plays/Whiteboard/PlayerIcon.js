@@ -19,10 +19,11 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   const {
     state: { currentPlay, currentStep },
     updateCurrentPlayerPath,
+    addArrow,
     removePlayer,
   } = useContext(PlayContext);
 
-  const { pathToNextPos } =
+  const { pathToNextPos, pathType } =
     currentPlay.players.find((p) => playerId === p?.id).steps[currentStep] ||
     {};
 
@@ -41,13 +42,14 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     animatedStylePlayer,
     animatedStyleMid,
     animatedStyleEnd,
-  } = usePlayerPosition(playerId, pathToNextPos);
+  } = usePlayerPosition(playerId, pathToNextPos, pathType);
 
   const { animatedPropsArrow, animatedPropsArrowHead } = useArrowPoints(
     playerPos,
     posMid,
     posEnd,
-    pathToNextPos
+    pathToNextPos,
+    pathType
   );
 
   usePlayerAnimation(playerPos, pathToNextPos, animationProgress);
@@ -55,13 +57,9 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   const menuIcons = [
     {
       bg: 'yellow.400',
-      icon: 'add-sharp',
+      icon: 'arrow-up',
       text: 'Add Arrow',
-      onPress: () =>
-        updateCurrentPlayerPath(
-          playerId,
-          setNextPath(playerPos, posMid, posEnd)
-        ),
+      onPress: () => addArrow(playerId, setNextPath(playerPos, posMid, posEnd)),
     },
     { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Dribble' },
     {
