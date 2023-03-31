@@ -11,6 +11,7 @@ import squiggleLine from '../utils/squiggleLine';
 import {
   Context as PlayContext,
   ARROW_PATH_TYPE,
+  DRIBBLE_PATH_TYPE,
 } from '../context/PlayContext';
 
 export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
@@ -21,13 +22,13 @@ export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
   const dribblePath = useSharedValue('');
 
   const squiggleLineWrapper = (path) => {
-    dribblePath.value = squiggleLine(path);
+    dribblePath.value = path ? squiggleLine(path) : '';
   };
 
   useAnimatedReaction(
     () => getPath(playerPos.value, posMid.value, posEnd.value),
     (result) => {
-      runOnJS(squiggleLineWrapper)(serialize(result));
+      if (isEditMode) runOnJS(squiggleLineWrapper)(serialize(result));
     }
   );
 
@@ -36,18 +37,30 @@ export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
     const p = isEditMode
       ? getPath(playerPos.value, posMid.value, posEnd.value)
       : pathToNextPos;
-    // return { d: dribblePath.value };
-    return { d: p ? (pathType === ARROW_PATH_TYPE ? serialize(p) : '') : '' };
+
+    let d = '';
+
+    switch (pathType) {
+      case ARROW_PATH_TYPE:
+        d = serialize(p);
+        break;
+      case DRIBBLE_PATH_TYPE:
+        d = dribblePath.value;
+        break;
+    }
+
+    return { d };
   }, [isEditMode, pathToNextPos, pathType]);
 
   const animatedPropsArrowHead = useAnimatedProps(() => {
     return {
-      d: !(
-        playerPos.value.x === posEnd.value.x &&
-        playerPos.value.y === posEnd.value.y
-      )
-        ? 'M 0 0 L 10 5 L 0 10 z'
-        : '',
+      d:
+        !(
+          playerPos.value.x === posEnd.value.x &&
+          playerPos.value.y === posEnd.value.y
+        ) && pathType
+          ? 'M 0 0 L 10 5 L 0 10 z'
+          : '',
     };
   }, [pathToNextPos]);
 

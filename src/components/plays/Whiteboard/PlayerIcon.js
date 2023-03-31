@@ -20,6 +20,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     state: { currentPlay, currentStep },
     updateCurrentPlayerPath,
     addArrow,
+    addDribble,
     removePlayer,
   } = useContext(PlayContext);
 
@@ -61,7 +62,13 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
       text: 'Add Arrow',
       onPress: () => addArrow(playerId, setNextPath(playerPos, posMid, posEnd)),
     },
-    { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Dribble' },
+    {
+      bg: 'yellow.400',
+      icon: 'basketball-sharp',
+      text: 'Add Dribble',
+      onPress: () =>
+        addDribble(playerId, setNextPath(playerPos, posMid, posEnd)),
+    },
     {
       bg: 'red.400',
       icon: 'arrow-undo',
