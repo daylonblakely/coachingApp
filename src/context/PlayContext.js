@@ -8,6 +8,7 @@ const INITIAL_PLAY = {
 
 export const ARROW_PATH_TYPE = 'ARROW_PATH_TYPE';
 export const DRIBBLE_PATH_TYPE = 'DRIBBLE_PATH_TYPE';
+export const SCREEN_PATH_TYPE = 'SCREEN_PATH_TYPE';
 
 const playReducer = (state, action) => {
   switch (action.type) {
@@ -191,6 +192,10 @@ const addDribble = (dispatch) => (playerId, path) => {
   updateCurrentPlayerPath(dispatch)(playerId, path, false, DRIBBLE_PATH_TYPE);
 };
 
+const addScreen = (dispatch) => (playerId, path) => {
+  updateCurrentPlayerPath(dispatch)(playerId, path, false, SCREEN_PATH_TYPE);
+};
+
 const fetchPlayById = (dispatch) => async (playId) => {
   try {
     console.log('fetching play ', playId);
@@ -248,6 +253,7 @@ export const { Provider, Context } = createDataContext(
     removePlayer,
     addArrow,
     addDribble,
+    addScreen,
   },
   {
     isEditMode: true,

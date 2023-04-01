@@ -21,6 +21,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     updateCurrentPlayerPath,
     addArrow,
     addDribble,
+    addScreen,
     removePlayer,
   } = useContext(PlayContext);
 
@@ -70,9 +71,16 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         addDribble(playerId, setNextPath(playerPos, posMid, posEnd)),
     },
     {
+      bg: 'yellow.400',
+      icon: 'md-pin-sharp',
+      text: 'Add Screen',
+      onPress: () =>
+        addScreen(playerId, setNextPath(playerPos, posMid, posEnd)),
+    },
+    {
       bg: 'red.400',
       icon: 'arrow-undo',
-      text: 'Reset',
+      text: 'Remove Arrow',
       onPress: () => updateCurrentPlayerPath(playerId, null),
     },
     {

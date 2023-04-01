@@ -12,6 +12,7 @@ import {
   Context as PlayContext,
   ARROW_PATH_TYPE,
   DRIBBLE_PATH_TYPE,
+  SCREEN_PATH_TYPE,
 } from '../context/PlayContext';
 
 export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
@@ -40,28 +41,25 @@ export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
 
     let d = 'M 0 0 L 0 0';
 
-    switch (pathType) {
-      case ARROW_PATH_TYPE:
-        d = serialize(p);
-        break;
-      case DRIBBLE_PATH_TYPE:
-        d = dribblePath.value;
-        break;
+    if (pathType === ARROW_PATH_TYPE || pathType === SCREEN_PATH_TYPE) {
+      d = serialize(p);
+    } else if (pathType === DRIBBLE_PATH_TYPE) {
+      d = dribblePath.value;
     }
 
     return { d };
   }, [isEditMode, pathToNextPos, pathType]);
 
   const animatedPropsArrowHead = useAnimatedProps(() => {
-    return {
-      d:
-        !(
-          playerPos.value.x === posEnd.value.x &&
-          playerPos.value.y === posEnd.value.y
-        ) && pathType
-          ? 'M 0 0 L 10 5 L 0 10 z'
-          : '',
-    };
+    let d = '';
+
+    if (pathType === ARROW_PATH_TYPE || pathType === DRIBBLE_PATH_TYPE) {
+      d = 'M 0 0 L 10 5 L 0 10 z';
+    } else if (pathType === SCREEN_PATH_TYPE) {
+      d = 'M 0 0 L 0 10';
+    }
+
+    return { d };
   }, [pathToNextPos]);
 
   return {
