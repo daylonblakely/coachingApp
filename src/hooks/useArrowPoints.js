@@ -38,7 +38,7 @@ export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
       ? getPath(playerPos.value, posMid.value, posEnd.value)
       : pathToNextPos;
 
-    let d = '';
+    let d = 'M 0 0 L 0 0';
 
     switch (pathType) {
       case ARROW_PATH_TYPE:
