@@ -1,6 +1,6 @@
 import { extendTheme, themeTools } from 'native-base';
 
-export default theme = extendTheme({
+export default extendTheme({
   components: {
     Text: {
       defaultProps: {

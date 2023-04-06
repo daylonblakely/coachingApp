@@ -25,7 +25,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     removePlayer,
   } = useContext(PlayContext);
 
-  const { pathToNextPos, pathType } =
+  const { pathToNextPos, pathType, hasBall } =
     currentPlay.players.find((p) => playerId === p?.id).steps[currentStep] ||
     {};
 
@@ -109,15 +109,21 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         animatedPropsArrowHead={animatedPropsArrowHead}
         color={arrowColor}
       />
-
       <GestureDetector gesture={composed}>
         <AnimatedCircle
           style={animatedStylePlayer}
           position="absolute"
           size="xs"
-          bg="secondary.600"
+          borderWidth={hasBall ? '3' : '0'}
+          _dark={{ borderColor: 'white' }}
+          _light={{ borderColor: 'black' }}
         >
-          <Text color="white" fontSize="xl">
+          <Text
+            fontSize={hasBall ? 'xl' : '3xl'}
+            bold
+            _dark={{ color: 'white' }}
+            _light={{ color: 'black' }}
+          >
             {label}
           </Text>
         </AnimatedCircle>
