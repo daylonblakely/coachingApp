@@ -26,6 +26,11 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     addBall,
   } = useContext(PlayContext);
 
+  // check if any players have the ball in the current step
+  const stepHasBall = currentPlay.players.some(
+    (p) => p?.steps[currentStep]?.hasBall === true
+  );
+
   const { pathToNextPos, pathType, hasBall } =
     currentPlay.players.find((p) => playerId === p?.id).steps[currentStep] ||
     {};
@@ -58,32 +63,42 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   usePlayerAnimation(playerPos, pathToNextPos, animationProgress);
 
   const menuIcons = [
-    {
-      bg: 'yellow.400',
-      icon: 'arrow-up',
-      text: 'Add Arrow',
-      onPress: () => addArrow(playerId, setNextPath(playerPos, posMid, posEnd)),
-    },
-    {
-      bg: 'yellow.400',
-      icon: 'basketball-sharp',
-      text: 'Add Dribble',
-      onPress: () =>
-        addDribble(playerId, setNextPath(playerPos, posMid, posEnd)),
-    },
-    {
-      bg: 'blue.400',
-      icon: 'basketball-outline',
-      text: 'Add Ball',
-      onPress: () => addBall(playerId),
-    },
-    {
-      bg: 'yellow.400',
-      icon: 'md-pin-sharp',
-      text: 'Add Screen',
-      onPress: () =>
-        addScreen(playerId, setNextPath(playerPos, posMid, posEnd)),
-    },
+    ...(!hasBall
+      ? [
+          {
+            bg: 'yellow.400',
+            icon: 'arrow-up',
+            text: 'Add Arrow',
+            onPress: () =>
+              addArrow(playerId, setNextPath(playerPos, posMid, posEnd)),
+          },
+          {
+            bg: 'yellow.400',
+            icon: 'md-pin-sharp',
+            text: 'Add Screen',
+            onPress: () =>
+              addScreen(playerId, setNextPath(playerPos, posMid, posEnd)),
+          },
+          ...(!stepHasBall
+            ? [
+                {
+                  bg: 'blue.400',
+                  icon: 'basketball-outline',
+                  text: 'Add Ball',
+                  onPress: () => addBall(playerId),
+                },
+              ]
+            : []),
+        ]
+      : [
+          {
+            bg: 'yellow.400',
+            icon: 'arrow-up',
+            text: 'Add Dribble',
+            onPress: () =>
+              addDribble(playerId, setNextPath(playerPos, posMid, posEnd)),
+          },
+        ]),
     {
       bg: 'red.400',
       icon: 'arrow-undo',
@@ -126,7 +141,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
           _light={{ borderColor: 'black' }}
         >
           <Text
-            fontSize={hasBall ? 'xl' : '3xl'}
+            fontSize={hasBall ? 'xl' : '2xl'}
             bold
             _dark={{ color: 'white' }}
             _light={{ color: 'black' }}
