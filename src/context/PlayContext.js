@@ -103,6 +103,36 @@ const playReducer = (state, action) => {
           ],
         },
       };
+    case 'update_hasBall':
+      return {
+        ...state,
+        currentPlay: {
+          ...state.currentPlay,
+          players: [
+            ...state.currentPlay.players.slice(0, action.payload.playerId),
+            {
+              ...state.currentPlay.players[action.payload.playerId],
+              steps: [
+                ...state.currentPlay.players[
+                  action.payload.playerId
+                ].steps.slice(0, state.currentStep),
+                {
+                  ...state.currentPlay.players[action.payload.playerId].steps[
+                    state.currentStep
+                  ],
+                  hasBall: action.payload.hasBall,
+                },
+                // ...(action.payload.shouldPreserveSubsequent
+                //   ? state.currentPlay.players[
+                //       action.payload.playerId
+                //     ].steps.slice(state.currentStep + 1)
+                //   : []),
+              ],
+            },
+            ...state.currentPlay.players.slice(action.payload.playerId + 1),
+          ],
+        },
+      };
     default:
       return state;
   }
@@ -238,6 +268,10 @@ const removePlayer = (dispatch) => (playerId) => {
   dispatch({ type: 'update_player', payload: { playerId, player: null } });
 };
 
+const addBall = (dispatch) => (playerId) => {
+  dispatch({ type: 'update_hasBall', payload: { playerId, hasBall: true } });
+};
+
 export const { Provider, Context } = createDataContext(
   playReducer,
   {
@@ -254,6 +288,7 @@ export const { Provider, Context } = createDataContext(
     addArrow,
     addDribble,
     addScreen,
+    addBall,
   },
   {
     isEditMode: true,

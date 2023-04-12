@@ -23,6 +23,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     addDribble,
     addScreen,
     removePlayer,
+    addBall,
   } = useContext(PlayContext);
 
   const { pathToNextPos, pathType, hasBall } =
@@ -69,6 +70,12 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
       text: 'Add Dribble',
       onPress: () =>
         addDribble(playerId, setNextPath(playerPos, posMid, posEnd)),
+    },
+    {
+      bg: 'blue.400',
+      icon: 'basketball-outline',
+      text: 'Add Ball',
+      onPress: () => addBall(playerId),
     },
     {
       bg: 'yellow.400',
