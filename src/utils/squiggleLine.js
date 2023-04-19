@@ -3,7 +3,7 @@ import * as path from 'svg-path-properties';
 // takes an svg path for a straight line and returns a path for a squiggly with the same endpoints
 export default (
   followPathString,
-  squiggleStep = 25,
+  squiggleStep = 15,
   squiggleAmplitude = 30
 ) => {
   const followPath = path.svgPathProperties(followPathString);

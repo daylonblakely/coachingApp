@@ -27,21 +27,22 @@ const Arrow = ({
             refX="0"
             refY="5"
             markerUnits="strokeWidth"
-            markerWidth="6"
-            markerHeight="4"
+            markerWidth="5"
+            markerHeight="3"
             orient="auto"
           >
             <AnimatedPath
               animatedProps={animatedPropsArrowHead}
               stroke={color || 'black'}
               fill={color || 'black'}
+              strokeWidth="4"
             />
           </Marker>
         </Defs>
         <AnimatedPath
           animatedProps={animatedPropsArrow}
           stroke={color || 'black'}
-          strokeWidth="6"
+          strokeWidth="4"
           markerEnd="url(#Triangle)"
         />
       </Svg>

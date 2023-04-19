@@ -56,7 +56,7 @@ export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
     if (pathType === ARROW_PATH_TYPE || pathType === DRIBBLE_PATH_TYPE) {
       d = 'M 0 0 L 10 5 L 0 10 z';
     } else if (pathType === SCREEN_PATH_TYPE) {
-      d = 'M 0 0 L 0 10';
+      d = 'M 0 -10 L 0 20';
     }
 
     return { d };
