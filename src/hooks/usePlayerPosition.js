@@ -9,6 +9,7 @@ import { getPath, isStraight, getInitialPositions } from '../utils/pathUtils';
 import { Context as PlayContext } from '../context/PlayContext';
 
 const DEFAULT_PLAYER_COORDS = { x: 100, y: 100 };
+const ARROW_POINT_SIZE = 10; //tech debt - move to constants this needs to match the Circle size in Arrow.js and PlayerIcon.js
 
 export default (playerId, pathToNextPos, pathType) => {
   const {
@@ -77,7 +78,9 @@ export default (playerId, pathToNextPos, pathType) => {
   const [gestureHandlerPlayer, animatedStylePlayer] = useDraggable(
     playerPos,
     isEditMode && currentStep === 0,
-    setCurrentPath
+    setCurrentPath,
+    ARROW_POINT_SIZE * 2,
+    ARROW_POINT_SIZE * 2
   );
 
   // move midpoint on player drag
@@ -112,13 +115,17 @@ export default (playerId, pathToNextPos, pathType) => {
       }
 
       setCurrentPathMid();
-    }
+    },
+    ARROW_POINT_SIZE * 2,
+    ARROW_POINT_SIZE * 2
   );
 
   const [gestureHandlerEnd, animatedStyleEnd] = useDraggable(
     posEnd,
     isEditMode,
-    setCurrentPath
+    setCurrentPath,
+    ARROW_POINT_SIZE * 2,
+    ARROW_POINT_SIZE * 2
   );
 
   // move midpoint on end drag

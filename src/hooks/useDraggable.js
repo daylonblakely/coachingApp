@@ -1,7 +1,7 @@
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { Gesture } from 'react-native-gesture-handler';
 
-export default (pos, isDraggable, onEnd) => {
+export default (pos, isDraggable, onEnd, offsetX = 0, offsetY = 0) => {
   const context = useSharedValue({ x: pos.value.x, y: pos.value.y });
   const gestureHandler = Gesture.Pan()
     .onStart(() => {
@@ -23,7 +23,10 @@ export default (pos, isDraggable, onEnd) => {
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ translateX: pos.value.x }, { translateY: pos.value.y }],
+      transform: [
+        { translateX: pos.value.x - offsetX },
+        { translateY: pos.value.y - offsetY },
+      ],
     };
   });
 

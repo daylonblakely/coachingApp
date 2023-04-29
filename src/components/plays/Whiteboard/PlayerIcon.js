@@ -135,7 +135,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         <AnimatedCircle
           style={animatedStylePlayer}
           position="absolute"
-          size="xs"
+          size="10"
           borderWidth={hasBall ? '3' : '0'}
           _dark={{ borderColor: 'white' }}
           _light={{ borderColor: 'black' }}

@@ -27,10 +27,38 @@ export const isStraight = (a, b, c) => {
   return triangleHeight(a, b, c) < SNAP_THRESHOLD;
 };
 
+const getPointOnLine = (x1, y1, x2, y2, distance) => {
+  'worklet';
+  // Calculate the length of the line segment
+  const segmentLength = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+  if (segmentLength <= distance) return [x1, y1];
+
+  // Calculate the direction of the line segment
+  const directionX = (x2 - x1) / segmentLength;
+  const directionY = (y2 - y1) / segmentLength;
+
+  // Calculate the x and y coordinates of the point on the line that is the given distance away from the first coordinate
+  const pointX = x1 + distance * directionX;
+  const pointY = y1 + distance * directionY;
+
+  // Return the x and y coordinates of the point
+  return [pointX, pointY];
+};
+
 // gets a path object with one arc for three positions (sharedValues)
 export const getPath = (playerPos, posMid, posEnd) => {
   'worklet';
-  const p = createPath(playerPos);
+  // get coords up the line from the player so the arrow doesn't over lap the player
+  const [x, y] = getPointOnLine(
+    playerPos.x,
+    playerPos.y,
+    posMid.x,
+    posMid.y,
+    15 //TODO use player circle size constant
+  );
+
+  const p = createPath({ x, y });
   addArc(p, posMid, posEnd);
   return p;
 };
