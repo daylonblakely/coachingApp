@@ -7,7 +7,7 @@ import {
 } from 'react-native-reanimated';
 import { serialize } from 'react-native-redash';
 import { getPath } from '../utils/pathUtils';
-import squiggleLine from '../../../utils/squiggleLine';
+import squiggleLine from '../utils/squiggleLine';
 import {
   Context as PlayContext,
   ARROW_PATH_TYPE,

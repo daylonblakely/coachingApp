@@ -4,6 +4,7 @@ import { Svg, Defs, Marker, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
 import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
+import { ARROW_POINT_SIZE } from '../constants';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -51,7 +52,7 @@ const Arrow = ({
           <AnimatedCircle
             style={animatedStyleMid}
             position="absolute"
-            size="10"
+            size={ARROW_POINT_SIZE}
             bg="green.600"
           />
         </GestureDetector>
@@ -59,7 +60,7 @@ const Arrow = ({
           <AnimatedCircle
             style={animatedStyleEnd}
             position="absolute"
-            size="10"
+            size={ARROW_POINT_SIZE}
             bg="primary.600"
           />
         </GestureDetector>

@@ -1,4 +1,5 @@
 import { createPath, addArc } from 'react-native-redash';
+import { PLAYER_CIRCLE_SIZE } from '../constants';
 
 const DEFAULT_LENGTH = 100; // default length of a straight line if no path is provided
 const SNAP_THRESHOLD = 20; // min distance from straight line for curve
@@ -55,7 +56,7 @@ export const getPath = (playerPos, posMid, posEnd) => {
     playerPos.y,
     posMid.x,
     posMid.y,
-    15 //TODO use player circle size constant
+    PLAYER_CIRCLE_SIZE + 5
   );
 
   const p = createPath({ x, y });

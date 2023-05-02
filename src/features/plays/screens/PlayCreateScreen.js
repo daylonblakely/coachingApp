@@ -1,8 +1,8 @@
 import React, { useContext, useCallback, useEffect } from 'react';
 import { Box } from 'native-base';
 import { useFocusEffect } from '@react-navigation/native';
-import Whiteboard from '../../components/plays/Whiteboard';
-import PlayFooter from '../../components/plays/PlayFooter';
+import Whiteboard from '../Whiteboard';
+import PlayFooter from '../PlayFooter';
 import { Context as PlayContext } from '../../../context/PlayContext';
 
 const PlayCreateScreen = ({ route }) => {

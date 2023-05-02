@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import PlayHomeScreen from '../../screens/plays/PlayHomeScreen';
-import PlayListScreen from '../../screens/plays/PlayListScreen';
+import PlayHomeScreen from './screens/PlayHomeScreen';
+import PlayListScreen from './screens//PlayListScreen';
 import PlayCreateScreen from './screens/PlayCreateScreen';
 import PlayStepCountHeader from './PlayStepCountHeader';
 

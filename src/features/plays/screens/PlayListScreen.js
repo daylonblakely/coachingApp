@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Context as PlayContext } from '../../context/PlayContext';
-import VerticalScrollList from '../../components/VerticalScrollList';
+import { Context as PlayContext } from '../../../context/PlayContext';
+import VerticalScrollList from '../../../components/VerticalScrollList';
 
 const PlaylListScreen = ({ navigation }) => {
   const {

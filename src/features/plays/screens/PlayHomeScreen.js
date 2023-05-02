@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, Text, Box } from 'native-base';
-import HorizontalListDisplay from '../../components/HorizontalListDisplay';
-import ListBoxOption from '../../components/ListBoxOption';
+import HorizontalListDisplay from '../../../components/HorizontalListDisplay';
+import ListBoxOption from '../../../components/ListBoxOption';
 
 const PlayHomeScreen = ({ navigation }) => {
   const quickAccess = ['Recent'];

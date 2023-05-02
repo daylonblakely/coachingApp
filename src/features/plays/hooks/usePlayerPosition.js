@@ -6,10 +6,10 @@ import {
 } from 'react-native-reanimated';
 import useDraggable from './useDraggable';
 import { getPath, isStraight, getInitialPositions } from '../utils/pathUtils';
-import { Context as PlayContext } from '../context/PlayContext';
+import { Context as PlayContext } from '../../../context/PlayContext';
+import { ARROW_POINT_SIZE, PLAYER_CIRCLE_SIZE } from '../constants';
 
 const DEFAULT_PLAYER_COORDS = { x: 100, y: 100 };
-const ARROW_POINT_SIZE = 10; //tech debt - move to constants this needs to match the Circle size in Arrow.js and PlayerIcon.js
 
 export default (playerId, pathToNextPos, pathType) => {
   const {
@@ -79,8 +79,8 @@ export default (playerId, pathToNextPos, pathType) => {
     playerPos,
     isEditMode && currentStep === 0,
     setCurrentPath,
-    ARROW_POINT_SIZE * 2,
-    ARROW_POINT_SIZE * 2
+    PLAYER_CIRCLE_SIZE * 2,
+    PLAYER_CIRCLE_SIZE * 2
   );
 
   // move midpoint on player drag
