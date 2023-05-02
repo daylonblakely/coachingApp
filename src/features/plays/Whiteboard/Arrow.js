@@ -17,6 +17,7 @@ const Arrow = ({
   animatedPropsArrow,
   animatedPropsArrowHead,
   color,
+  isEditMode,
 }) => {
   return (
     <>
@@ -52,16 +53,16 @@ const Arrow = ({
           <AnimatedCircle
             style={animatedStyleMid}
             position="absolute"
-            size={ARROW_POINT_SIZE}
-            bg="green.600"
+            size={isEditMode ? ARROW_POINT_SIZE : 0}
+            bg={color || 'black'}
           />
         </GestureDetector>
         <GestureDetector gesture={gestureHandlerEnd}>
           <AnimatedCircle
             style={animatedStyleEnd}
             position="absolute"
-            size={ARROW_POINT_SIZE}
-            bg="primary.600"
+            size={isEditMode ? ARROW_POINT_SIZE : 0}
+            bg={color || 'black'}
           />
         </GestureDetector>
       </>

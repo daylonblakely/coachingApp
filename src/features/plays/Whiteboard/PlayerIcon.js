@@ -18,7 +18,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
   const {
-    state: { currentPlay, currentStep },
+    state: { currentPlay, currentStep, isEditMode },
     updateCurrentPlayerPath,
     addArrow,
     addDribble,
@@ -131,6 +131,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
         animatedPropsArrow={animatedPropsArrow}
         animatedPropsArrowHead={animatedPropsArrowHead}
         color={arrowColor}
+        isEditMode={isEditMode}
       />
       <GestureDetector gesture={composed}>
         <AnimatedCircle
