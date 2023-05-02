@@ -3,7 +3,7 @@ import { Box } from 'native-base';
 import { useFocusEffect } from '@react-navigation/native';
 import Whiteboard from '../../components/plays/Whiteboard';
 import PlayFooter from '../../components/plays/PlayFooter';
-import { Context as PlayContext } from '../../context/PlayContext';
+import { Context as PlayContext } from '../../../context/PlayContext';
 
 const PlayCreateScreen = ({ route }) => {
   const { fetchPlayById, clearCurrentPlay } = useContext(PlayContext);

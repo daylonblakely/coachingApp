@@ -4,7 +4,7 @@ import { useColorModeValue, useToken } from 'native-base';
 import AuthNavigator from './AuthNavigator';
 import PracticeNavigator from './PracticeNavigator';
 import DrillNavigator from './DrillNavigator';
-import PlayNavigator from './PlayNavigator';
+import PlayNavigator from '../../features/plays/PlayNavigator';
 import displayParentHeader from './displayParentHeader';
 
 import HomeScreen from '../../screens/HomeScreen';

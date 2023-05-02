@@ -3,8 +3,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import PlayHomeScreen from '../../screens/plays/PlayHomeScreen';
 import PlayListScreen from '../../screens/plays/PlayListScreen';
-import PlayCreateScreen from '../../screens/plays/PlayCreateScreen';
-import PlayStepCountHeader from '../plays/PlayStepCountHeader';
+import PlayCreateScreen from './screens/PlayCreateScreen';
+import PlayStepCountHeader from './PlayStepCountHeader';
 
 const PlayNavigator = () => {
   const Stack = createStackNavigator();
