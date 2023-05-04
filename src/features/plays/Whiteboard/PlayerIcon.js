@@ -139,8 +139,11 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
           position="absolute"
           size={PLAYER_CIRCLE_SIZE}
           borderWidth={hasBall ? '3' : '0'}
-          _dark={{ borderColor: 'white' }}
-          _light={{ borderColor: 'black' }}
+          _dark={{ borderColor: 'white', backgroundColor: 'primary.500' }}
+          _light={{
+            borderColor: 'black',
+            backgroundColor: 'primary.600',
+          }}
         >
           <Text
             fontSize={hasBall ? 'xl' : '2xl'}

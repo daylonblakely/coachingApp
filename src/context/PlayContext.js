@@ -170,7 +170,7 @@ const currentStepAnimation = (dispatch) => () => {
 const stopPlayAnimation = (dispatch) => (currentStep, players) => {
   const isLastStep = currentStep === players[0].steps.length - 1;
   const stepHasArrows = isLastStep
-    ? players.some((p) => p?.steps[currentStep]?.pathToNextPos !== null)
+    ? players.some((p) => p?.steps[currentStep]?.pathType)
     : true;
 
   dispatch({

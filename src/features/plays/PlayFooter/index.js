@@ -22,7 +22,7 @@ const PlayFooter = () => {
 
   // check if any players move during the current step
   const stepHasArrows = currentPlay.players.some(
-    (p) => p?.steps[currentStep]?.pathToNextPos !== null
+    (p) => p?.steps[currentStep]?.pathType
   );
 
   const firstEmptyPlayerSlot = currentPlay.players.indexOf(null);
@@ -69,8 +69,8 @@ const PlayFooter = () => {
   ];
 
   const menuIcons = [
-    { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Offense' },
-    { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Defense' },
+    // { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Offense' },
+    // { bg: 'yellow.400', icon: 'add-sharp', text: 'Add Defense' },
     {
       bg: 'yellow.400',
       icon: 'add-sharp',
