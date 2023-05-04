@@ -1,2 +1,6 @@
 export const ARROW_POINT_SIZE = 5;
 export const PLAYER_CIRCLE_SIZE = 10;
+
+export const ARROW_PATH_TYPE = 'ARROW_PATH_TYPE';
+export const DRIBBLE_PATH_TYPE = 'DRIBBLE_PATH_TYPE';
+export const SCREEN_PATH_TYPE = 'SCREEN_PATH_TYPE';

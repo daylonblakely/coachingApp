@@ -1,14 +1,15 @@
 import createDataContext from './createDataContext';
+import {
+  ARROW_PATH_TYPE,
+  DRIBBLE_PATH_TYPE,
+  SCREEN_PATH_TYPE,
+} from '../features/plays/constants';
 
 const INITIAL_PLAY = {
   id: null,
   title: null,
   players: [null, null, null, null, null],
 };
-
-export const ARROW_PATH_TYPE = 'ARROW_PATH_TYPE';
-export const DRIBBLE_PATH_TYPE = 'DRIBBLE_PATH_TYPE';
-export const SCREEN_PATH_TYPE = 'SCREEN_PATH_TYPE';
 
 const playReducer = (state, action) => {
   switch (action.type) {
