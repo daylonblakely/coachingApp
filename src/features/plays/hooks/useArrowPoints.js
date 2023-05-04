@@ -17,7 +17,7 @@ import {
 
 export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
   const {
-    state: { isEditMode },
+    state: { isEditMode, currentStep, shouldAnimatePlay },
   } = useContext(PlayContext);
 
   const dribblePath = useSharedValue('');
@@ -26,6 +26,17 @@ export default (playerPos, posMid, posEnd, pathToNextPos, pathType) => {
     dribblePath.value = path ? squiggleLine(path) : '';
   };
 
+  // update dribble path when step changes (running plays)
+  useAnimatedReaction(
+    () => {},
+    () => {
+      if (pathToNextPos && shouldAnimatePlay)
+        runOnJS(squiggleLineWrapper)(serialize(pathToNextPos));
+    },
+    [currentStep]
+  );
+
+  // update dribble path on edit
   useAnimatedReaction(
     () => getPath(playerPos.value, posMid.value, posEnd.value),
     (result) => {
