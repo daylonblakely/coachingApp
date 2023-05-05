@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Circle, Text, useDisclose } from 'native-base';
 import Animated from 'react-native-reanimated';
@@ -18,7 +18,14 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
   const {
-    state: { currentPlay, currentStep, isEditMode, pendingPassFromId },
+    state: {
+      currentPlay,
+      currentStep,
+      isEditMode,
+      pendingPassFromId,
+      passFromPosSharedVal,
+      passToPosSharedVal,
+    },
     updateCurrentPlayerPath,
     addArrow,
     addDribble,
@@ -27,6 +34,8 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     addBall,
     setPendingPassFromId,
     setPassAtCurrentStep,
+    setPassFromPosSharedVal,
+    setPassToPosSharedVal,
   } = useContext(PlayContext);
 
   // check if any players have the ball in the current step
@@ -66,6 +75,22 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   );
 
   usePlayerAnimation(playerPos, pathToNextPos, animationProgress);
+
+  // set shared values for pass arrow
+  const { passes } = currentPlay;
+  useEffect(() => {
+    if (!passes?.[currentStep]) {
+      setPassFromPosSharedVal(null);
+      setPassToPosSharedVal(null);
+    } else if (
+      passes?.[currentStep]?.from === playerId &&
+      !passFromPosSharedVal
+    ) {
+      setPassFromPosSharedVal(playerPos);
+    } else if (passes?.[currentStep]?.to === playerId && !passToPosSharedVal) {
+      setPassToPosSharedVal(playerPos);
+    }
+  }, [passes?.[currentStep]]);
 
   const menuIcons = [
     ...(!hasBall

@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Box, useColorModeValue } from 'native-base';
 import Svg from 'react-native-svg';
 import { useSharedValue, withTiming, runOnJS } from 'react-native-reanimated';
+import PassArrow from './PassArrow';
 import PlayerIcon from './PlayerIcon';
 import FullCourt from './FullCourt';
 
@@ -19,7 +20,6 @@ const Whiteboard = () => {
     stopPlayAnimation,
   } = useContext(PlayContext);
 
-  console.log('passes', currentPlay.passes);
   const animationProgress = useSharedValue(0);
 
   const runAnimation = (isStep) => {
@@ -48,6 +48,7 @@ const Whiteboard = () => {
 
   useEffect(() => {
     if (shouldAnimatePlay || shouldAnimateStep) {
+      //TODO run pass animation here
       runAnimation(shouldAnimateStep);
     }
   });
@@ -70,7 +71,10 @@ const Whiteboard = () => {
     <Box flex={1} padding={3}>
       <FullCourt color={lineColor} />
       <Box position="absolute" w="100%" h="100%">
-        <Svg>{renderPlayers()}</Svg>
+        <Svg>
+          {renderPlayers()}
+          <PassArrow />
+        </Svg>
       </Box>
     </Box>
   );

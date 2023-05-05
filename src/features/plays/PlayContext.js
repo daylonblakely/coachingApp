@@ -59,6 +59,8 @@ const playReducer = (state, action) => {
         currentStep: 0,
         shouldAnimatePlay: false,
         shouldAnimateStep: false,
+        passFromPosSharedVal: null,
+        passToPosSharedVal: null,
         currentPlay: action.payload,
       };
     case 'update_path':
@@ -152,6 +154,10 @@ const playReducer = (state, action) => {
         },
         pendingPassFromId: null,
       };
+    case 'update_passFromPosSharedVal':
+      return { ...state, passFromPosSharedVal: action.payload };
+    case 'update_passToPosSharedVal':
+      return { ...state, passToPosSharedVal: action.payload };
     default:
       return state;
   }
@@ -299,6 +305,14 @@ const setPassAtCurrentStep = (dispatch) => (playerId) => {
   dispatch({ type: 'update_passAtCurrentStep', payload: playerId });
 };
 
+const setPassFromPosSharedVal = (dispatch) => (pos) => {
+  dispatch({ type: 'update_passFromPosSharedVal', payload: pos });
+};
+
+const setPassToPosSharedVal = (dispatch) => (pos) => {
+  dispatch({ type: 'update_passToPosSharedVal', payload: pos });
+};
+
 export const { Provider, Context } = createDataContext(
   playReducer,
   {
@@ -318,6 +332,8 @@ export const { Provider, Context } = createDataContext(
     addBall,
     setPendingPassFromId,
     setPassAtCurrentStep,
+    setPassFromPosSharedVal,
+    setPassToPosSharedVal,
   },
   {
     isEditMode: true,
@@ -325,6 +341,8 @@ export const { Provider, Context } = createDataContext(
     shouldAnimateStep: false,
     currentStep: 0,
     pendingPassFromId: null,
+    passFromPosSharedVal: null,
+    passToPosSharedVal: null,
     plays: [
       { id: '1', title: 'test play 1' },
       { id: '2', title: 'test play 2' },
