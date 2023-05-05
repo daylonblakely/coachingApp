@@ -8,7 +8,7 @@ import {
 import { serialize } from 'react-native-redash';
 import { getPath } from '../utils/pathUtils';
 import squiggleLine from '../utils/squiggleLine';
-import { Context as PlayContext } from '../../../context/PlayContext';
+import { Context as PlayContext } from '../PlayContext';
 import {
   ARROW_PATH_TYPE,
   DRIBBLE_PATH_TYPE,

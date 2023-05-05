@@ -6,7 +6,7 @@ import {
 } from 'react-native-reanimated';
 import useDraggable from './useDraggable';
 import { getPath, isStraight, getInitialPositions } from '../utils/pathUtils';
-import { Context as PlayContext } from '../../../context/PlayContext';
+import { Context as PlayContext } from '../PlayContext';
 import { ARROW_POINT_SIZE, PLAYER_CIRCLE_SIZE } from '../constants';
 
 const DEFAULT_PLAYER_COORDS = { x: 100, y: 100 };

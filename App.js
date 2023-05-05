@@ -3,7 +3,7 @@ import { StatusBar } from 'react-native';
 import { NativeBaseProvider } from 'native-base';
 import { theme, colorModeManager } from './src/theme';
 import { Provider as DrillProvider } from './src/context/DrillContext';
-import { Provider as PlayProvider } from './src/context/PlayContext';
+import { Provider as PlayProvider } from './src/features/plays/PlayContext';
 import RootComponent from './src/components/RootComponent';
 
 const App = () => {

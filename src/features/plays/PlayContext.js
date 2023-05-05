@@ -1,9 +1,9 @@
-import createDataContext from './createDataContext';
+import createDataContext from '../../context/createDataContext';
 import {
   ARROW_PATH_TYPE,
   DRIBBLE_PATH_TYPE,
   SCREEN_PATH_TYPE,
-} from '../features/plays/constants';
+} from './constants';
 
 const INITIAL_PLAY = {
   id: null,

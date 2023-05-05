@@ -5,7 +5,7 @@ import { useSharedValue, withTiming, runOnJS } from 'react-native-reanimated';
 import PlayerIcon from './PlayerIcon';
 import FullCourt from './FullCourt';
 
-import { Context as PlayContext } from '../../../context/PlayContext';
+import { Context as PlayContext } from '../../PlayContext';
 
 const ANIMATION_DURATION = 2000;
 

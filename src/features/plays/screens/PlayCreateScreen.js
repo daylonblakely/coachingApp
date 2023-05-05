@@ -1,9 +1,9 @@
 import React, { useContext, useCallback, useEffect } from 'react';
 import { Box } from 'native-base';
 import { useFocusEffect } from '@react-navigation/native';
-import Whiteboard from '../Whiteboard';
-import PlayFooter from '../PlayFooter';
-import { Context as PlayContext } from '../../../context/PlayContext';
+import Whiteboard from '../ui/Whiteboard';
+import PlayFooter from '../ui/PlayFooter';
+import { Context as PlayContext } from '../PlayContext';
 
 const PlayCreateScreen = ({ route }) => {
   const { fetchPlayById, clearCurrentPlay } = useContext(PlayContext);

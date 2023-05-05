@@ -10,7 +10,7 @@ import Arrow from './Arrow';
 import MenuIcon from '../../../../components/MenuIcon';
 import StaggerModal from '../../../../components/StaggerModal';
 import { setNextPath } from '../../utils/pathUtils';
-import { Context as PlayContext } from '../../../../context/PlayContext';
+import { Context as PlayContext } from '../../PlayContext';
 import { PLAYER_CIRCLE_SIZE } from '../../constants';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -98,6 +98,14 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
             text: 'Add Dribble',
             onPress: () =>
               addDribble(playerId, setNextPath(playerPos, posMid, posEnd)),
+          },
+          {
+            bg: 'blue.400',
+            icon: 'basketball-outline',
+            text: 'Pass Ball',
+            onPress: () => {
+              console.log('pass');
+            },
           },
         ]),
     {

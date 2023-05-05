@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Box, Text } from 'native-base';
-import { Context as PlayContext } from '../../../context/PlayContext';
+import { Context as PlayContext } from '../PlayContext';
 
 const PlayStepCountHeader = () => {
   const {
