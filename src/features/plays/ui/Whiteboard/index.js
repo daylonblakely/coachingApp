@@ -19,6 +19,7 @@ const Whiteboard = () => {
     stopPlayAnimation,
   } = useContext(PlayContext);
 
+  console.log('passes', currentPlay.passes);
   const animationProgress = useSharedValue(0);
 
   const runAnimation = (isStep) => {

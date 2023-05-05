@@ -18,13 +18,15 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
   const {
-    state: { currentPlay, currentStep, isEditMode },
+    state: { currentPlay, currentStep, isEditMode, pendingPassFromId },
     updateCurrentPlayerPath,
     addArrow,
     addDribble,
     addScreen,
     removePlayer,
     addBall,
+    setPendingPassFromId,
+    setPassAtCurrentStep,
   } = useContext(PlayContext);
 
   // check if any players have the ball in the current step
@@ -35,6 +37,8 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   const { pathToNextPos, pathType, hasBall } =
     currentPlay.players.find((p) => playerId === p?.id).steps[currentStep] ||
     {};
+
+  const playerIsEligibleForPass = pendingPassFromId !== null && !hasBall;
 
   const { isOpen, onToggle } = useDisclose();
 
@@ -104,7 +108,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
             icon: 'basketball-outline',
             text: 'Pass Ball',
             onPress: () => {
-              console.log('pass');
+              setPendingPassFromId(playerId);
             },
           },
         ]),
@@ -124,10 +128,24 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
 
   const doubleTapGesture = Gesture.Tap()
     .numberOfTaps(2)
+    .enabled(!playerIsEligibleForPass) // dont open menu if pass is pending
     .runOnJS(true)
     .onStart(onToggle);
 
-  const composed = Gesture.Race(gestureHandlerPlayer, doubleTapGesture);
+  gestureHandlerPlayer.enabled(!playerIsEligibleForPass); // dont move player if pass is pending
+
+  // gesture handler for selecting pass recipient
+  const setPassGesture = Gesture.Tap()
+    .numberOfTaps(1)
+    .enabled(playerIsEligibleForPass)
+    .runOnJS(true)
+    .onStart(() => setPassAtCurrentStep(playerId));
+
+  const composed = Gesture.Race(
+    gestureHandlerPlayer,
+    doubleTapGesture,
+    setPassGesture
+  );
 
   return (
     <>
@@ -165,7 +183,16 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
       </GestureDetector>
       <StaggerModal isOpen={isOpen} onToggle={onToggle}>
         {menuIcons.map(({ bg, icon, text, onPress }, i) => (
-          <MenuIcon bg={bg} icon={icon} text={text} onPress={onPress} key={i} />
+          <MenuIcon
+            bg={bg}
+            icon={icon}
+            text={text}
+            onPress={() => {
+              onPress();
+              onToggle();
+            }}
+            key={i}
+          />
         ))}
       </StaggerModal>
     </>

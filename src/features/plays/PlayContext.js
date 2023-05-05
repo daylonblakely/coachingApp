@@ -9,6 +9,7 @@ const INITIAL_PLAY = {
   id: null,
   title: null,
   players: [null, null, null, null, null],
+  passes: null,
 };
 
 const playReducer = (state, action) => {
@@ -133,6 +134,23 @@ const playReducer = (state, action) => {
             ...state.currentPlay.players.slice(action.payload.playerId + 1),
           ],
         },
+      };
+    case 'update_pendingPassFromId':
+      return { ...state, pendingPassFromId: action.payload };
+    case 'update_passAtCurrentStep':
+      return {
+        ...state,
+        currentPlay: {
+          ...state.currentPlay,
+          passes: {
+            ...state.currentPlay.passes,
+            [state.currentStep]: {
+              from: state.pendingPassFromId,
+              to: action.payload,
+            },
+          },
+        },
+        pendingPassFromId: null,
       };
     default:
       return state;
@@ -273,6 +291,14 @@ const addBall = (dispatch) => (playerId) => {
   dispatch({ type: 'update_hasBall', payload: { playerId, hasBall: true } });
 };
 
+const setPendingPassFromId = (dispatch) => (playerId) => {
+  dispatch({ type: 'update_pendingPassFromId', payload: playerId });
+};
+
+const setPassAtCurrentStep = (dispatch) => (playerId) => {
+  dispatch({ type: 'update_passAtCurrentStep', payload: playerId });
+};
+
 export const { Provider, Context } = createDataContext(
   playReducer,
   {
@@ -290,12 +316,15 @@ export const { Provider, Context } = createDataContext(
     addDribble,
     addScreen,
     addBall,
+    setPendingPassFromId,
+    setPassAtCurrentStep,
   },
   {
     isEditMode: true,
     shouldAnimatePlay: false,
     shouldAnimateStep: false,
     currentStep: 0,
+    pendingPassFromId: null,
     plays: [
       { id: '1', title: 'test play 1' },
       { id: '2', title: 'test play 2' },
