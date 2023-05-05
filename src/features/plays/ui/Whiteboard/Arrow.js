@@ -4,7 +4,7 @@ import { Svg, Defs, Marker, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
 import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
-import { ARROW_POINT_SIZE } from '../constants';
+import { ARROW_POINT_SIZE } from '../../constants';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);

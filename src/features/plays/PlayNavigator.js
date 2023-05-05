@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PlayHomeScreen from './screens/PlayHomeScreen';
 import PlayListScreen from './screens//PlayListScreen';
 import PlayCreateScreen from './screens/PlayCreateScreen';
-import PlayStepCountHeader from './PlayStepCountHeader';
+import PlayStepCountHeader from './ui/PlayStepCountHeader';
 
 const PlayNavigator = () => {
   const Stack = createStackNavigator();

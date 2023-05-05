@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { Circle, Text, useDisclose } from 'native-base';
 import Animated from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import usePlayerPosition from '../hooks/usePlayerPosition';
-import useArrowPoints from '../hooks/useArrowPoints';
-import usePlayerAnimation from '../hooks/usePlayerAnimation';
+import usePlayerPosition from '../../hooks/usePlayerPosition';
+import useArrowPoints from '../../hooks/useArrowPoints';
+import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 import Arrow from './Arrow';
-import MenuIcon from '../../../components/MenuIcon';
-import StaggerModal from '../../../components/StaggerModal';
-import { setNextPath } from '../utils/pathUtils';
-import { Context as PlayContext } from '../../../context/PlayContext';
-import { PLAYER_CIRCLE_SIZE } from '../constants';
+import MenuIcon from '../../../../components/MenuIcon';
+import StaggerModal from '../../../../components/StaggerModal';
+import { setNextPath } from '../../utils/pathUtils';
+import { Context as PlayContext } from '../../../../context/PlayContext';
+import { PLAYER_CIRCLE_SIZE } from '../../constants';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
