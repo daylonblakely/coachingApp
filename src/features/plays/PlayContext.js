@@ -144,6 +144,37 @@ const playReducer = (state, action) => {
         ...state,
         currentPlay: {
           ...state.currentPlay,
+          players: state.currentPlay.players.map((player) => {
+            return player
+              ? {
+                  ...player,
+                  steps: player.steps.map((step, i) => {
+                    if (i === state.currentStep) {
+                      if (player.id === action.payload) {
+                        return {
+                          ...step,
+                          recievesBall: true, // set recievesBall so player starts with ball if next step is blank
+                        };
+                      } else if (player.id === state.pendingPassFromId) {
+                        return {
+                          ...step,
+                          passesBall: true, // set passesBall on player that loses ball this step, use for adding blank next step
+                        };
+                      }
+                    }
+                    if (i > state.currentStep) {
+                      return {
+                        ...step,
+                        // add ball to all steps after current for this player
+                        // and remove for other players
+                        hasBall: player.id === action.payload ? true : false,
+                      };
+                    }
+                    return step;
+                  }),
+                }
+              : player;
+          }),
           passes: {
             ...state.currentPlay.passes,
             [state.currentStep]: {
@@ -175,6 +206,10 @@ const addBlankStepToAllPlayers = (currentStep, players) => {
               ...player.steps[currentStep],
               pathToNextPos: null,
               pathType: null,
+              hasBall: player.steps[currentStep].passesBall
+                ? false
+                : player.steps[currentStep].hasBall ||
+                  player.steps[currentStep].recievesBall,
             },
           ],
         }
