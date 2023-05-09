@@ -125,12 +125,9 @@ const playReducer = (state, action) => {
                     state.currentStep
                   ],
                   hasBall: action.payload.hasBall,
+                  pathToNextPos: null,
+                  pathType: null,
                 },
-                // ...(action.payload.shouldPreserveSubsequent
-                //   ? state.currentPlay.players[
-                //       action.payload.playerId
-                //     ].steps.slice(state.currentStep + 1)
-                //   : []),
               ],
             },
             ...state.currentPlay.players.slice(action.payload.playerId + 1),
@@ -148,30 +145,21 @@ const playReducer = (state, action) => {
             return player
               ? {
                   ...player,
-                  steps: player.steps.map((step, i) => {
-                    if (i === state.currentStep) {
-                      if (player.id === action.payload) {
-                        return {
-                          ...step,
-                          recievesBall: true, // set recievesBall so player starts with ball if next step is blank
-                        };
-                      } else if (player.id === state.pendingPassFromId) {
-                        return {
-                          ...step,
-                          passesBall: true, // set passesBall on player that loses ball this step, use for adding blank next step
-                        };
-                      }
-                    }
-                    if (i > state.currentStep) {
-                      return {
-                        ...step,
-                        // add ball to all steps after current for this player
-                        // and remove for other players
-                        hasBall: player.id === action.payload ? true : false,
-                      };
-                    }
-                    return step;
-                  }),
+                  steps: [
+                    ...player.steps.slice(0, state.currentStep),
+                    {
+                      ...player.steps[state.currentStep],
+                      passesBall: player.id === state.pendingPassFromId,
+                      receivesBall: player.id === action.payload,
+                      ...(player.id === state.pendingPassFromId ||
+                      player.id === action.payload
+                        ? {
+                            pathToNextPos: null,
+                            pathType: null,
+                          }
+                        : {}),
+                    },
+                  ],
                 }
               : player;
           }),
@@ -200,6 +188,7 @@ const addBlankStepToAllPlayers = (currentStep, players) => {
     return player
       ? {
           ...player,
+          // TODO setup a default player object
           steps: [
             ...player.steps,
             {
@@ -209,7 +198,9 @@ const addBlankStepToAllPlayers = (currentStep, players) => {
               hasBall: player.steps[currentStep].passesBall
                 ? false
                 : player.steps[currentStep].hasBall ||
-                  player.steps[currentStep].recievesBall,
+                  player.steps[currentStep].receivesBall,
+              receivesBall: false,
+              passesBall: false,
             },
           ],
         }

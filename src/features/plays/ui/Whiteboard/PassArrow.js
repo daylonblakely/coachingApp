@@ -17,7 +17,7 @@ const PassArrow = () => {
   } = useContext(PlayContext);
 
   const animatedPropsArrow = useAnimatedProps(() => {
-    if (!passFromPosSharedVal) return { d: undefined };
+    if (!passFromPosSharedVal) return { d: '' };
 
     const p = createPath(passFromPosSharedVal.value);
     addLine(p, passToPosSharedVal.value);

@@ -43,7 +43,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     (p) => p?.steps[currentStep]?.hasBall === true
   );
 
-  const { pathToNextPos, pathType, hasBall } =
+  const { pathToNextPos, pathType, hasBall, receivesBall, passesBall } =
     currentPlay.players.find((p) => playerId === p?.id).steps[currentStep] ||
     {};
 
@@ -93,7 +93,7 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   }, [passes?.[currentStep]]);
 
   const menuIcons = [
-    ...(!hasBall
+    ...((hasBall && passesBall) || (!hasBall && !receivesBall)
       ? [
           {
             bg: 'yellow.400',
@@ -128,14 +128,18 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
             onPress: () =>
               addDribble(playerId, setNextPath(playerPos, posMid, posEnd)),
           },
-          {
-            bg: 'blue.400',
-            icon: 'basketball-outline',
-            text: 'Pass Ball',
-            onPress: () => {
-              setPendingPassFromId(playerId);
-            },
-          },
+          ...(!receivesBall
+            ? [
+                {
+                  bg: 'blue.400',
+                  icon: 'basketball-outline',
+                  text: 'Pass Ball',
+                  onPress: () => {
+                    setPendingPassFromId(playerId);
+                  },
+                },
+              ]
+            : []),
         ]),
     {
       bg: 'red.400',

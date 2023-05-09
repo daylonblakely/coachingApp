@@ -73,7 +73,7 @@ const Whiteboard = () => {
       <Box position="absolute" w="100%" h="100%">
         <Svg>
           {renderPlayers()}
-          <PassArrow />
+          {/* <PassArrow /> */}
         </Svg>
       </Box>
     </Box>

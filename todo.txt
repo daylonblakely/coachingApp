@@ -43,3 +43,9 @@ consider saving the player/arrow positions in state instead of the path. Or poss
 - add players - DONE
 - remove players - DONE
 - reset to blank play
+
+5/5/23
+- if player has arrow and recieves pass, remove arrow - DONE
+- pass ball animation
+- pass arrow styling
+- need a default player object to use in context
