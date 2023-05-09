@@ -1,4 +1,5 @@
 import createDataContext from '../../context/createDataContext';
+import { isLastStep, stepHasArrows } from './utils/playUtils';
 import {
   ARROW_PATH_TYPE,
   DRIBBLE_PATH_TYPE,
@@ -217,23 +218,22 @@ const currentStepAnimation = (dispatch) => () => {
   dispatch({ type: 'start_step_animation' });
 };
 
-const stopPlayAnimation = (dispatch) => (currentStep, players) => {
-  const isLastStep = currentStep === players[0].steps.length - 1;
-  const stepHasArrows = isLastStep
-    ? players.some((p) => p?.steps[currentStep]?.pathType)
-    : true;
+const stopPlayAnimation = (dispatch) => (currentStep, currentPlay) => {
+  const { players } = currentPlay;
+  const animationShouldEnd = isLastStep(players, currentStep);
+  const shouldAddBlankStep = stepHasArrows(currentPlay, currentStep);
 
   dispatch({
     type: 'stop_play_animation',
     payload: {
-      shouldAnimatePlay: !isLastStep,
-      isEditMode: isLastStep,
+      shouldAnimatePlay: !animationShouldEnd,
+      isEditMode: animationShouldEnd,
       currentStep:
-        !isLastStep || (isLastStep && stepHasArrows)
+        !animationShouldEnd || (animationShouldEnd && shouldAddBlankStep)
           ? currentStep + 1
           : currentStep,
       players:
-        isLastStep && stepHasArrows // end play on a blank step, add one if needed
+        animationShouldEnd && shouldAddBlankStep // end play on a blank step, add one if needed
           ? addBlankStepToAllPlayers(currentStep, players)
           : players,
     },
@@ -242,9 +242,7 @@ const stopPlayAnimation = (dispatch) => (currentStep, players) => {
 
 const stopStepAnimation = (dispatch) => (currentStep, players) => {
   // if there is no path at the next run step, create a default one for each player
-  const isLastStep = currentStep === players[0].steps.length - 1;
-
-  const updatedPlayers = isLastStep
+  const updatedPlayers = isLastStep(players, currentStep)
     ? addBlankStepToAllPlayers(currentStep, players)
     : players;
 
@@ -257,8 +255,6 @@ const stopStepAnimation = (dispatch) => (currentStep, players) => {
 const updateCurrentPlayerPath =
   (dispatch) =>
   (playerId, path, shouldPreserveSubsequent = false, pathType = null) => {
-    console.log('updating path ', playerId);
-    console.log('preserve subsequent steps ', shouldPreserveSubsequent);
     dispatch({
       type: 'update_path',
       payload: { playerId, path, shouldPreserveSubsequent, pathType },

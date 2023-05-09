@@ -37,7 +37,7 @@ const Whiteboard = () => {
             // set next path and run step when done animating
             runOnJS(stopStepAnimation)(currentStep, currentPlay.players);
           } else {
-            runOnJS(stopPlayAnimation)(currentStep, currentPlay.players);
+            runOnJS(stopPlayAnimation)(currentStep, currentPlay);
           }
         } else {
           console.log('ANIMATION CANCELLED');
@@ -73,7 +73,7 @@ const Whiteboard = () => {
       <Box position="absolute" w="100%" h="100%">
         <Svg>
           {renderPlayers()}
-          {/* <PassArrow /> */}
+          <PassArrow />
         </Svg>
       </Box>
     </Box>

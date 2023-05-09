@@ -3,6 +3,7 @@ import { Box, HStack, useDisclose, useToast } from 'native-base';
 import FooterIcon from './FooterIcon';
 import StaggerModal from '../../../../components/StaggerModal';
 import MenuIcon from '../../../../components/MenuIcon';
+import { stepHasArrows } from '../../utils/playUtils';
 import { Context as PlayContext } from '../../PlayContext';
 
 const PlayFooter = () => {
@@ -21,9 +22,7 @@ const PlayFooter = () => {
   const isAnimating = shouldAnimatePlay || shouldAnimateStep;
 
   // check if any players move during the current step
-  const stepHasArrows = currentPlay.players.some(
-    (p) => p?.steps[currentStep]?.pathType
-  );
+  const shouldAnimate = stepHasArrows(currentPlay, currentStep);
 
   const firstEmptyPlayerSlot = currentPlay.players.indexOf(null);
 
@@ -40,7 +39,7 @@ const PlayFooter = () => {
       icon: 'play',
       text: 'Run Play',
       onPress: () => {
-        stepHasArrows
+        shouldAnimate
           ? runPlayAnimation()
           : !toast.isActive(stepToastId) &&
             toast.show({
@@ -55,7 +54,7 @@ const PlayFooter = () => {
       icon: 'play-skip-forward',
       text: 'Next Step',
       onPress: () => {
-        stepHasArrows
+        shouldAnimate
           ? currentStepAnimation()
           : !toast.isActive(stepToastId) &&
             toast.show({
