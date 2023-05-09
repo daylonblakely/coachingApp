@@ -1,4 +1,4 @@
-import { createPath, addArc } from 'react-native-redash';
+import { createPath, addArc, addLine } from 'react-native-redash';
 import { PLAYER_CIRCLE_SIZE } from '../constants';
 
 const DEFAULT_LENGTH = 100; // default length of a straight line if no path is provided
@@ -61,6 +61,24 @@ export const getPath = (playerPos, posMid, posEnd) => {
 
   const p = createPath({ x, y });
   addArc(p, posMid, posEnd);
+  return p;
+};
+
+// get a path object for pass arrow (2 points), this is so the arrow isnt overlapped by the receiving player
+export const getPassArrowPath = (posStart, posEnd) => {
+  'worklet';
+
+  // get coords up the line from the player so the arrow doesn't over lap the player
+  const [x, y] = getPointOnLine(
+    posEnd.x,
+    posEnd.y,
+    posStart.x,
+    posStart.y,
+    PLAYER_CIRCLE_SIZE + 30
+  );
+
+  const p = createPath(posStart);
+  addLine(p, { x, y });
   return p;
 };
 

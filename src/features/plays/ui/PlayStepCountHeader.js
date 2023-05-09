@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Box, Text } from 'native-base';
+import { numberOfSteps } from '../utils/playUtils';
 import { Context as PlayContext } from '../PlayContext';
 
 const PlayStepCountHeader = () => {
@@ -7,8 +8,7 @@ const PlayStepCountHeader = () => {
     state: { currentPlay, currentStep },
   } = useContext(PlayContext);
 
-  const stepLengths = currentPlay.players.map((p) => p?.steps.length || 1);
-  const stepCount = Math.max(...stepLengths);
+  const stepCount = numberOfSteps(currentPlay);
 
   return (
     <Box mx={5}>

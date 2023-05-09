@@ -4,7 +4,7 @@ import { Svg, Defs, Marker, Path } from 'react-native-svg';
 import { Circle } from 'native-base';
 import Animated, { useAnimatedProps } from 'react-native-reanimated';
 import { serialize } from 'react-native-redash';
-import { createPath, addLine } from 'react-native-redash';
+import { getPassArrowPath } from '../../utils/pathUtils';
 
 import { Context as PlayContext } from '../../PlayContext';
 
@@ -19,8 +19,10 @@ const PassArrow = () => {
   const animatedPropsArrow = useAnimatedProps(() => {
     if (!passFromPosSharedVal) return { d: '' };
 
-    const p = createPath(passFromPosSharedVal.value);
-    addLine(p, passToPosSharedVal.value);
+    const p = getPassArrowPath(
+      passFromPosSharedVal.value,
+      passToPosSharedVal.value
+    );
 
     return { d: serialize(p) };
   });
@@ -54,6 +56,7 @@ const PassArrow = () => {
         <AnimatedPath
           animatedProps={animatedPropsArrow}
           stroke={'black'}
+          strokeDasharray={'10,10'}
           strokeWidth="4"
           markerEnd="url(#Triangle)"
         />
