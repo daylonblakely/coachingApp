@@ -18,14 +18,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
   console.log('---------RENDERING PLAYER: ', label);
   const {
-    state: {
-      currentPlay,
-      currentStep,
-      isEditMode,
-      pendingPassFromId,
-      passFromPosSharedVal,
-      passToPosSharedVal,
-    },
+    state: { currentPlay, currentStep, isEditMode, pendingPassFromId },
     updateCurrentPlayerPath,
     addArrow,
     addDribble,
@@ -82,12 +75,9 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     if (!passes?.[currentStep]) {
       setPassFromPosSharedVal(null);
       setPassToPosSharedVal(null);
-    } else if (
-      passes?.[currentStep]?.from === playerId &&
-      !passFromPosSharedVal
-    ) {
+    } else if (passes?.[currentStep]?.from === playerId) {
       setPassFromPosSharedVal(playerPos);
-    } else if (passes?.[currentStep]?.to === playerId && !passToPosSharedVal) {
+    } else if (passes?.[currentStep]?.to === playerId) {
       setPassToPosSharedVal(playerPos);
     }
   }, [passes?.[currentStep]]);

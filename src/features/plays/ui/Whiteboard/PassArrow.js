@@ -1,28 +1,65 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
 import { Svg, Defs, Marker, Path } from 'react-native-svg';
-import { Circle } from 'native-base';
-import Animated, { useAnimatedProps } from 'react-native-reanimated';
+import { Circle, Text } from 'native-base';
+import Animated, {
+  useAnimatedProps,
+  useDerivedValue,
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedReaction,
+} from 'react-native-reanimated';
 import { serialize } from 'react-native-redash';
 import { getPassArrowPath } from '../../utils/pathUtils';
+import usePlayerAnimation from '../../hooks/usePlayerAnimation';
 
 import { Context as PlayContext } from '../../PlayContext';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const PassArrow = () => {
+const PassArrow = ({ animationProgress }) => {
   const {
-    state: { passFromPosSharedVal, passToPosSharedVal },
+    state: {
+      passFromPosSharedVal,
+      passToPosSharedVal,
+      isEditMode,
+      currentStep,
+    },
   } = useContext(PlayContext);
 
-  const animatedPropsArrow = useAnimatedProps(() => {
-    if (!passFromPosSharedVal) return { d: '' };
+  const ballPos = useSharedValue({ x: 0, y: 0 });
+  const passRecipientPos = useSharedValue({ x: 0, y: 0 });
 
-    const p = getPassArrowPath(
-      passFromPosSharedVal.value,
-      passToPosSharedVal.value
-    );
+  useAnimatedReaction(
+    () => [passFromPosSharedVal?.value, passToPosSharedVal?.value],
+    ([res1, res2]) => {
+      // dont update path if when player moves while not in edit mode (play animations)
+      if (res1 && res2 && isEditMode) {
+        ballPos.value = res1;
+        passRecipientPos.value = res2;
+      }
+    },
+    [passFromPosSharedVal, passToPosSharedVal, isEditMode]
+  );
+
+  useAnimatedReaction(
+    () => {},
+    () => {
+      if (passFromPosSharedVal && passToPosSharedVal) {
+        ballPos.value = passFromPosSharedVal?.value;
+        passRecipientPos.value = passToPosSharedVal?.value;
+      }
+    },
+    [passFromPosSharedVal, passToPosSharedVal, currentStep]
+  );
+
+  const animatedPropsArrow = useAnimatedProps(() => {
+    // remove line when there isn't a pass
+    if (!ballPos.value || !passRecipientPos.value || !passFromPosSharedVal)
+      return { d: 'M 0 0 L 0 0' };
+
+    const p = getPassArrowPath(ballPos.value, passRecipientPos.value);
 
     return { d: serialize(p) };
   });
@@ -30,6 +67,24 @@ const PassArrow = () => {
   const animatedPropsArrowHead = useAnimatedProps(() => {
     return { d: passFromPosSharedVal ? 'M 0 0 L 10 5 L 0 10 z' : '' };
   });
+
+  //   const animatedStyle = useAnimatedStyle(() => {
+  //     return {
+  //       transform: [
+  //         { translateX: ballPos.value.x },
+  //         { translateY: ballPos.value.y },
+  //       ],
+  //     };
+  //   });
+
+  //   usePlayerAnimation(
+  //     ballPos,
+  //     getPassArrowPath(
+  //       passFromPosSharedVal?.value || { x: 0, y: 0 },
+  //       passToPosSharedVal?.value || { x: 0, y: 0 }
+  //     ),
+  //     animationProgress
+  //   );
 
   return (
     <>
@@ -61,7 +116,21 @@ const PassArrow = () => {
           markerEnd="url(#Triangle)"
         />
       </Svg>
-      {/* <AnimatedCircle></AnimatedCircle> */}
+      {/* <AnimatedCircle
+        style={animatedStyle}
+        position="absolute"
+        size="sm"
+        bg="red.300"
+      >
+        <Text
+          fontSize={'xl'}
+          bold
+          _dark={{ color: 'white' }}
+          _light={{ color: 'black' }}
+        >
+          {'B'}
+        </Text>
+      </AnimatedCircle> */}
     </>
   );
 };

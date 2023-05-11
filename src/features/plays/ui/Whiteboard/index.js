@@ -20,10 +20,23 @@ const Whiteboard = () => {
     stopPlayAnimation,
   } = useContext(PlayContext);
 
+  const passAnimationProgress = useSharedValue(0);
   const animationProgress = useSharedValue(0);
+
+  const runPassAnimation = () => {
+    passAnimationProgress.value = withTiming(
+      1,
+      { duration: ANIMATION_DURATION },
+      (finished) => {
+        passAnimationProgress.value = 0;
+      }
+    );
+  };
 
   const runAnimation = (isStep) => {
     console.log('START ANIMATION');
+
+    // runPassAnimation();
 
     animationProgress.value = withTiming(
       1,
@@ -73,7 +86,7 @@ const Whiteboard = () => {
       <Box position="absolute" w="100%" h="100%">
         <Svg>
           {renderPlayers()}
-          <PassArrow />
+          <PassArrow animationProgress={passAnimationProgress} />
         </Svg>
       </Box>
     </Box>

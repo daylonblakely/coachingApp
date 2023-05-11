@@ -46,7 +46,7 @@ consider saving the player/arrow positions in state instead of the path. Or poss
 
 5/5/23
 - if player has arrow and recieves pass, remove arrow - DONE
-- pass ball animation
-- pass arrow styling
+- pass ball animation, and figure out why animations are being cancelled when running plays with passes
+- pass arrow styling - DONE
 - need a default player object to use in context
 - move some of the play reducer logic to play utils

@@ -32,6 +32,8 @@ const playReducer = (state, action) => {
         ...state,
         shouldAnimatePlay: action.payload.shouldAnimatePlay,
         isEditMode: action.payload.isEditMode,
+        passFromPosSharedVal: null,
+        passToPosSharedVal: null,
         currentStep: action.payload.currentStep,
         currentPlay: {
           ...state.currentPlay,
@@ -43,6 +45,8 @@ const playReducer = (state, action) => {
         ...state,
         shouldAnimateStep: false,
         isEditMode: true,
+        passFromPosSharedVal: null,
+        passToPosSharedVal: null,
         currentStep: state.currentStep + 1,
         currentPlay: {
           ...state.currentPlay,
