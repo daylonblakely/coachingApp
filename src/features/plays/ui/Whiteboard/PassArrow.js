@@ -1,17 +1,18 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
 import { Svg, Defs, Marker, Path } from 'react-native-svg';
-import { Circle, Text } from 'native-base';
+import { Circle } from 'native-base';
 import Animated, {
   useAnimatedProps,
-  useDerivedValue,
   useSharedValue,
   useAnimatedStyle,
   useAnimatedReaction,
 } from 'react-native-reanimated';
 import { serialize } from 'react-native-redash';
-import { getPassArrowPath } from '../../utils/pathUtils';
+import { Ionicons } from '@expo/vector-icons';
+import { getPassArrowPath, getStraightLinePath } from '../../utils/pathUtils';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
+import { PLAYER_CIRCLE_SIZE } from '../../constants';
 
 import { Context as PlayContext } from '../../PlayContext';
 
@@ -28,8 +29,8 @@ const PassArrow = ({ animationProgress }) => {
     },
   } = useContext(PlayContext);
 
-  const ballPos = useSharedValue({ x: 0, y: 0 });
-  const passRecipientPos = useSharedValue({ x: 0, y: 0 });
+  const ballPos = useSharedValue(null);
+  const passRecipientPos = useSharedValue(null);
 
   useAnimatedReaction(
     () => [passFromPosSharedVal?.value, passToPosSharedVal?.value],
@@ -65,26 +66,30 @@ const PassArrow = ({ animationProgress }) => {
   });
 
   const animatedPropsArrowHead = useAnimatedProps(() => {
-    return { d: passFromPosSharedVal ? 'M 0 0 L 10 5 L 0 10 z' : '' };
+    if (!ballPos.value || !passRecipientPos.value || !passFromPosSharedVal)
+      return { d: 'M 0 0 L 0 0' };
+
+    return { d: 'M 0 0 L 10 5 L 0 10 z' };
   });
 
-  //   const animatedStyle = useAnimatedStyle(() => {
-  //     return {
-  //       transform: [
-  //         { translateX: ballPos.value.x },
-  //         { translateY: ballPos.value.y },
-  //       ],
-  //     };
-  //   });
+  const animatedStyle = useAnimatedStyle(() => {
+    if (!ballPos.value || !passRecipientPos.value || !passFromPosSharedVal)
+      return { display: 'none' };
 
-  //   usePlayerAnimation(
-  //     ballPos,
-  //     getPassArrowPath(
-  //       passFromPosSharedVal?.value || { x: 0, y: 0 },
-  //       passToPosSharedVal?.value || { x: 0, y: 0 }
-  //     ),
-  //     animationProgress
-  //   );
+    return {
+      transform: [
+        { translateX: ballPos.value.x - PLAYER_CIRCLE_SIZE * 2 },
+        { translateY: ballPos.value.y - PLAYER_CIRCLE_SIZE * 2 },
+      ],
+      display: 'flex',
+    };
+  });
+
+  usePlayerAnimation(
+    ballPos || {},
+    getStraightLinePath(ballPos?.value, passRecipientPos?.value),
+    animationProgress
+  );
 
   return (
     <>
@@ -116,21 +121,9 @@ const PassArrow = ({ animationProgress }) => {
           markerEnd="url(#Triangle)"
         />
       </Svg>
-      {/* <AnimatedCircle
-        style={animatedStyle}
-        position="absolute"
-        size="sm"
-        bg="red.300"
-      >
-        <Text
-          fontSize={'xl'}
-          bold
-          _dark={{ color: 'white' }}
-          _light={{ color: 'black' }}
-        >
-          {'B'}
-        </Text>
-      </AnimatedCircle> */}
+      <AnimatedCircle style={animatedStyle} position="absolute" size="sm">
+        <Ionicons name={'basketball-outline'} size={32} color="black" />
+      </AnimatedCircle>
     </>
   );
 };

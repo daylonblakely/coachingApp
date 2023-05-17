@@ -82,6 +82,12 @@ export const getPassArrowPath = (posStart, posEnd) => {
   return p;
 };
 
+export const getStraightLinePath = (posStart, posEnd) => {
+  const p = createPath(posStart);
+  addLine(p, posEnd);
+  return p;
+};
+
 // get (x,y) of mid and endpoints from a start position and a path object
 export const getInitialPositions = (pathToNextPos) => {
   // init start

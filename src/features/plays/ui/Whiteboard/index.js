@@ -24,19 +24,22 @@ const Whiteboard = () => {
   const animationProgress = useSharedValue(0);
 
   const runPassAnimation = () => {
-    passAnimationProgress.value = withTiming(
-      1,
-      { duration: ANIMATION_DURATION },
-      (finished) => {
-        passAnimationProgress.value = 0;
-      }
-    );
+    return new Promise((resolve) => {
+      passAnimationProgress.value = withTiming(
+        1,
+        { duration: ANIMATION_DURATION },
+        () => {
+          passAnimationProgress.value = 0;
+          runOnJS(resolve)();
+        }
+      );
+    });
   };
 
-  const runAnimation = (isStep) => {
+  const runAnimation = async (isStep) => {
     console.log('START ANIMATION');
 
-    // runPassAnimation();
+    await runPassAnimation();
 
     animationProgress.value = withTiming(
       1,
@@ -85,8 +88,8 @@ const Whiteboard = () => {
       <FullCourt color={lineColor} />
       <Box position="absolute" w="100%" h="100%">
         <Svg>
-          {renderPlayers()}
           <PassArrow animationProgress={passAnimationProgress} />
+          {renderPlayers()}
         </Svg>
       </Box>
     </Box>
