@@ -15,9 +15,16 @@ const Whiteboard = () => {
   const lineColor = useColorModeValue('black', 'white');
 
   const {
-    state: { currentPlay, currentStep, shouldAnimatePlay, shouldAnimateStep },
+    state: {
+      currentPlay,
+      currentStep,
+      shouldAnimatePlay,
+      shouldAnimateStep,
+      pendingPassFromId,
+    },
     stopStepAnimation,
     stopPlayAnimation,
+    setPendingPassFromId,
   } = useContext(PlayContext);
 
   const passAnimationProgress = useSharedValue(0);
@@ -86,15 +93,25 @@ const Whiteboard = () => {
   return (
     <Box flex={1} padding={3}>
       <FullCourt color={lineColor} />
-      <Box position="absolute" w="100%" h="100%">
-        <Svg>
-          <PassArrow
-            animationProgress={passAnimationProgress}
-            arrowColor={lineColor}
-          />
-          {renderPlayers()}
-        </Svg>
-      </Box>
+      <Svg
+        style={{
+          position: 'absolute',
+          width: '200%',
+          height: '200%',
+          // backgroundColor: 'red',
+        }}
+        onPress={() => {
+          if (pendingPassFromId !== null) {
+            setPendingPassFromId(null);
+          }
+        }}
+      >
+        <PassArrow
+          animationProgress={passAnimationProgress}
+          arrowColor={lineColor}
+        />
+        {renderPlayers()}
+      </Svg>
     </Box>
   );
 };
