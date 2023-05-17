@@ -1,24 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, VStack, Text } from 'native-base';
+import { IconButton, VStack, Text, useColorModeValue } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 
-const MenuIcon = ({ bg, icon, onPress, text, disabled }) => {
+const MenuIcon = ({ bg, icon, onPress, text, disabled, ...rest }) => {
+  const lineColor = useColorModeValue('white', 'black');
+
   return (
     <VStack alignItems="center">
       <IconButton
         // mb="4"
         disabled={disabled}
         variant="solid"
-        bg={bg}
         size={16}
         colorScheme={bg.split('.')[0]} //color when pressed
         borderRadius="full"
         onPress={onPress}
-        icon={<Ionicons name={icon} size={32} color="white" />}
+        icon={<Ionicons name={icon} size={32} color={lineColor} />}
+        {...rest}
       />
       {text && (
-        <Text color="white" mb="3">
+        <Text color={lineColor} mb="3">
           {text}
         </Text>
       )}

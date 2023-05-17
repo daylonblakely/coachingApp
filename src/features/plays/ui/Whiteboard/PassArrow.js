@@ -19,7 +19,7 @@ import { Context as PlayContext } from '../../PlayContext';
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const PassArrow = ({ animationProgress }) => {
+const PassArrow = ({ animationProgress, arrowColor }) => {
   const {
     state: {
       passFromPosSharedVal,
@@ -107,22 +107,22 @@ const PassArrow = ({ animationProgress }) => {
           >
             <AnimatedPath
               animatedProps={animatedPropsArrowHead}
-              stroke={'black'}
-              fill={'black'}
+              stroke={arrowColor}
+              fill={arrowColor}
               strokeWidth="4"
             />
           </Marker>
         </Defs>
         <AnimatedPath
           animatedProps={animatedPropsArrow}
-          stroke={'black'}
+          stroke={arrowColor}
           strokeDasharray={'10,10'}
           strokeWidth="4"
           markerEnd="url(#Triangle)"
         />
       </Svg>
       <AnimatedCircle style={animatedStyle} position="absolute" size="sm">
-        <Ionicons name={'basketball-outline'} size={32} color="black" />
+        <Ionicons name={'basketball-outline'} size={32} color={arrowColor} />
       </AnimatedCircle>
     </>
   );

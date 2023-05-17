@@ -112,7 +112,13 @@ const PlayFooter = () => {
       </HStack>
       <Box position="absolute" top="-50%" right="5">
         <MenuIcon
-          bg="primary.700"
+          bg="primary.500"
+          _dark={{
+            backgroundColor: 'primary.200',
+          }}
+          _light={{
+            backgroundColor: 'primary.500',
+          }}
           icon="ellipsis-horizontal"
           onPress={onToggle}
         />

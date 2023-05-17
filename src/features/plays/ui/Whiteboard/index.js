@@ -88,7 +88,10 @@ const Whiteboard = () => {
       <FullCourt color={lineColor} />
       <Box position="absolute" w="100%" h="100%">
         <Svg>
-          <PassArrow animationProgress={passAnimationProgress} />
+          <PassArrow
+            animationProgress={passAnimationProgress}
+            arrowColor={lineColor}
+          />
           {renderPlayers()}
         </Svg>
       </Box>

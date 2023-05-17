@@ -6,6 +6,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import usePlayerPosition from '../../hooks/usePlayerPosition';
 import useArrowPoints from '../../hooks/useArrowPoints';
 import usePlayerAnimation from '../../hooks/usePlayerAnimation';
+import useIsBlinking from '../../hooks/useIsBlinking';
 import Arrow from './Arrow';
 import MenuIcon from '../../../../components/MenuIcon';
 import StaggerModal from '../../../../components/StaggerModal';
@@ -41,6 +42,8 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
     {};
 
   const playerIsEligibleForPass = pendingPassFromId !== null && !hasBall;
+
+  const [isBlinking] = useIsBlinking(playerIsEligibleForPass);
 
   const { isOpen, onToggle } = useDisclose();
 
@@ -184,17 +187,20 @@ const PlayerIcon = ({ playerId, arrowColor, label, animationProgress }) => {
           position="absolute"
           size={PLAYER_CIRCLE_SIZE}
           borderWidth={hasBall ? '3' : '0'}
-          _dark={{ borderColor: 'white', backgroundColor: 'primary.500' }}
+          _dark={{
+            borderColor: 'white',
+            backgroundColor: isBlinking ? 'primary.700' : 'primary.200',
+          }}
           _light={{
             borderColor: 'black',
-            backgroundColor: 'primary.600',
+            backgroundColor: isBlinking ? 'primary.700' : 'primary.500',
           }}
         >
           <Text
             fontSize={hasBall ? 'xl' : '2xl'}
             bold
-            _dark={{ color: 'white' }}
-            _light={{ color: 'black' }}
+            _dark={{ color: 'black' }}
+            _light={{ color: 'white' }}
           >
             {label}
           </Text>
